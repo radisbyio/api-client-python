@@ -2,8 +2,8 @@ import logging
 
 import httpx
 
-from retailcrm.response import Response
 from retailcrm.exceptions import RetailCrmTimeoutException
+from retailcrm.response import Response
 
 logger = logging.getLogger("retailcrm.http_cilent")
 
@@ -23,9 +23,7 @@ class HttpClient:
         self._crm_url = crm_url
         self._api_key = api_key
 
-        headers = {
-            'X-API-KEY': self._api_key
-        }
+        headers = {"X-API-KEY": self._api_key}
         self._client = httpx.AsyncClient(
             headers=headers,
             base_url=crm_url + "/api/" + version,
@@ -33,13 +31,13 @@ class HttpClient:
 
     async def get(self, endpoint: str, params: dict = None) -> Response:
         try:
-            logger.debug(f'Request to {endpoint} with params: {params}')
+            logger.debug(f"Request to {endpoint} with params: {params}")
             response = await self._client.get(
                 endpoint,
                 params=params,
                 timeout=5.0,
             )
-            logger.debug(f'Received {response.status_code} with {response.text}')
+            logger.debug(f"Received {response.status_code} with {response.text}")
         except httpx.TimeoutException:
             raise RetailCrmTimeoutException
         else:
@@ -47,14 +45,14 @@ class HttpClient:
 
     async def post(self, endpoint: str, params=None, data: dict = None) -> Response:
         try:
-            logger.debug(f'Request to {endpoint} with params: {params}')
+            logger.debug(f"Request to {endpoint} with params: {params}")
             response = await self._client.post(
                 endpoint,
                 params=params,
                 data=data,
                 timeout=5.0,
             )
-            logger.debug(f'Received {response.status_code} with {response.text}')
+            logger.debug(f"Received {response.status_code} with {response.text}")
         except httpx.TimeoutException:
             raise RetailCrmTimeoutException
         else:

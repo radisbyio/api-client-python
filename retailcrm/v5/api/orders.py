@@ -22,7 +22,7 @@ class RetailCrmOrdersApi:
             data={
                 "site": site,
                 "order": order_json,
-            }
+            },
         )
 
     async def get_order(self, order_id: str, by: str, site: str) -> Response:
@@ -41,5 +41,5 @@ class RetailCrmOrdersApi:
             params={
                 "by": by,
                 "site": site,
-            }
+            },
         )

@@ -1,4 +1,4 @@
-from typing import List, Optional, Union, Dict
+from typing import Dict, List, Optional, Union
 
 from pydantic import BaseModel
 
@@ -19,7 +19,9 @@ class GenericData(BaseModel):
     shipmentpointId: str = ""
     extraData: Optional[List[Dict[str, str]]] = None
     itemDeclaredValues: Optional[List[Dict[str, Union[int, float]]]] = None
-    packages: Optional[List[Dict[str, Union[str, float, int, List[Dict[str, Union[int, str]]]]]]] = None
+    packages: Optional[
+        List[Dict[str, Union[str, float, int, List[Dict[str, Union[int, str]]]]]]
+    ] = None
 
 
 class PackageItemOrderProduct(BaseModel):
@@ -211,6 +213,7 @@ class SerializedOrder(BaseModel):
     applyRound: bool = False
     isFromCart: bool = False
     clientId: str = ""
+
 
 # todo: remove
 class SchemaRequestCreateOrder(BaseModel):
