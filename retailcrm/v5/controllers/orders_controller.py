@@ -2,9 +2,15 @@ from retailcrm.exceptions import RetailCrmApiError
 from retailcrm.http_cilent import BaseHttpClient
 from retailcrm.v5.api.orders import RetailCrmOrdersApi
 from retailcrm.v5.enums import IdTypes
-from retailcrm.v5.schemas.requests.orders.create_order import SerializedOrder
-from retailcrm.v5.schemas.responses.orders.create_order import ResponseCreateOrder
-from retailcrm.v5.schemas.responses.orders.get_order import ResponseGetOrder
+from retailcrm.v5.schemas.requests.orders import SerializedOrder, SerializedPayment
+from retailcrm.v5.schemas.responses.orders import (
+    ResponseCreateOrder,
+    ResponseCreateOrderPayment,
+    ResponseDeleteOrderPayment,
+    ResponseEditOrder,
+    ResponseEditOrderPayment,
+    ResponseGetOrder,
+)
 
 
 class OrdersController:
@@ -12,10 +18,10 @@ class OrdersController:
         self._api = RetailCrmOrdersApi(client)
 
     async def create_order(
-        self, order_data: SerializedOrder, site: str
+        self, order: SerializedOrder, site: str
     ) -> ResponseCreateOrder:
-        response = await self._api.create_order(
-            order_json=order_data.model_dump_json(exclude_unset=True, by_alias=True),
+        response = await self._api.order_create(
+            order_json=order.model_dump_json(exclude_unset=True, by_alias=True),
             site=site,
         )
         response_obj = ResponseCreateOrder.model_validate_json(response.body)
@@ -24,12 +30,65 @@ class OrdersController:
         return response_obj
 
     async def get_order(
-        self, order_id, site, id_type: IdTypes = IdTypes.EXTERNAL_ID
+        self, order_id: str, site: str, id_type: IdTypes = IdTypes.EXTERNAL_ID
     ) -> ResponseGetOrder:
-        response = await self._api.get_order(
-            order_id=order_id, by=id_type.value, site=site
-        )
+        response = await self._api.order(order_id=order_id, by=id_type.value, site=site)
         response_obj = ResponseGetOrder.model_validate_json(response.body)
+        if response.status_code >= 400:
+            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
+        return response_obj
+
+    async def edit_order(
+        self,
+        order_id: str,
+        order: SerializedOrder,
+        site: str,
+        id_type: IdTypes = IdTypes.EXTERNAL_ID,
+    ) -> ResponseEditOrder:
+        response = await self._api.order_edit(
+            order_json=order.model_dump_json(exclude_unset=True, by_alias=True),
+            order_id=order_id,
+            by=id_type.value,
+            site=site,
+        )
+        response_obj = ResponseEditOrder.model_validate_json(response.body)
+        if response.status_code >= 400:
+            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
+        return response_obj
+
+    async def payment_create(
+        self, payment: SerializedPayment, site: str
+    ) -> ResponseCreateOrderPayment:
+        response = await self._api.payment_create(
+            payment_json=payment.model_dump_json(exclude_unset=True, by_alias=True),
+            site=site,
+        )
+        response_obj = ResponseCreateOrderPayment.model_validate_json(response.body)
+        if response.status_code >= 400:
+            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
+        return response_obj
+
+    async def payment_edit(
+        self,
+        payment_id: str,
+        payment: SerializedPayment,
+        site: str,
+        id_type: IdTypes = IdTypes.EXTERNAL_ID,
+    ) -> ResponseEditOrderPayment:
+        response = await self._api.payment_edit(
+            payment_id=payment_id,
+            payment_json=payment.model_dump_json(exclude_unset=True, by_alias=True),
+            by=id_type.value,
+            site=site,
+        )
+        response_obj = ResponseEditOrderPayment.model_validate_json(response.body)
+        if response.status_code >= 400:
+            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
+        return response_obj
+
+    async def payment_delete(self, payment_id: str) -> ResponseDeleteOrderPayment:
+        response = await self._api.payment_delete(payment_id=payment_id)
+        response_obj = ResponseDeleteOrderPayment.model_validate_json(response.body)
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj

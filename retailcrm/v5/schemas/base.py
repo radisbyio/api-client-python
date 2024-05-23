@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
 
-class BaseRetailCrmResponse(BaseModel):
+class RetailCrmResponse(BaseModel):
     success: bool = False
     errorMsg: str = ""

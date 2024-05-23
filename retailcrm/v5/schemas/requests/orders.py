@@ -1,12 +1,12 @@
 from typing import Dict, List, Optional, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class TimeInterval(BaseModel):
-    from_time: Optional[str]
-    to_time: Optional[str]
-    custom: Optional[str]
+    from_time: str = ""
+    to_time: str = ""
+    custom: str = ""
 
 
 class GenericData(BaseModel):
@@ -19,15 +19,15 @@ class GenericData(BaseModel):
     shipmentpointId: str = ""
     extraData: Optional[List[Dict[str, str]]] = None
     itemDeclaredValues: Optional[List[Dict[str, Union[int, float]]]] = None
-    packages: Optional[
-        List[Dict[str, Union[str, float, int, List[Dict[str, Union[int, str]]]]]]
-    ] = None
+    packages: List[
+        Dict[str, Union[str, float, int, List[Dict[str, Union[int, str]]]]]
+    ] = []
 
 
 class PackageItemOrderProduct(BaseModel):
     id: int
-    externalId: Optional[str]
-    externalIds: Optional[List[Dict[str, str]]]
+    externalId: str = ""
+    externalIds: List[Dict[str, str]] = []
 
 
 class PackageItem(BaseModel):
@@ -36,12 +36,12 @@ class PackageItem(BaseModel):
 
 
 class Package(BaseModel):
-    packageId: str
-    weight: float
-    length: int
-    width: int
-    height: int
-    items: List[PackageItem]
+    packageId: str = ""
+    weight: float = 0
+    length: int = 0
+    width: int = 0
+    height: int = 0
+    items: List[PackageItem] = []
 
 
 class DeliveryService(BaseModel):
@@ -89,7 +89,7 @@ class Offer(BaseModel):
 
 
 class Item(BaseModel):
-    markingCodes: Optional[List[str]] = None
+    markingCodes: List[str] = []
     initialPrice: float
     discountManualAmount: float = 0
     discountManualPercent: float = 0
@@ -97,15 +97,15 @@ class Item(BaseModel):
     createdAt: str = ""
     quantity: float
     comment: str = ""
-    properties: Optional[List[Dict[str, str]]] = None
+    properties: List[Dict[str, str]] = []
     purchasePrice: float = 0
     ordering: int = 0
     offer: Optional[Offer] = None
     productName: str
     status: str = ""
-    priceType: Dict[str, str] = None
+    priceType: Dict[str, str] = {}
     externalId: str = ""
-    externalIds: Optional[List[Dict[str, str]]] = None
+    externalIds: List[Dict[str, str]] = []
 
 
 class SerializedOrderDelivery(BaseModel):
@@ -149,21 +149,21 @@ class MGDialog(BaseModel):
 
 
 class OrderContragent(BaseModel):
-    contragentType: str
-    legalName: str
-    legalAddress: str
-    INN: str
-    OKPO: str
-    KPP: str
-    OGRN: str
-    OGRNIP: str
-    certificateNumber: str
-    certificateDate: str
-    BIK: str
-    bank: str
-    bankAddress: str
-    corrAccount: str
-    bankAccount: str
+    contragentType: str = ""
+    legalName: str = ""
+    legalAddress: str = ""
+    INN: str = ""
+    OKPO: str = ""
+    KPP: str = ""
+    OGRN: str = ""
+    OGRNIP: str = ""
+    certificateNumber: str = ""
+    certificateDate: str = ""
+    BIK: str = ""
+    bank: str = ""
+    bankAddress: str = ""
+    corrAccount: str = ""
+    bankAccount: str = ""
 
 
 class SerializedOrder(BaseModel):
@@ -208,14 +208,24 @@ class SerializedOrder(BaseModel):
     delivery: Optional[SerializedOrderDelivery] = None
     source: Optional[Source] = None
     shipmentStore: str = ""
-    payments: List[Payment] = None
+    payments: List[Payment] = []
     loyaltyEventDiscountId: int = 0
     applyRound: bool = False
     isFromCart: bool = False
     clientId: str = ""
 
 
-# todo: remove
-class SchemaRequestCreateOrder(BaseModel):
-    site: str
-    order: SerializedOrder
+class SerializedEntityOrder(BaseModel):
+    id: int = Field(0, description="Внутренний ID заказа")
+    external_id: str = Field("", description="Внешний ID заказа")
+    number: str = Field("", description="Номер заказа")
+
+
+class SerializedPayment(BaseModel):
+    externalId: Optional[str] = ""
+    amount: float = 0
+    paidAt: Optional[str] = ""
+    comment: Optional[str] = ""
+    order: Optional[SerializedEntityOrder] = None
+    type: str = ""
+    status: str = ""
