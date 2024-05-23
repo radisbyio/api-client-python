@@ -38,6 +38,19 @@ class OrdersController:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
 
+    async def get_orders(
+        self, filter: object, limit: int = 20, page: int = 1
+    ) -> ResponseGetOrder:
+        response = await self._api.orders(
+            filter_json=filter.model_dump_json(exclude_unset=True, by_alias=True),
+            limit=limit,
+            page=page,
+        )
+        response_obj = ResponseGetOrder.model_validate_json(response.body)
+        if response.status_code >= 400:
+            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
+        return response_obj
+
     async def edit_order(
         self,
         order_id: str,

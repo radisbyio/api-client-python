@@ -1,9 +1,11 @@
 from retailcrm.http_cilent import BaseHttpClient, HttpClient
-from retailcrm.v5.controllers.orders_controller import OrdersController
+from retailcrm.v5.controllers.customers import CustomersController
+from retailcrm.v5.controllers.orders import OrdersController
 
 
 class RetailCrmApiClientV5:
     _orders_controller: OrdersController = None
+    _customers_controller: CustomersController = None
 
     def __init__(self, crm_url: str, api_key: str, client: BaseHttpClient = None):
         self._crm_url = crm_url
@@ -27,3 +29,9 @@ class RetailCrmApiClientV5:
         if not self._orders_controller:
             self._orders_controller = OrdersController(self._client)
         return self._orders_controller
+
+    @property
+    def customers(self) -> CustomersController:
+        if not self._customers_controller:
+            self._customers_controller = CustomersController(self._client)
+        return self._customers_controller
