@@ -12,8 +12,10 @@ async def test_customers_success(
         mock_retailcrm_client_v5: RetailCrmApiClientV5,
         mock_customer: dict
 ):
-    filter_data = {'online': 'No', 'contragentType': 'individual'}
-    respx_mock.get(f"{mock_retailcrm_client_v5.crm_url}/api/v5/customers").mock(
+    respx_mock.get(
+        f"{mock_retailcrm_client_v5.crm_url}/api/v5/customers",
+        params={"limit": 20, "page": 1, 'filter[online]': False, 'filter[vip]': True}
+    ).mock(
         httpx.Response(json={
             'success': 'true',
             'pagination': {
@@ -27,7 +29,7 @@ async def test_customers_success(
     )
 
     get_customers_result = await mock_retailcrm_client_v5.customers.customers(
-        filter_data=CustomerFilterData.model_validate(filter_data)
+        filter_data=CustomerFilterData(online=False, vip=True)
     )
 
     assert get_customers_result.success is True

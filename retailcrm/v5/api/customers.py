@@ -7,14 +7,14 @@ class RetailCrmCustomersApi:
         self._client = client
 
     async def customers(
-        self, filter_json: str, limit: int = 20, page: int = 1
+        self, filter: dict, limit: int = 20, page: int = 1
     ) -> Response:
         """
         **Получение списка клиентов, удовлетворяющих заданному фильтру**
         Результат возвращается постранично. В поле pagination содержится информация о постраничной разбивке.
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-customers
-        :param filter_json: Фильтр
+        :param filter: Словарь полей фильтра
         :param limit: Количество элементов в ответе (по умолчанию равно 20)
         :param page: Номер страницы с результатами (по умолчанию равно 1)
         :return: Response
@@ -24,6 +24,6 @@ class RetailCrmCustomersApi:
             params={
                 "limit": limit,
                 "page": page,
-                "filter": filter_json,
+                **filter
             },
         )

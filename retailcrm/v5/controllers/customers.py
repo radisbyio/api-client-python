@@ -12,8 +12,9 @@ class CustomersController:
     async def customers(
         self, filter_data: CustomerFilterData, limit: int = 20, page: int = 1
     ) -> ResponseCustomers:
+        filter_dict = filter_data.model_dump(exclude_unset=True, by_alias=True)
         response = await self._api.customers(
-            filter_json=filter_data.model_dump_json(exclude_unset=True, by_alias=True),
+            filter={f"filter[{x}]": y for x, y in filter_dict.items()},
             limit=limit,
             page=page,
         )

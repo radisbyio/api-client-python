@@ -27,7 +27,7 @@ class CustomerFilterData(BaseModel):
     tasksCounts: int = 0
     email: str = ""
     contragentName: str = ""
-    contragentTypes: List[str] = []
+    # contragentTypes: List[str] = [] # Несостыковка в документации
     contragentInn: str = ""
     contragentKpp: str = ""
     contragentBik: str = ""
