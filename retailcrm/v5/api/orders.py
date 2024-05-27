@@ -120,15 +120,15 @@ class RetailCrmOrdersApi:
         :param site: string
         :return: Response
         """
-        params = {
+        data = {
             "by": by,
             "payment": payment_json,
         }
         if site:
-            params["site"] = site
+            data["site"] = site
 
         return await self._client.post(
-            endpoint=f"/orders/payments/{payment_id}/edit", params=params
+            endpoint=f"/orders/payments/{payment_id}/edit", data=data
         )
 
     async def payment_delete(self, payment_id: str) -> Response:

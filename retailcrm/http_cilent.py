@@ -45,7 +45,7 @@ class HttpClient:
 
     async def post(self, endpoint: str, params=None, data: dict = None) -> Response:
         try:
-            logger.debug(f"Request to {endpoint} with params: {params}")
+            logger.debug(f"Request to {endpoint} with params: {params} and body: {data}")
             response = await self._client.post(
                 endpoint,
                 params=params,
