@@ -217,7 +217,7 @@ class SerializedOrder(BaseModel):
 
 class SerializedEntityOrder(BaseModel):
     id: int = Field(0, description="Внутренний ID заказа")
-    external_id: str = Field("", description="Внешний ID заказа")
+    external_id: str = Field("", alias="externalId", description="Внешний ID заказа")
     number: str = Field("", description="Номер заказа")
 
 
