@@ -1,3 +1,4 @@
+from datetime import datetime, date
 from typing import Dict, List, Optional, Union
 
 from pydantic import BaseModel, Field
@@ -229,3 +230,11 @@ class SerializedPayment(BaseModel):
     order: Optional[SerializedEntityOrder] = None
     type: str = ""
     status: str = ""
+
+
+class OrderHistoryFilterV4Type(BaseModel):
+    order_id: Optional[int] = Field(None, serialization_alias="orderId", description="ID заказа")
+    since_id: Optional[int] = Field(None, serialization_alias="sinceId", description="Начиная с ID истории заказов")
+    external_id: Optional[str] = Field(None, serialization_alias="externalId", description="Внешний ID заказа")
+    start_date: Optional[date] = Field(None, serialization_alias="startDate", description="Дата/время изменения (от)")
+    end_date: Optional[date] = Field(None, serialization_alias="endDate", description="Дата/время изменения (до)")

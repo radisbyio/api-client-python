@@ -88,6 +88,28 @@ class RetailCrmOrdersApi:
             },
         )
 
+    async def orders_history(
+        self, filter_dict: dict, limit: int = 20, page: int = 1
+    ) -> Response:
+        """
+        **Получение списка заказов, удовлетворяющих заданному фильтру.**
+        Результат возвращается постранично. В поле pagination содержится информация о постраничной разбивке.
+
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-orders
+        :param limit: Количество элементов в ответе (по умолчанию равно 20)
+        :param page: Номер страницы с результатами (по умолчанию равно 1)
+        :param filter_dict: Фильтр
+        :return: Response
+        """
+        return await self._client.get(
+            endpoint=f"/orders/history",
+            params={
+                "limit": limit,
+                "page": page,
+                **filter_dict,
+            },
+        )
+
     async def payment_create(self, payment_json: str, site: str) -> Response:
         """
         **Добавление платежа**
