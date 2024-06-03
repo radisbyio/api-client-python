@@ -39,7 +39,7 @@ class RetailCrmOrdersApi:
         :return: Response
         """
         return await self._client.post(
-            endpoint=f"/api/v5/orders/{order_id}/edit",
+            endpoint=f"/orders/{order_id}/edit",
             data={
                 "by": by,
                 "site": site,
