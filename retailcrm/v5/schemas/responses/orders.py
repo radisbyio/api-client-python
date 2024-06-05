@@ -1,9 +1,21 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Callable, Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field ,field_validator
+from pydantic_core.core_schema import ValidationInfo
 
 from retailcrm.v5.schemas.base import RetailCrmResponse
+
+
+def dict_validator() -> Callable[[Any, ValidationInfo], dict]:
+    def validator(v, info: ValidationInfo) -> dict:
+        if isinstance(v, dict):
+            return v
+        if isinstance(v, list) and not v:
+            return {}
+        else:
+            raise ValueError("Not empty list")
+    return validator
 
 
 class CreateOrder(BaseModel):
@@ -68,7 +80,8 @@ class OrderProduct(BaseModel):
     discounts: list[AbstractDiscount] = Field([], description="Массив скидок")
     offer: Optional[Offer] = Field(None, description="Торговое предложение")
     ordering: Optional[int] = Field(None, description="Порядок")
-    properties: dict = Field([], description="Дополнительные свойства позиции в заказе")
+    properties: dict = Field({}, description="Дополнительные свойства позиции в заказе")
+    properties_validator = field_validator("properties", mode="before")(dict_validator())
 
 
 class OrderHistory(BaseModel):
@@ -79,8 +92,10 @@ class OrderHistory(BaseModel):
     source: Optional[str] = Field(None, description="Источник изменения")
     user: Optional[User] = Field(None, description="Пользователь")
     field: Optional[str] = Field(None, description="Имя изменившегося поля")
-    old_value: Optional[str | int | datetime | dict] = Field(None, description="Старое значение свойства", validation_alias="oldValue")
-    new_value: Optional[str | int | datetime | dict] = Field(None, description="Новое значение свойства", validation_alias="newValue")
+    old_value: Optional[str | int | datetime | dict] = Field(None, description="Старое значение свойства",
+                                                             validation_alias="oldValue")
+    new_value: Optional[str | int | datetime | dict] = Field(None, description="Новое значение свойства",
+                                                             validation_alias="newValue")
     api_key: Optional[ApiKey] = Field(None, description="Информация о ключе api, использовавшемся для этого изменения",
                                       validation_alias="apiKey")
     order: Optional[Order] = Field(None, description="Заказ")
