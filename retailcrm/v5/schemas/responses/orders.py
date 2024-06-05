@@ -112,7 +112,7 @@ class ResponseEditOrderPayment(RetailCrmResponse):
 class ResponseOrderHistory(RetailCrmResponse):
     generated_at: Optional[datetime] = Field(None, description="Время формирования ответа",
                                              validation_alias="generatedAt")
-    history: Optional[OrderHistory] = []
+    history: list[OrderHistory] = []
 
 
 class ResponseDeleteOrderPayment(RetailCrmResponse):
