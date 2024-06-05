@@ -54,7 +54,9 @@ class Offer(BaseModel):
     id: Optional[int] = Field(None, description="ID торгового предложения")
     externalId: Optional[str] = Field(None, description="ID торгового предложения в магазине")
     xmlId: Optional[str] = Field(None, description="ID торгового предложения в складской системе")
-    properties: Optional[list[str]] = Field(None, description="Свойства SKU")
+    properties: dict[str, Any] = Field({}, description="Свойства SKU")
+
+    properties_validator = field_validator("properties", mode="before")(dict_validator())
 
 
 class User(BaseModel):
