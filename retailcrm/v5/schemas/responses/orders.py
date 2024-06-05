@@ -68,7 +68,7 @@ class OrderProduct(BaseModel):
     discounts: list[AbstractDiscount] = Field([], description="Массив скидок")
     offer: Optional[Offer] = Field(None, description="Торговое предложение")
     ordering: Optional[int] = Field(None, description="Порядок")
-    properties: list[dict] = Field([], description="Дополнительные свойства позиции в заказе")
+    properties: dict = Field([], description="Дополнительные свойства позиции в заказе")
 
 
 class OrderHistory(BaseModel):
