@@ -79,8 +79,8 @@ class OrderHistory(BaseModel):
     source: Optional[str] = Field(None, description="Источник изменения")
     user: Optional[User] = Field(None, description="Пользователь")
     field: Optional[str] = Field(None, description="Имя изменившегося поля")
-    old_value: Optional[str] = Field(None, description="Старое значение свойства", validation_alias="oldValue")
-    new_value: Optional[str] = Field(None, description="Новое значение свойства", validation_alias="newValue")
+    old_value: Optional[str | int | datetime] = Field(None, description="Старое значение свойства", validation_alias="oldValue")
+    new_value: Optional[str | int | datetime] = Field(None, description="Новое значение свойства", validation_alias="newValue")
     api_key: Optional[ApiKey] = Field(None, description="Информация о ключе api, использовавшемся для этого изменения",
                                       validation_alias="apiKey")
     order: Optional[Order] = Field(None, description="Заказ")
