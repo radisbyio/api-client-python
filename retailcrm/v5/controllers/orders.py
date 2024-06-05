@@ -3,7 +3,8 @@ from retailcrm.http_cilent import BaseHttpClient
 from retailcrm.utils import pydantic_to_nested_dict
 from retailcrm.v5.api.orders import RetailCrmOrdersApi
 from retailcrm.v5.enums import IdTypes
-from retailcrm.v5.schemas.requests.orders import SerializedOrder, SerializedPayment, OrderHistoryFilterV4Type
+from retailcrm.v5.schemas.requests.orders import SerializedOrder, SerializedPayment, OrderHistoryFilterV4Type, \
+    OrderFilterData
 from retailcrm.v5.schemas.responses.orders import (
     ResponseCreateOrder,
     ResponseCreateOrderPayment,
@@ -40,10 +41,10 @@ class OrdersController:
         return response_obj
 
     async def get_orders(
-            self, filter: object, limit: int = 20, page: int = 1
+            self, filter_obj: OrderFilterData, limit: int = 20, page: int = 1
     ) -> ResponseGetOrder:
         response = await self._api.orders(
-            filter_json=filter.model_dump_json(exclude_unset=True, by_alias=True),
+            filter_dict=pydantic_to_nested_dict(filter_obj, "filter"),
             limit=limit,
             page=page,
         )
