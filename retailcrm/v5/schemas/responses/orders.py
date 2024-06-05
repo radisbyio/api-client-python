@@ -712,6 +712,10 @@ class ResponseGetOrder(RetailCrmResponse):
     order: Optional[Order] = None
 
 
+class ResponseOrders(RetailCrmResponse):
+    orders: list[Order] = Field([], description="Список заказов")
+
+
 class ResponseEditOrder(RetailCrmResponse):
     id: Optional[int] = None
     order: Optional[Order] = None

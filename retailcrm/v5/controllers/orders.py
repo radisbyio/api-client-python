@@ -11,7 +11,8 @@ from retailcrm.v5.schemas.responses.orders import (
     ResponseDeleteOrderPayment,
     ResponseEditOrder,
     ResponseEditOrderPayment,
-    ResponseGetOrder, ResponseOrderHistory,
+    ResponseGetOrder,
+    ResponseOrderHistory, ResponseOrders,
 )
 
 
@@ -42,13 +43,13 @@ class OrdersController:
 
     async def orders(
             self, filter_obj: OrderFilterData, limit: int = 20, page: int = 1
-    ) -> ResponseGetOrder:
+    ) -> ResponseOrders:
         response = await self._api.orders(
             filter_dict=pydantic_to_nested_dict(filter_obj, "filter"),
             limit=limit,
             page=page,
         )
-        response_obj = ResponseGetOrder.model_validate_json(response.body)
+        response_obj = ResponseOrders.model_validate_json(response.body)
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
