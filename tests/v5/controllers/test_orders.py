@@ -56,7 +56,7 @@ async def test_get_order_success(
         httpx.Response(json={'success': 'true', 'order': mock_order}, status_code=200)
     )
 
-    get_order_result = await mock_retailcrm_client_v5.orders.get_order(
+    get_order_result = await mock_retailcrm_client_v5.orders.order(
         order_id="8888",
         site="test_site",
     )
@@ -75,7 +75,7 @@ async def test_get_order_error(
     )
 
     with pytest.raises(RetailCrmApiError) as exc_info:
-        _ = await mock_retailcrm_client_v5.orders.get_order(
+        _ = await mock_retailcrm_client_v5.orders.order(
             order_id="8888",
             site="test_site",
         )
