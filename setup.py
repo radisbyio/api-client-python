@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='retailcrm',
-    version='0.0.13',
+    version='0.0.14',
     description='RetailCRM API client',
     url='https://github.com/retailcrm/api-client-python',
     author='Radis.by',

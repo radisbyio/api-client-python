@@ -31,7 +31,7 @@ class OrdersController:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
 
-    async def get_order(
+    async def order(
             self, order_id: str, site: str, id_type: IdTypes = IdTypes.EXTERNAL_ID
     ) -> ResponseGetOrder:
         response = await self._api.order(order_id=order_id, by=id_type.value, site=site)
@@ -40,7 +40,7 @@ class OrdersController:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
 
-    async def get_orders(
+    async def orders(
             self, filter_obj: OrderFilterData, limit: int = 20, page: int = 1
     ) -> ResponseGetOrder:
         response = await self._api.orders(

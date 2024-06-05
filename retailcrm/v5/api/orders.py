@@ -67,7 +67,7 @@ class RetailCrmOrdersApi:
         return await self._client.get(endpoint=f"/orders/{order_id}", params=params)
 
     async def orders(
-        self, filter_json: str, limit: int = 20, page: int = 1
+        self, filter_dict: dict, limit: int = 20, page: int = 1
     ) -> Response:
         """
         **Получение списка заказов, удовлетворяющих заданному фильтру.**
@@ -76,7 +76,7 @@ class RetailCrmOrdersApi:
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-orders
         :param limit: Количество элементов в ответе (по умолчанию равно 20)
         :param page: Номер страницы с результатами (по умолчанию равно 1)
-        :param filter_json: Фильтр
+        :param filter_dict: Фильтр
         :return: Response
         """
         return await self._client.get(
@@ -84,7 +84,7 @@ class RetailCrmOrdersApi:
             params={
                 "limit": limit,
                 "page": page,
-                "filter": filter_json,
+                **filter_dict,
             },
         )
 
