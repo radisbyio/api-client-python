@@ -77,7 +77,7 @@ class OrderDeliveryAddress(BaseModel):
 class Payment(BaseModel):
     externalId: Optional[str] = ""
     amount: float
-    paid_at: Optional[datetime] = Field(None, serialization_alias="paid_at")
+    paid_at: Optional[datetime] = Field(None, serialization_alias="paidAt")
     comment: Optional[str] = ""
     type: str = ""
     status: str = ""
