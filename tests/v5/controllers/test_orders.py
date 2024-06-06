@@ -5,7 +5,7 @@ import pytest
 import respx
 
 from retailcrm import RetailCrmApiClientV5, RetailCrmApiError
-from retailcrm.v5.schemas.requests import SerializedOrder, SerializedPayment, OrderHistoryFilterV4Type
+from retailcrm.v5.schemas.requests import SerializedOrder, SerializedPayment, OrderHistoryFilterV4Type ,SerializedOrderList
 
 
 @pytest.mark.asyncio
@@ -27,23 +27,40 @@ async def test_order_create_success(
 
 
 @pytest.mark.asyncio
-async def test_order_create_error(
+async def test_orders_upload_success(
         respx_mock: respx.router.MockRouter,
         mock_retailcrm_client_v5: RetailCrmApiClientV5,
         mock_order: dict
 ):
-    respx_mock.post(f"{mock_retailcrm_client_v5.crm_url}/api/v5/orders/create").mock(
-        httpx.Response(json={'success': 'false', 'errorMsg': "Invalid body"}, status_code=400)
+    respx_mock.post(f"{mock_retailcrm_client_v5.crm_url}/api/v5/orders/upload").mock(
+        httpx.Response(json={'success': 'true'}, status_code=201)
     )
 
-    with pytest.raises(RetailCrmApiError) as exc_info:
-        _ = await mock_retailcrm_client_v5.orders.create_order(
-            SerializedOrder.model_validate(mock_order),
+    create_result = await mock_retailcrm_client_v5.orders.upload(
+        SerializedOrderList([mock_order]),
+        "test_site"
+    )
+
+    assert create_result.success is True
+
+
+@pytest.mark.asyncio
+async def test_orders_upload_too_many_error(
+        respx_mock: respx.router.MockRouter,
+        mock_retailcrm_client_v5: RetailCrmApiClientV5,
+        mock_order: dict
+):
+    respx_mock.post(f"{mock_retailcrm_client_v5.crm_url}/api/v5/orders/upload").mock(
+        httpx.Response(json={'success': 'true'}, status_code=201)
+    )
+
+    with pytest.raises(ValueError) as exc_info:
+        create_result = await mock_retailcrm_client_v5.orders.upload(
+            SerializedOrderList([mock_order]*51),
             "test_site"
         )
 
-    assert exc_info.value.status_code == 400
-    assert exc_info.value.error_msg == "Invalid body"
+    assert str(exc_info.value) == "Too many orders, only 50 are allowed"
 
 
 @pytest.mark.asyncio

@@ -1,7 +1,7 @@
 from datetime import datetime, date
 from typing import Dict, List, Optional, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, RootModel
 
 
 class TimeInterval(BaseModel):
@@ -77,7 +77,7 @@ class OrderDeliveryAddress(BaseModel):
 class Payment(BaseModel):
     externalId: Optional[str] = ""
     amount: float
-    paidAt: Optional[str] = ""
+    paid_at: Optional[datetime] = Field(None, serialization_alias="paid_at")
     comment: Optional[str] = ""
     type: str = ""
     status: str = ""
@@ -176,7 +176,7 @@ class SerializedOrder(BaseModel):
     externalId: str = ""
     privilegeType: str = ""
     countryIso: str = ""
-    createdAt: str = ""
+    created_at: Optional[datetime] = Field(None, serialization_alias="createdAt")
     statusUpdatedAt: str = ""
     discountManualAmount: float = 0
     discountManualPercent: float = 0
@@ -218,6 +218,10 @@ class SerializedOrder(BaseModel):
     applyRound: bool = False
     isFromCart: bool = False
     clientId: str = ""
+
+
+class SerializedOrderList(RootModel):
+    root: list[SerializedOrder] = []
 
 
 class SerializedEntityOrder(BaseModel):

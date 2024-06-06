@@ -24,6 +24,24 @@ class RetailCrmOrdersApi:
             },
         )
 
+    async def orders_upload(self, orders_json: str, site: str) -> Response:
+        """
+        **Пакетная загрузка заказов**
+        Метод позволяет загружать пакетно до 50 заказов.
+
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-orders-upload
+        :param orders_json: string
+        :param site: string
+        :return: Response
+        """
+        return await self._client.post(
+            endpoint="/orders/upload",
+            data={
+                "site": site,
+                "orders": orders_json,
+            },
+        )
+
     async def order_edit(
         self, order_id: str, by: str, order_json: str, site: str
     ) -> Response:
