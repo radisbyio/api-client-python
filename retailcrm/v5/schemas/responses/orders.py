@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, time
 from typing import Optional, Callable, Any, List
 
 from pydantic import BaseModel, Field, field_validator
@@ -423,8 +423,8 @@ class PackageItem(BaseModel):
 
 
 class TimeInterval(BaseModel):
-    from_: Optional[datetime] = Field(None, alias="from")
-    to: Optional[datetime] = Field(None)
+    from_: Optional[time] = Field(None, serialization_alias="from")
+    to: Optional[time] = Field(None)
 
 
 class LinkedOrder(BaseModel):
@@ -642,7 +642,7 @@ class Order(BaseModel):
     source: Optional[SerializedSource] = Field(None)
     items: list[OrderProduct] = Field([])
     full_paid_at: Optional[datetime] = Field(None, validation_alias="fullPaidAt")
-    payments: list["Payment"] = Field([])
+    payments: dict[str,"Payment"] = Field({})
     from_api: bool = Field(False, validation_alias="fromApi")
     weight: float = 0
     length: int = 0
