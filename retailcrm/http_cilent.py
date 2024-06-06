@@ -35,7 +35,7 @@ class HttpClient:
             response = await self._client.get(
                 endpoint,
                 params=params,
-                timeout=5.0,
+                timeout=15.0,
             )
             logger.debug(f"Received {response.status_code} with {response.text}")
         except httpx.TimeoutException:
@@ -50,7 +50,7 @@ class HttpClient:
                 endpoint,
                 params=params,
                 data=data,
-                timeout=5.0,
+                timeout=15.0,
             )
             logger.debug(f"Received {response.status_code} with {response.text}")
         except httpx.TimeoutException:
