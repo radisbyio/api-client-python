@@ -642,7 +642,7 @@ class Order(BaseModel):
     source: Optional[SerializedSource] = Field(None)
     items: list[OrderProduct] = Field([])
     full_paid_at: Optional[datetime] = Field(None, validation_alias="fullPaidAt")
-    payments: dict[str,"Payment"] = Field({})
+    payments: dict[str, "Payment"] = Field({})
     from_api: bool = Field(False, validation_alias="fromApi")
     weight: float = 0
     length: int = 0
@@ -716,6 +716,23 @@ class ResponseOrders(RetailCrmResponse):
     orders: list[Order] = Field([], description="Список заказов")
 
 
+class FixExternalRow(BaseModel):
+    id: Optional[int] = Field(None, description="Внутренний ID")
+    external_id: Optional[str] = Field(None, description="Внешний ID", validation_alias="externalId")
+
+
+class EntityWithExternalId(BaseModel):
+    external_id: Optional[str] = Field(None, description="Внешний ID (при наличии)", validation_alias="externalId")
+
+
+class ResponseOrdersUpload(RetailCrmResponse):
+    uploaded_orders: list[FixExternalRow] = Field([], description="Идентификаторы загруженных объектов",
+                                                  validation_alias="uploadedOrders")
+    failed_orders: list[FixExternalRow] = Field([], description="Идентификаторы незагруженных объектов",
+                                                validation_alias="failedOrders")
+    orders: list[Order] = Field([], description="Список заказов")
+
+
 class ResponseEditOrder(RetailCrmResponse):
     id: Optional[int] = None
     order: Optional[Order] = None
@@ -738,9 +755,3 @@ class ResponseOrderHistory(RetailCrmResponse):
 
 class ResponseDeleteOrderPayment(RetailCrmResponse):
     pass
-
-
-class ResponseOrdersHistory(RetailCrmResponse):
-    generated_at: Optional[datetime] = Field(
-        None,
-    )

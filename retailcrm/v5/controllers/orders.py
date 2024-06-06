@@ -12,7 +12,7 @@ from retailcrm.v5.schemas.responses.orders import (
     ResponseEditOrder,
     ResponseEditOrderPayment,
     ResponseGetOrder,
-    ResponseOrderHistory, ResponseOrders,
+    ResponseOrderHistory, ResponseOrders, ResponseOrdersUpload,
 )
 
 
@@ -34,14 +34,14 @@ class OrdersController:
 
     async def upload(
             self, orders: SerializedOrderList, site: str
-    ) -> ResponseCreateOrder:
+    ) -> ResponseOrdersUpload:
         if len(orders.root) > 50:
             raise ValueError("Too many orders, only 50 are allowed")
         response = await self._api.orders_upload(
             orders_json=orders.model_dump_json(exclude_unset=True, by_alias=True),
             site=site,
         )
-        response_obj = ResponseCreateOrder.model_validate_json(response.body)
+        response_obj = ResponseOrdersUpload.model_validate_json(response.body)
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
