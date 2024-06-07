@@ -1,6 +1,14 @@
 from enum import Enum
 
-__all__ = ["IdTypes", "VatRateTypes", "PaymentObjects", "PaymentMethods", "RefundStatuses", "DiscountTypes", "PrivilegeType"]
+__all__ = [
+    "IdTypes",
+    "VatRateTypes",
+    "PaymentObjects",
+    "PaymentMethods",
+    "RefundStatuses",
+    "DiscountTypes",
+    "PrivilegeType",
+]
 
 
 class RetailEnum(Enum):

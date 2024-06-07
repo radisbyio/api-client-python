@@ -3,10 +3,10 @@ from retailcrm.http_cilent import BaseHttpClient
 from retailcrm.v5.api.payments import RetailCrmPaymentsApi
 from retailcrm.v5.schemas import ApiCheckRequest, ApiCreateInvoiceRequest
 from retailcrm.v5.schemas.payments import (
+    ApiUpdateInvoiceRequest,
     PaymentCheckResponse,
     PaymentCreateInvoiceResponse,
     PaymentUpdateInvoiceResponse,
-    ApiUpdateInvoiceRequest,
 )
 
 

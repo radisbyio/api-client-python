@@ -1,2 +1,2 @@
-from .shared import *
 from .payments import *
+from .shared import *
