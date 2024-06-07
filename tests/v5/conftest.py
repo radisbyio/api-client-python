@@ -16,7 +16,7 @@ def mock_http_client() -> BaseHttpClient:
     return AsyncMock()
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def mock_retailcrm_client_v5() -> RetailCrmApiClientV5:
     return RetailCrmApiClientV5("http://testcrm.retailcrm.ru", "test_api_key")
 

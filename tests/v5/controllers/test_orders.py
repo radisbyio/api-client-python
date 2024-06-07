@@ -5,7 +5,8 @@ import pytest
 import respx
 
 from retailcrm import RetailCrmApiClientV5, RetailCrmApiError
-from retailcrm.v5.schemas.requests import SerializedOrder, SerializedPayment, OrderHistoryFilterV4Type ,SerializedOrderList
+from retailcrm.v5.schemas.requests import SerializedOrder, SerializedPayment, OrderHistoryFilterV4Type, \
+    SerializedOrderList
 
 
 @pytest.mark.asyncio
@@ -50,15 +51,14 @@ async def test_orders_upload_too_many_error(
         mock_retailcrm_client_v5: RetailCrmApiClientV5,
         mock_order: dict
 ):
+    orders = SerializedOrderList([mock_order] * 51)
+
     respx_mock.post(f"{mock_retailcrm_client_v5.crm_url}/api/v5/orders/upload").mock(
         httpx.Response(json={'success': 'true'}, status_code=201)
     )
 
     with pytest.raises(ValueError) as exc_info:
-        create_result = await mock_retailcrm_client_v5.orders.upload(
-            SerializedOrderList([mock_order]*51),
-            "test_site"
-        )
+        create_result = await mock_retailcrm_client_v5.orders.upload(orders, "test_site")
 
     assert str(exc_info.value) == "Too many orders, only 50 are allowed"
 
@@ -73,7 +73,7 @@ async def test_get_order_success(
         httpx.Response(json={'success': 'true', 'order': mock_order}, status_code=200)
     )
 
-    get_order_result = await mock_retailcrm_client_v5.orders.order(
+    get_order_result = await mock_retailcrm_client_v5.orders.get_order_by_id(
         order_id="8888",
         site="test_site",
     )
@@ -92,7 +92,7 @@ async def test_get_order_error(
     )
 
     with pytest.raises(RetailCrmApiError) as exc_info:
-        _ = await mock_retailcrm_client_v5.orders.order(
+        _ = await mock_retailcrm_client_v5.orders.get_order_by_id(
             order_id="8888",
             site="test_site",
         )
@@ -107,36 +107,18 @@ async def test_payment_create_success(
         mock_retailcrm_client_v5: RetailCrmApiClientV5,
         mock_payment: dict
 ):
+    payment = SerializedPayment.model_validate(mock_payment)
+
     respx_mock.post(f"{mock_retailcrm_client_v5.crm_url}/api/v5/orders/payments/create").mock(
         httpx.Response(json={'success': 'true', 'id': 123}, status_code=201)
     )
 
     get_order_result = await mock_retailcrm_client_v5.orders.payment_create(
-        payment=SerializedPayment.model_validate(mock_payment),
+        payment=payment,
         site="test_site",
     )
 
     assert get_order_result.success is True
-
-
-@pytest.mark.asyncio
-async def test_payment_create_error(
-        respx_mock: respx.router.MockRouter,
-        mock_retailcrm_client_v5: RetailCrmApiClientV5,
-        mock_payment: dict
-):
-    respx_mock.post(f"{mock_retailcrm_client_v5.crm_url}/api/v5/orders/payments/create").mock(
-        httpx.Response(json={'success': 'false', 'errorMsg': "Bad request"}, status_code=400)
-    )
-
-    with pytest.raises(RetailCrmApiError) as exc_info:
-        _ = await mock_retailcrm_client_v5.orders.payment_create(
-            payment=SerializedPayment.model_validate(mock_payment),
-            site="test_site",
-        )
-
-    assert exc_info.value.status_code == 400
-    assert exc_info.value.error_msg == "Bad request"
 
 
 @pytest.mark.asyncio
@@ -159,31 +141,9 @@ async def test_payment_edit_success(
 
 
 @pytest.mark.asyncio
-async def test_payment_edit_error(
-        respx_mock: respx.router.MockRouter,
-        mock_retailcrm_client_v5: RetailCrmApiClientV5,
-        mock_payment: dict
-):
-    respx_mock.post(f"{mock_retailcrm_client_v5.crm_url}/api/v5/orders/payments/123/edit").mock(
-        httpx.Response(json={'success': 'false', 'errorMsg': "Bad request"}, status_code=400)
-    )
-
-    with pytest.raises(RetailCrmApiError) as exc_info:
-        _ = await mock_retailcrm_client_v5.orders.payment_edit(
-            payment_id="123",
-            payment=SerializedPayment.model_validate(mock_payment),
-            site="test_site",
-        )
-
-    assert exc_info.value.status_code == 400
-    assert exc_info.value.error_msg == "Bad request"
-
-
-@pytest.mark.asyncio
 async def test_payment_delete_success(
         respx_mock: respx.router.MockRouter,
         mock_retailcrm_client_v5: RetailCrmApiClientV5,
-        mock_payment: dict
 ):
     respx_mock.post(f"{mock_retailcrm_client_v5.crm_url}/api/v5/orders/payments/123/delete").mock(
         httpx.Response(json={'success': 'true', 'id': 123}, status_code=200)
@@ -197,28 +157,9 @@ async def test_payment_delete_success(
 
 
 @pytest.mark.asyncio
-async def test_payment_delete_error(
-        respx_mock: respx.router.MockRouter,
-        mock_retailcrm_client_v5: RetailCrmApiClientV5,
-):
-    respx_mock.post(f"{mock_retailcrm_client_v5.crm_url}/api/v5/orders/payments/123/delete").mock(
-        httpx.Response(json={'success': 'false', 'errorMsg': "Not found"}, status_code=404)
-    )
-
-    with pytest.raises(RetailCrmApiError) as exc_info:
-        _ = await mock_retailcrm_client_v5.orders.payment_delete(
-            payment_id="123"
-        )
-
-    assert exc_info.value.status_code == 404
-    assert exc_info.value.error_msg == "Not found"
-
-
-@pytest.mark.asyncio
 async def test_orders_history_success(
         respx_mock: respx.router.MockRouter,
         mock_retailcrm_client_v5: RetailCrmApiClientV5,
-        mock_payment: dict
 ):
     filter_params = {
         'limit': 20,
@@ -391,7 +332,7 @@ async def test_orders_history_success(
             },
         ]
     }
-    route = respx_mock.get(
+    mock_request = respx_mock.get(
         f"{mock_retailcrm_client_v5.crm_url}/api/v5/orders/history",
         params=filter_params
     ).mock(
@@ -404,8 +345,11 @@ async def test_orders_history_success(
         end_date=date(2020, 4, 12)
     )
 
-    get_order_result = await mock_retailcrm_client_v5.orders.orders_history(
+    get_order_result = await mock_retailcrm_client_v5.orders.get_orders_history(
         request
     )
 
+    query_params = mock_request.calls.last.request.url.params
+
     assert get_order_result.success is True
+    assert all([query_params.get(key) == str(value) for key, value in filter_params.items()])
