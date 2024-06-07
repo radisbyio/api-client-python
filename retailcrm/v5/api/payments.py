@@ -38,9 +38,7 @@ class RetailCrmPaymentsApi:
             },
         )
 
-    async def update_invoice(
-        self, update_invoice_json: str
-    ) -> Response:
+    async def update_invoice(self, update_invoice_json: str) -> Response:
         """
         **Изменение инвойса**
         Метод позволяет изменить данные инвойса в системе.
@@ -51,7 +49,5 @@ class RetailCrmPaymentsApi:
         """
         return await self._client.post(
             endpoint=f"/payment/update-invoice",
-            data={
-                "updateInvoice": update_invoice_json
-            },
+            data={"updateInvoice": update_invoice_json},
         )

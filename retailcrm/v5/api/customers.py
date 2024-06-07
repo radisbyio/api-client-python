@@ -6,9 +6,7 @@ class RetailCrmCustomersApi:
     def __init__(self, client: BaseHttpClient):
         self._client = client
 
-    async def customers(
-        self, filter: dict, limit: int = 20, page: int = 1
-    ) -> Response:
+    async def customers(self, filter: dict, limit: int = 20, page: int = 1) -> Response:
         """
         **Получение списка клиентов, удовлетворяющих заданному фильтру**
         Результат возвращается постранично. В поле pagination содержится информация о постраничной разбивке.
@@ -21,9 +19,5 @@ class RetailCrmCustomersApi:
         """
         return await self._client.get(
             endpoint=f"/customers",
-            params={
-                "limit": limit,
-                "page": page,
-                **filter
-            },
+            params={"limit": limit, "page": page, **filter},
         )

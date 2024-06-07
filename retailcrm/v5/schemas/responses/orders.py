@@ -1,22 +1,11 @@
 from datetime import datetime, time
-from typing import Any, Callable, List, Optional
+from typing import Any, List, Optional
 
 from pydantic import BaseModel, Field, field_validator
-from pydantic_core.core_schema import ValidationInfo
 
 from retailcrm.v5.schemas.base import RetailCrmResponse
-
-
-def dict_validator() -> Callable[[Any, ValidationInfo], dict]:
-    def validator(v, info: ValidationInfo) -> dict:
-        if isinstance(v, dict):
-            return v
-        if isinstance(v, list) and not v:
-            return {}
-        else:
-            raise ValueError("Not empty list")
-
-    return validator
+from retailcrm.v5.schemas.shared import SerializedSource, CustomerAddress, Customer
+from retailcrm.v5.schemas.validators import dict_validator
 
 
 class CreateOrder(BaseModel):
@@ -55,50 +44,6 @@ class CustomerContragent(BaseModel):
     bankAccount: Optional[str] = Field(None)
 
 
-class Customer(BaseModel):
-    type: Optional[str] = Field(None)
-    id: Optional[int] = Field(None)
-    externalId: Optional[str] = Field(None)
-    isContact: Optional[bool] = Field(None)
-    createdAt: Optional[datetime] = Field(None)
-    managerId: Optional[int] = Field(None)
-    vip: Optional[bool] = Field(None)
-    bad: Optional[bool] = Field(None)
-    site: Optional[str] = Field(None)
-    contragent: Optional[CustomerContragent] = Field(None)
-    tags: Optional[List["CustomerTagLink"]] = Field(None)
-    firstClientId: Optional[str] = Field(None)
-    lastClientId: Optional[str] = Field(None)
-    customFields: Optional[dict] = Field(None)
-    personalDiscount: Optional[float] = Field(None)
-    cumulativeDiscount: Optional[float] = Field(None)
-    discountCardNumber: Optional[str] = Field(None)
-    avgMarginSumm: Optional[float] = Field(None)
-    marginSumm: Optional[float] = Field(None)
-    totalSumm: Optional[float] = Field(None)
-    averageSumm: Optional[float] = Field(None)
-    ordersCount: Optional[int] = Field(None)
-    costSumm: Optional[float] = Field(None)
-    address: Optional["CustomerAddress"] = Field(None)
-    maturationTime: Optional[int] = Field(None)
-    firstName: Optional[str] = Field(None)
-    lastName: Optional[str] = Field(None)
-    patronymic: Optional[str] = Field(None)
-    sex: Optional[str] = Field(None)
-    presumableSex: Optional[str] = Field(None)
-    email: Optional[str] = Field(None)
-    emailMarketingUnsubscribedAt: Optional[datetime] = Field(None)
-    phones: Optional[List["CustomerPhone"]] = Field(None)
-    birthday: Optional[datetime] = Field(None)
-    source: Optional["SerializedSource"] = Field(None)
-    mgCustomers: Optional[List["MGCustomer"]] = Field(None)
-    photoUrl: Optional[str] = Field(None)
-
-    custom_fields_validator = field_validator("customFields", mode="before")(
-        dict_validator()
-    )
-
-
 class CodeValueModel(BaseModel):
     code: Optional[str] = Field(None, description="Код")
     value: Optional[str] = Field(None, description="Значение")
@@ -112,63 +57,6 @@ class Unit(BaseModel):
 
 class PriceType(BaseModel):
     code: Optional[str]
-
-
-class CustomerTagLink(BaseModel):
-    name: Optional[str]
-    colorCode: Optional[str]
-    attached: Optional[bool]
-
-
-class CustomerAddress(BaseModel):
-    id: Optional[int] = Field(None)
-    index: Optional[str] = Field(None)
-    countryIso: Optional[str] = Field(None)
-    region: Optional[str] = Field(None)
-    regionId: Optional[int] = Field(None)
-    city: Optional[str] = Field(None)
-    cityId: Optional[int] = Field(None)
-    cityType: Optional[str] = Field(None)
-    street: Optional[str] = Field(None)
-    streetId: Optional[int] = Field(None)
-    streetType: Optional[str] = Field(None)
-    building: Optional[str] = Field(None)
-    flat: Optional[str] = Field(None)
-    floor: Optional[int] = Field(None)
-    block: Optional[int] = Field(None)
-    house: Optional[str] = Field(None)
-    housing: Optional[str] = Field(None)
-    metro: Optional[str] = Field(None)
-    notes: Optional[str] = Field(None)
-    text: Optional[str] = Field(None)
-    externalId: Optional[str] = Field(None)
-    name: Optional[str] = Field(None)
-
-
-class CustomerPhone(BaseModel):
-    number: str
-
-
-class SerializedSource(BaseModel):
-    source: Optional[str] = Field(None)
-    medium: Optional[str] = Field(None)
-    campaign: Optional[str] = Field(None)
-    keyword: Optional[str] = Field(None)
-    content: Optional[str] = Field(None)
-
-
-class MGCustomer(BaseModel):
-    id: int
-    externalId: Optional[int] = Field(None)
-    mgChannel: "MGChannel"
-
-
-class MGChannel(BaseModel):
-    id: Optional[int] = Field(None)
-    externalId: Optional[int] = Field(None)
-    type: Optional[str] = Field(None)
-    active: Optional[bool] = Field(None)
-    name: Optional[str] = Field(None)
 
 
 class CompanyContragent(BaseModel):

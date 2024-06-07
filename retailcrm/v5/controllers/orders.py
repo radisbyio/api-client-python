@@ -3,8 +3,13 @@ from retailcrm.http_cilent import BaseHttpClient
 from retailcrm.utils import pydantic_to_nested_dict
 from retailcrm.v5.api.orders import RetailCrmOrdersApi
 from retailcrm.v5.enums import IdTypes
-from retailcrm.v5.schemas.requests.orders import SerializedOrder, SerializedPayment, OrderHistoryFilterV4Type, \
-    OrderFilterData, SerializedOrderList
+from retailcrm.v5.schemas.requests.orders import (
+    SerializedOrder,
+    SerializedPayment,
+    OrderHistoryFilterV4Type,
+    OrderFilterData,
+    SerializedOrderList,
+)
 from retailcrm.v5.schemas.responses.orders import (
     ResponseCreateOrder,
     ResponseCreateOrderPayment,
@@ -12,7 +17,9 @@ from retailcrm.v5.schemas.responses.orders import (
     ResponseEditOrder,
     ResponseEditOrderPayment,
     ResponseGetOrder,
-    ResponseOrderHistory, ResponseOrders, ResponseOrdersUpload,
+    ResponseOrderHistory,
+    ResponseOrders,
+    ResponseOrdersUpload,
 )
 
 
@@ -21,7 +28,7 @@ class OrdersController:
         self._api = RetailCrmOrdersApi(client)
 
     async def create_order(
-            self, order: SerializedOrder, site: str
+        self, order: SerializedOrder, site: str
     ) -> ResponseCreateOrder:
         response = await self._api.create(
             order_json=order.model_dump_json(exclude_unset=True, by_alias=True),
@@ -33,7 +40,7 @@ class OrdersController:
         return response_obj
 
     async def upload(
-            self, orders: SerializedOrderList, site: str
+        self, orders: SerializedOrderList, site: str
     ) -> ResponseOrdersUpload:
         if len(orders.root) > 50:
             raise ValueError("Too many orders, only 50 are allowed")
@@ -47,16 +54,18 @@ class OrdersController:
         return response_obj
 
     async def get_order_by_id(
-            self, order_id: str, site: str, id_type: IdTypes = IdTypes.EXTERNAL_ID
+        self, order_id: str, site: str, id_type: IdTypes = IdTypes.EXTERNAL_ID
     ) -> ResponseGetOrder:
-        response = await self._api.get_by_id(order_id=order_id, by=id_type.value, site=site)
+        response = await self._api.get_by_id(
+            order_id=order_id, by=id_type.value, site=site
+        )
         response_obj = ResponseGetOrder.model_validate_json(response.body)
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
 
     async def get_orders(
-            self, filter_obj: OrderFilterData, limit: int = 20, page: int = 1
+        self, filter_obj: OrderFilterData, limit: int = 20, page: int = 1
     ) -> ResponseOrders:
         response = await self._api.get_all(
             filter_dict=pydantic_to_nested_dict(filter_obj, "filter"),
@@ -69,11 +78,11 @@ class OrdersController:
         return response_obj
 
     async def edit_order(
-            self,
-            order_id: str,
-            order: SerializedOrder,
-            site: str,
-            id_type: IdTypes = IdTypes.EXTERNAL_ID,
+        self,
+        order_id: str,
+        order: SerializedOrder,
+        site: str,
+        id_type: IdTypes = IdTypes.EXTERNAL_ID,
     ) -> ResponseEditOrder:
         response = await self._api.edit(
             order_json=order.model_dump_json(exclude_unset=True, by_alias=True),
@@ -87,7 +96,7 @@ class OrdersController:
         return response_obj
 
     async def payment_create(
-            self, payment: SerializedPayment, site: str
+        self, payment: SerializedPayment, site: str
     ) -> ResponseCreateOrderPayment:
         response = await self._api.payment_create(
             payment_json=payment.model_dump_json(exclude_unset=True, by_alias=True),
@@ -99,11 +108,11 @@ class OrdersController:
         return response_obj
 
     async def payment_edit(
-            self,
-            payment_id: str,
-            payment: SerializedPayment,
-            site: str,
-            id_type: IdTypes = IdTypes.EXTERNAL_ID,
+        self,
+        payment_id: str,
+        payment: SerializedPayment,
+        site: str,
+        id_type: IdTypes = IdTypes.EXTERNAL_ID,
     ) -> ResponseEditOrderPayment:
         response = await self._api.payment_edit(
             payment_id=payment_id,
@@ -123,8 +132,9 @@ class OrdersController:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
 
-    async def get_orders_history(self, filter_obj: OrderHistoryFilterV4Type, limit: int = 20,
-                                 page: int = 1) -> ResponseOrderHistory:
+    async def get_orders_history(
+        self, filter_obj: OrderHistoryFilterV4Type, limit: int = 20, page: int = 1
+    ) -> ResponseOrderHistory:
         response = await self._api.history(
             filter_dict=pydantic_to_nested_dict(filter_obj, "filter"),
             limit=limit,

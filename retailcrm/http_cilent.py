@@ -5,7 +5,7 @@ import httpx
 from retailcrm.exceptions import RetailCrmTimeoutException
 from retailcrm.response import Response
 
-logger = logging.getLogger("retailcrm.http_cilent")
+logger = logging.getLogger("retailcrm.http_client")
 
 
 class BaseHttpClient:
@@ -45,7 +45,9 @@ class HttpClient:
 
     async def post(self, endpoint: str, params=None, data: dict = None) -> Response:
         try:
-            logger.debug(f"Request to {endpoint} with params: {params} and body: {data}")
+            logger.debug(
+                f"Request to {endpoint} with params: {params} and body: {data}"
+            )
             response = await self._client.post(
                 endpoint,
                 params=params,

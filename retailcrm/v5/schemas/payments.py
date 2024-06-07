@@ -19,7 +19,7 @@ __all__ = [
     "PaymentCreateInvoiceResponse",
     "ApiUpdateInvoiceRequest",
     "ModuleRefund",
-    "PaymentUpdateInvoiceResponse"
+    "PaymentUpdateInvoiceResponse",
 ]
 
 
@@ -31,11 +31,15 @@ class ApiCheckRequest(BaseModel):
 
 class ApiCheckResponseResult(RetailCrmResponse):
     success: bool = Field(False, description="Результат проверки (успешный/неуспешный)")
-    error_msg: str = Field("", description="Текст ошибки (в случае, если проверка не прошла)")
+    error_msg: str = Field(
+        "", description="Текст ошибки (в случае, если проверка не прошла)"
+    )
 
 
 class PaymentCheckResponse(RetailCrmResponse):
-    result: Optional[ApiCheckResponseResult] = Field(None, description="Объект с результатом проверки")
+    result: Optional[ApiCheckResponseResult] = Field(
+        None, description="Объект с результатом проверки"
+    )
 
 
 class ApiCreateInvoiceRequest(BaseModel):
@@ -51,7 +55,9 @@ class ApiCreateInvoiceResponseResult(BaseModel):
 
 
 class PaymentCreateInvoiceResponse(RetailCrmResponse):
-    result: Optional[ApiCreateInvoiceRequest] = Field(None, description="JSON с данными созданного инвойса")
+    result: Optional[ApiCreateInvoiceRequest] = Field(
+        None, description="JSON с данными созданного инвойса"
+    )
 
 
 class ModuleRefund(BaseModel):
@@ -70,12 +76,8 @@ class ApiUpdateInvoiceRequest(BaseModel):
     )
     amount: float = Field(0, description="Сумма платежа")
     status: str = Field("", description="Код статуса оплаты")
-    cancellationDetails: str = Field(
-        "", description="Причина отмены платежа"
-    )
-    invoiceUrl: str = Field(
-        "", description="Ссылка на страницу оплаты для покупателя"
-    )
+    cancellationDetails: str = Field("", description="Причина отмены платежа")
+    invoiceUrl: str = Field("", description="Ссылка на страницу оплаты для покупателя")
     paidAt: Optional[datetime] = Field(None, description="Дата и время оплаты")
     expiredAt: Optional[datetime] = Field(
         None,
@@ -147,7 +149,9 @@ class PaymentCreateResult(BaseModel):
 
 
 class PaymentCreateCallbackResponse(BaseModel):
-    result: Optional[PaymentCreateResult] = Field(None, description="JSON с информацией о созданном платеже")
+    result: Optional[PaymentCreateResult] = Field(
+        None, description="JSON с информацией о созданном платеже"
+    )
 
 
 class PaymentRefundCallbackResponse(BaseModel):

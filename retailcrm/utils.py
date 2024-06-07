@@ -17,4 +17,6 @@ def pydantic_to_nested_dict(model: BaseModel, prefix: str = "") -> dict[str, str
             data[f"{prefix}[{key}]"] = value
         return data
 
-    return _pydantic_to_nested_dict(model.model_dump(exclude_none=True, by_alias=True), prefix)
+    return _pydantic_to_nested_dict(
+        model.model_dump(exclude_none=True, by_alias=True), prefix
+    )
