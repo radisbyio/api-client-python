@@ -4,12 +4,20 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 
 from retailcrm.v5.schemas.base import RetailCrmResponse
-from retailcrm.v5.schemas.shared import DeclaredValueItem, Package, Order, Payment, OrderProduct
+from retailcrm.v5.schemas.shared import (
+    DeclaredValueItem,
+    Order,
+    OrderProduct,
+    Package,
+    Payment,
+)
+
 
 # todo: заполнить
 class CreateOrder(BaseModel):
     id: int
     externalId: Optional[str] = None
+
 
 # todo: заполнить
 class ResponseCreateOrder(RetailCrmResponse):
