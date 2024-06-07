@@ -1,8 +1,8 @@
 from setuptools import find_packages, setup
 
 setup(
-    name="radis-retailcrm",
-    version="0.0.22",
+    name="radis-retailcrm-api",
+    version="0.0.23",
     description="RetailCRM API client",
     url="https://github.com/retailcrm/api-client-python",
     author="Radis.by",
