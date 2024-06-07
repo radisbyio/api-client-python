@@ -6,7 +6,7 @@ class RetailCrmOrdersApi:
     def __init__(self, client: BaseHttpClient):
         self._client = client
 
-    async def order_create(self, order_json: str, site: str) -> Response:
+    async def create(self, order_json: str, site: str) -> Response:
         """
         **Создание заказа**
         Метод создает заказ и возвращает внутренний ID созданного заказа.
@@ -24,7 +24,7 @@ class RetailCrmOrdersApi:
             },
         )
 
-    async def orders_upload(self, orders_json: str, site: str) -> Response:
+    async def upload(self, orders_json: str, site: str) -> Response:
         """
         **Пакетная загрузка заказов**
         Метод позволяет загружать пакетно до 50 заказов.
@@ -42,7 +42,7 @@ class RetailCrmOrdersApi:
             },
         )
 
-    async def order_edit(
+    async def edit(
         self, order_id: str, by: str, order_json: str, site: str
     ) -> Response:
         """
@@ -65,7 +65,7 @@ class RetailCrmOrdersApi:
             },
         )
 
-    async def order(self, order_id: str, by: str, site: str) -> Response:
+    async def get_by_id(self, order_id: str, by: str, site: str) -> Response:
         """
         **Получение информации о заказе.**
         Для доступа к методу необходимо разрешение order_read.
@@ -84,7 +84,7 @@ class RetailCrmOrdersApi:
 
         return await self._client.get(endpoint=f"/orders/{order_id}", params=params)
 
-    async def orders(
+    async def get_all(
         self, filter_dict: dict, limit: int = 20, page: int = 1
     ) -> Response:
         """
@@ -106,7 +106,7 @@ class RetailCrmOrdersApi:
             },
         )
 
-    async def orders_history(
+    async def history(
         self, filter_dict: dict, limit: int = 20, page: int = 1
     ) -> Response:
         """

@@ -1,5 +1,5 @@
 from datetime import datetime, time
-from typing import Optional, Callable, Any, List
+from typing import Any, Callable, List, Optional
 
 from pydantic import BaseModel, Field, field_validator
 from pydantic_core.core_schema import ValidationInfo
@@ -718,18 +718,28 @@ class ResponseOrders(RetailCrmResponse):
 
 class FixExternalRow(BaseModel):
     id: Optional[int] = Field(None, description="Внутренний ID")
-    external_id: Optional[str] = Field(None, description="Внешний ID", validation_alias="externalId")
+    external_id: Optional[str] = Field(
+        None, description="Внешний ID", validation_alias="externalId"
+    )
 
 
 class EntityWithExternalId(BaseModel):
-    external_id: Optional[str] = Field(None, description="Внешний ID (при наличии)", validation_alias="externalId")
+    external_id: Optional[str] = Field(
+        None, description="Внешний ID (при наличии)", validation_alias="externalId"
+    )
 
 
 class ResponseOrdersUpload(RetailCrmResponse):
-    uploaded_orders: list[FixExternalRow] = Field([], description="Идентификаторы загруженных объектов",
-                                                  validation_alias="uploadedOrders")
-    failed_orders: list[FixExternalRow] = Field([], description="Идентификаторы незагруженных объектов",
-                                                validation_alias="failedOrders")
+    uploaded_orders: list[FixExternalRow] = Field(
+        [],
+        description="Идентификаторы загруженных объектов",
+        validation_alias="uploadedOrders",
+    )
+    failed_orders: list[FixExternalRow] = Field(
+        [],
+        description="Идентификаторы незагруженных объектов",
+        validation_alias="failedOrders",
+    )
     orders: list[Order] = Field([], description="Список заказов")
 
 

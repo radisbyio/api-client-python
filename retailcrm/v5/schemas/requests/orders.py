@@ -1,5 +1,5 @@
-from datetime import datetime, date
-from typing import Dict, List, Optional, Union, Callable
+from datetime import date, datetime
+from typing import Callable, Dict, List, Optional, Union
 
 from pydantic import BaseModel, Field, RootModel, field_serializer
 
@@ -7,8 +7,8 @@ from pydantic import BaseModel, Field, RootModel, field_serializer
 def datetime_serializer(format: str) -> Callable[[datetime], str]:
     def serializer(value: datetime) -> str:
         return datetime.strftime(value, format)
-    return serializer
 
+    return serializer
 
 
 class TimeInterval(BaseModel):
@@ -89,7 +89,9 @@ class Payment(BaseModel):
     type: str = ""
     status: str = ""
 
-    paid_at_serializer = field_serializer("paid_at")(datetime_serializer('%Y-%m-%d %H:%M:%S'))
+    paid_at_serializer = field_serializer("paid_at")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
 
 
 class Offer(BaseModel):
@@ -228,7 +230,9 @@ class SerializedOrder(BaseModel):
     isFromCart: bool = False
     clientId: str = ""
 
-    created_at_serializer = field_serializer("created_at")(datetime_serializer('%Y-%m-%d %H:%M:%S'))
+    created_at_serializer = field_serializer("created_at")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
 
 
 class SerializedOrderList(RootModel):

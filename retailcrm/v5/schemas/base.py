@@ -1,6 +1,8 @@
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
+__all__ = ["RetailCrmResponse", "PaginationResponse"]
 
 
 class PaginationResponse(BaseModel):
@@ -11,6 +13,7 @@ class PaginationResponse(BaseModel):
 
 
 class RetailCrmResponse(BaseModel):
-    success: bool = False
+    success: bool = Field(False, description="Результат запроса (успешный/неуспешный)")
     pagination: Optional[PaginationResponse] = None
-    errorMsg: str = ""
+    errorMsg: str = Field("", description="Текст ошибки")
+    errors: list[str] = Field([], description="Массив с детализациями ошибок")

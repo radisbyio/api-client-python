@@ -23,7 +23,7 @@ class OrdersController:
     async def create_order(
             self, order: SerializedOrder, site: str
     ) -> ResponseCreateOrder:
-        response = await self._api.order_create(
+        response = await self._api.create(
             order_json=order.model_dump_json(exclude_unset=True, by_alias=True),
             site=site,
         )
@@ -37,7 +37,7 @@ class OrdersController:
     ) -> ResponseOrdersUpload:
         if len(orders.root) > 50:
             raise ValueError("Too many orders, only 50 are allowed")
-        response = await self._api.orders_upload(
+        response = await self._api.upload(
             orders_json=orders.model_dump_json(exclude_unset=True, by_alias=True),
             site=site,
         )
@@ -46,19 +46,19 @@ class OrdersController:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
 
-    async def order(
+    async def get_order_by_id(
             self, order_id: str, site: str, id_type: IdTypes = IdTypes.EXTERNAL_ID
     ) -> ResponseGetOrder:
-        response = await self._api.order(order_id=order_id, by=id_type.value, site=site)
+        response = await self._api.get_by_id(order_id=order_id, by=id_type.value, site=site)
         response_obj = ResponseGetOrder.model_validate_json(response.body)
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
 
-    async def orders(
+    async def get_orders(
             self, filter_obj: OrderFilterData, limit: int = 20, page: int = 1
     ) -> ResponseOrders:
-        response = await self._api.orders(
+        response = await self._api.get_all(
             filter_dict=pydantic_to_nested_dict(filter_obj, "filter"),
             limit=limit,
             page=page,
@@ -75,7 +75,7 @@ class OrdersController:
             site: str,
             id_type: IdTypes = IdTypes.EXTERNAL_ID,
     ) -> ResponseEditOrder:
-        response = await self._api.order_edit(
+        response = await self._api.edit(
             order_json=order.model_dump_json(exclude_unset=True, by_alias=True),
             order_id=order_id,
             by=id_type.value,
@@ -123,9 +123,9 @@ class OrdersController:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
 
-    async def orders_history(self, filter_obj: OrderHistoryFilterV4Type, limit: int = 20,
-                             page: int = 1) -> ResponseOrderHistory:
-        response = await self._api.orders_history(
+    async def get_orders_history(self, filter_obj: OrderHistoryFilterV4Type, limit: int = 20,
+                                 page: int = 1) -> ResponseOrderHistory:
+        response = await self._api.history(
             filter_dict=pydantic_to_nested_dict(filter_obj, "filter"),
             limit=limit,
             page=page,
