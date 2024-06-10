@@ -10,7 +10,7 @@ from retailcrm.v5.enums import (
     PrivilegeType,
     VatRateTypes,
 )
-from retailcrm.v5.helpers import dict_validator, datetime_serializer
+from retailcrm.v5.helpers import dict_validator, datetime_serializer, payments_validator
 
 __all__ = [
     "Item",
@@ -548,7 +548,7 @@ class Order(BaseModel):
     source: Optional[SerializedSource] = Field(None, description="Источник заказа")
     items: list[OrderProduct] = Field([], description="Позиция в заказе")
     fullPaidAt: Optional[datetime] = Field(None, description="Дата полной оплаты")
-    payments: dict[str, "Payment"] = Field({}, description="Платежи")
+    payments: dict[str, Payment] = Field({}, description="Платежи")
     fromApi: bool = Field(False, description="Заказ поступил через API")
     weight: Optional[float] = Field(None, description="Вес")
     length: Optional[int] = Field(None, description="Длина")
@@ -563,6 +563,9 @@ class Order(BaseModel):
 
     custom_fields_validator = field_validator("custom_fields", mode="before")(
         dict_validator()
+    )
+    payments_validator = field_validator("payments", mode="before")(
+        payments_validator()
     )
 
     createdAt_serializer = field_serializer("createdAt")(

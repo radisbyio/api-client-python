@@ -17,10 +17,26 @@ def dict_validator() -> Callable[[Any, ValidationInfo], dict]:
 
 
 def datetime_serializer(format_str: str) -> Callable[[datetime], str]:
-    def serializer(value: Optional[datetime]) -> str:
+    def serializer(value: Optional[datetime]) -> Optional[str]:
         if value:
             return datetime.strftime(value, format_str)
         else:
-            return value
+            return None
 
     return serializer
+
+
+def payments_validator() -> Callable[[Any, ValidationInfo], dict]:
+    """
+    Вспомогательная функция, которая позволяет преобразовать список оплат в словарь по ключу payment.id
+    Пример использования - orders/history
+    """
+    def validator(v, info: ValidationInfo) -> dict:
+        if isinstance(v, dict):
+            return v
+        if isinstance(v, list) and not v:
+            return {payment_item["id"]: payment_item for payment_item in v}
+        else:
+            raise ValueError("cannot validate payment")
+
+    return validator
