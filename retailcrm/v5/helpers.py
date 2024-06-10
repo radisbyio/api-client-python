@@ -1,4 +1,4 @@
-from typing import Any, Callable
+from typing import Any, Callable, Optional
 from datetime import datetime
 
 from pydantic_core.core_schema import ValidationInfo
@@ -17,7 +17,10 @@ def dict_validator() -> Callable[[Any, ValidationInfo], dict]:
 
 
 def datetime_serializer(format_str: str) -> Callable[[datetime], str]:
-    def serializer(value: datetime) -> str:
-        return datetime.strftime(value, format_str)
+    def serializer(value: Optional[datetime]) -> str:
+        if value:
+            return datetime.strftime(value, format_str)
+        else:
+            return value
 
     return serializer
