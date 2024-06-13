@@ -12,6 +12,7 @@ class PaginationResponse(BaseModel):
     totalPageCount: int = 0
 
 
+# Добавить валидатор на ошибки, который переведёт dict -> list
 class RetailCrmResponse(BaseModel):
     success: bool = Field(False, description="Результат запроса (успешный/неуспешный)")
     pagination: Optional[PaginationResponse] = None
