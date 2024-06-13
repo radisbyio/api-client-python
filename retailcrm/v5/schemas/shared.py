@@ -344,7 +344,11 @@ class Company(BaseModel):
     averageSumm: Optional[float] = Field(None)
     costSumm: Optional[float] = Field(None)
     ordersCount: Optional[int] = Field(None)
-    customFields: Optional[dict] = Field(None)
+    customFields: dict = Field({})
+
+    customFields_validator = field_validator("customFields", mode="before")(
+        dict_validator()
+    )
 
 
 class OrderProduct(BaseModel):
@@ -558,10 +562,10 @@ class Order(BaseModel):
     shipmentDate: Optional[datetime] = Field(None, description="Дата отгрузки")
     shipped: bool = Field(False, description="Заказ отгружен")
     links: list[OrderLink] = Field(None, description="Связь заказов")
-    custom_fields: dict = Field({}, validation_alias="customFields")
+    customFields: dict = Field({}, validation_alias="customFields")
     client_id: Optional[str] = Field(None, validation_alias="clientId")
 
-    custom_fields_validator = field_validator("custom_fields", mode="before")(
+    customFields_validator = field_validator("customFields", mode="before")(
         dict_validator()
     )
     payments_validator = field_validator("payments", mode="before")(
