@@ -1,12 +1,12 @@
-from datetime import date
+from datetime import datetime
 
 import httpx
 import pytest
 import respx
 
 from retailcrm import RetailCrmApiClientV5, RetailCrmApiError
+from retailcrm.v5.schemas.orders import OrderHistoryFilterV4Type
 from retailcrm.v5.schemas.requests import (
-    OrderHistoryFilterV4Type,
     SerializedOrder,
     SerializedOrderList,
     SerializedPayment,
@@ -15,9 +15,9 @@ from retailcrm.v5.schemas.requests import (
 
 @pytest.mark.asyncio
 async def test_order_create_success(
-    respx_mock: respx.router.MockRouter,
-    mock_retailcrm_client_v5: RetailCrmApiClientV5,
-    mock_order: dict,
+        respx_mock: respx.router.MockRouter,
+        mock_retailcrm_client_v5: RetailCrmApiClientV5,
+        mock_order: dict,
 ):
     respx_mock.post(f"{mock_retailcrm_client_v5.crm_url}/api/v5/orders/create").mock(
         httpx.Response(
@@ -34,9 +34,9 @@ async def test_order_create_success(
 
 @pytest.mark.asyncio
 async def test_orders_upload_success(
-    respx_mock: respx.router.MockRouter,
-    mock_retailcrm_client_v5: RetailCrmApiClientV5,
-    mock_order: dict,
+        respx_mock: respx.router.MockRouter,
+        mock_retailcrm_client_v5: RetailCrmApiClientV5,
+        mock_order: dict,
 ):
     respx_mock.post(f"{mock_retailcrm_client_v5.crm_url}/api/v5/orders/upload").mock(
         httpx.Response(json={"success": "true"}, status_code=201)
@@ -51,9 +51,9 @@ async def test_orders_upload_success(
 
 @pytest.mark.asyncio
 async def test_orders_upload_too_many_error(
-    respx_mock: respx.router.MockRouter,
-    mock_retailcrm_client_v5: RetailCrmApiClientV5,
-    mock_order: dict,
+        respx_mock: respx.router.MockRouter,
+        mock_retailcrm_client_v5: RetailCrmApiClientV5,
+        mock_order: dict,
 ):
     orders = SerializedOrderList([mock_order] * 51)
 
@@ -71,9 +71,9 @@ async def test_orders_upload_too_many_error(
 
 @pytest.mark.asyncio
 async def test_get_order_success(
-    respx_mock: respx.router.MockRouter,
-    mock_retailcrm_client_v5: RetailCrmApiClientV5,
-    mock_order: dict,
+        respx_mock: respx.router.MockRouter,
+        mock_retailcrm_client_v5: RetailCrmApiClientV5,
+        mock_order: dict,
 ):
     respx_mock.get(
         f"{mock_retailcrm_client_v5.crm_url}/api/v5/orders/8888?by=externalId&site=test_site"
@@ -92,8 +92,8 @@ async def test_get_order_success(
 
 @pytest.mark.asyncio
 async def test_get_order_error(
-    respx_mock: respx.router.MockRouter,
-    mock_retailcrm_client_v5: RetailCrmApiClientV5,
+        respx_mock: respx.router.MockRouter,
+        mock_retailcrm_client_v5: RetailCrmApiClientV5,
 ):
     respx_mock.get(
         f"{mock_retailcrm_client_v5.crm_url}/api/v5/orders/8888?by=externalId&site=test_site"
@@ -115,9 +115,9 @@ async def test_get_order_error(
 
 @pytest.mark.asyncio
 async def test_payment_create_success(
-    respx_mock: respx.router.MockRouter,
-    mock_retailcrm_client_v5: RetailCrmApiClientV5,
-    mock_payment: dict,
+        respx_mock: respx.router.MockRouter,
+        mock_retailcrm_client_v5: RetailCrmApiClientV5,
+        mock_payment: dict,
 ):
     payment = SerializedPayment.model_validate(mock_payment)
 
@@ -135,9 +135,9 @@ async def test_payment_create_success(
 
 @pytest.mark.asyncio
 async def test_payment_edit_success(
-    respx_mock: respx.router.MockRouter,
-    mock_retailcrm_client_v5: RetailCrmApiClientV5,
-    mock_payment: dict,
+        respx_mock: respx.router.MockRouter,
+        mock_retailcrm_client_v5: RetailCrmApiClientV5,
+        mock_payment: dict,
 ):
     respx_mock.post(
         f"{mock_retailcrm_client_v5.crm_url}/api/v5/orders/payments/123/edit"
@@ -154,8 +154,8 @@ async def test_payment_edit_success(
 
 @pytest.mark.asyncio
 async def test_payment_delete_success(
-    respx_mock: respx.router.MockRouter,
-    mock_retailcrm_client_v5: RetailCrmApiClientV5,
+        respx_mock: respx.router.MockRouter,
+        mock_retailcrm_client_v5: RetailCrmApiClientV5,
 ):
     respx_mock.post(
         f"{mock_retailcrm_client_v5.crm_url}/api/v5/orders/payments/123/delete"
@@ -170,15 +170,15 @@ async def test_payment_delete_success(
 
 @pytest.mark.asyncio
 async def test_orders_history_success(
-    respx_mock: respx.router.MockRouter,
-    mock_retailcrm_client_v5: RetailCrmApiClientV5,
+        respx_mock: respx.router.MockRouter,
+        mock_retailcrm_client_v5: RetailCrmApiClientV5,
 ):
     filter_params = {
         "limit": 20,
         "page": 1,
         "filter[sinceId]": "1111",
-        "filter[startDate]": "2016-01-07",
-        "filter[endDate]": "2020-04-12",
+        "filter[startDate]": "2016-01-07 00:00:00",
+        "filter[endDate]": "2020-04-12 00:00:00",
     }
     history_response = {
         "success": "true",
@@ -278,6 +278,17 @@ async def test_orders_history_success(
                     "fromApi": "true",
                     "shipped": "false",
                     "customFields": [],
+                    "payments": {
+                        "84369": {
+                            "id": 84369,
+                            "status": "paid",
+                            "type": "yoomoney",
+                            "externalId": "71372",
+                            "amount": 20655,
+                            "paidAt": "2024-06-10 14:27:29",
+                            "comment": "Успешно оплачен"
+                        }
+                    },
                 },
             },
             {
@@ -317,7 +328,7 @@ async def test_orders_history_success(
     ).mock(httpx.Response(json=history_response, status_code=200))
 
     request = OrderHistoryFilterV4Type(
-        since_id=1111, start_date=date(2016, 1, 7), end_date=date(2020, 4, 12)
+        sinceId=1111, startDate=datetime(2016, 1, 7), endDate=datetime(2020, 4, 12)
     )
 
     get_order_result = await mock_retailcrm_client_v5.orders.get_orders_history(request)
@@ -328,3 +339,35 @@ async def test_orders_history_success(
     assert all(
         [query_params.get(key) == str(value) for key, value in filter_params.items()]
     )
+
+
+@pytest.mark.asyncio
+async def test_orders_history_error(
+        respx_mock: respx.router.MockRouter,
+        mock_retailcrm_client_v5: RetailCrmApiClientV5,
+):
+    filter_params = {
+        "limit": 20,
+        "page": 1,
+        "filter[sinceId]": "1111",
+        "filter[startDate]": "2016-01-07 00:00:00",
+        "filter[endDate]": "2020-04-12 00:00:00",
+    }
+    history_response = {
+        "success": False,
+        "errorMsg": "Errors in the input parameters",
+        "errors": {
+            "children[startDate]": "This value is not valid."
+        }
+    }
+    mock_request = respx_mock.get(
+        f"{mock_retailcrm_client_v5.crm_url}/api/v5/orders/history",
+        params=filter_params,
+    ).mock(httpx.Response(json=history_response, status_code=400))
+
+    request = OrderHistoryFilterV4Type(
+        sinceId=1111, startDate=datetime(2016, 1, 7), endDate=datetime(2020, 4, 12)
+    )
+
+    with pytest.raises(RetailCrmApiError):
+        _ = await mock_retailcrm_client_v5.orders.get_orders_history(request)

@@ -1,7 +1,25 @@
-from datetime import date
+from datetime import date, datetime
 from typing import Optional
 
 from pydantic import BaseModel, Field
+
+
+class OrderHistoryFilterV4Type(BaseModel):
+    orderId: Optional[int] = Field(
+        None, description="ID заказа"
+    )
+    sinceId: Optional[int] = Field(
+        None, description="Начиная с ID истории заказов"
+    )
+    externalId: Optional[str] = Field(
+        None, description="Внешний ID заказа"
+    )
+    startDate: Optional[datetime] = Field(
+        None, description="Дата/время изменения (от)"
+    )
+    endDate: Optional[datetime] = Field(
+        None, description="Дата/время изменения (до)"
+    )
 
 
 # todo: заполнить

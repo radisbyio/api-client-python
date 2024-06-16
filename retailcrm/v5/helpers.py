@@ -4,6 +4,16 @@ from datetime import datetime
 from pydantic_core.core_schema import ValidationInfo
 
 
+def errors_dict_validator() -> Callable[[Any, ValidationInfo], Optional[dict]]:
+    def validator(v, info: ValidationInfo) -> Optional[dict]:
+        if isinstance(v, list) and not v:
+            return {"default": [" ".join(v)]}
+        else:
+            return v
+
+    return validator
+
+
 def dict_validator() -> Callable[[Any, ValidationInfo], dict]:
     def validator(v, info: ValidationInfo) -> dict:
         if isinstance(v, dict):
