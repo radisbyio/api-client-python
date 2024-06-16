@@ -45,7 +45,7 @@ def payments_validator() -> Callable[[Any, ValidationInfo], dict]:
         if isinstance(v, dict):
             return v
         if isinstance(v, list):
-            return {payment_item["id"]: payment_item for payment_item in v}
+            return {str(payment_item["id"]): payment_item for payment_item in v}
         else:
             raise ValueError("cannot validate payment")
 
