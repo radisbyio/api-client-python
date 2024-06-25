@@ -490,8 +490,8 @@ class Order(BaseModel):
     number: str = Field("", description="Номер заказа")
     site: str = Field("", description="Магазин")
     status: str = Field("", description="Статус заказа")
-    statusComment: Optional[str] = Field(
-        None,
+    statusComment: str = Field(
+        "",
         description="Комментарий к статусу доставки",
     )
     managerId: Optional[int] = Field(
