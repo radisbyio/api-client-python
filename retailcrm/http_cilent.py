@@ -16,7 +16,7 @@ class BaseHttpClient:
         raise NotImplementedError
 
 
-class HttpClient:
+class HttpClient(BaseHttpClient):
     _client: httpx.AsyncClient
 
     def __init__(self, crm_url: str, api_key: str, version="v5"):
