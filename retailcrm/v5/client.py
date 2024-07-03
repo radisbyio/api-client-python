@@ -1,11 +1,12 @@
+from dataclasses import dataclass
+from typing import Optional
+
 from retailcrm.http_cilent import BaseHttpClient, HttpClient
 from retailcrm.v5.controllers.customers import CustomersController
 from retailcrm.v5.controllers.delivery import DeliveryController
 from retailcrm.v5.controllers.orders import OrdersController
 from retailcrm.v5.controllers.payments import PaymentController
 from retailcrm.v5.controllers.references import ReferencesController
-from dataclasses import dataclass
-from typing import Optional
 
 
 @dataclass(slots=True)

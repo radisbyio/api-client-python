@@ -10,7 +10,7 @@ from retailcrm.v5.enums import (
     PrivilegeType,
     VatRateTypes,
 )
-from retailcrm.v5.helpers import dict_validator, datetime_serializer, payments_validator
+from retailcrm.v5.helpers import datetime_serializer, dict_validator, payments_validator
 
 __all__ = [
     "Item",
@@ -25,6 +25,9 @@ __all__ = [
     "Order",
     "Package",
     "DeclaredValueItem",
+    "SerializedSource",
+    "Courier",
+    "CourierPhone",
 ]
 
 
@@ -587,3 +590,18 @@ class Order(BaseModel):
     shipmentDate_serializer = field_serializer("shipmentDate")(
         datetime_serializer("%Y-%m-%d %H:%M:%S")
     )
+
+
+class CourierPhone(BaseModel):
+    number: str = Field("", description="Номер телефона")
+
+
+class Courier(BaseModel):
+    id: int = Field(description="ID курьера")
+    firstName: str = Field("", description="Имя")
+    lastName: str = Field("", description="Фамилия")
+    patronymic: str = Field("", description="Отчество")
+    active: bool = Field(False, description="Признак активности")
+    email: str = Field("", description="Электронная почта")
+    phone: Optional[CourierPhone] = Field(None, description="Контактный телефон")
+    description: str = Field("", description="Примечание")

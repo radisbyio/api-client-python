@@ -1,5 +1,5 @@
-from typing import Any, Callable, Optional
 from datetime import datetime
+from typing import Any, Callable, Optional
 
 from pydantic_core.core_schema import ValidationInfo
 
@@ -41,6 +41,7 @@ def payments_validator() -> Callable[[Any, ValidationInfo], dict]:
     Вспомогательная функция, которая позволяет преобразовать список оплат в словарь по ключу payment.id
     Пример использования - orders/history
     """
+
     def validator(v, info: ValidationInfo) -> dict:
         if isinstance(v, dict):
             return v

@@ -21,6 +21,4 @@ class RetailCrmResponse(BaseModel):
     errorMsg: str = Field("", description="Текст ошибки")
     errors: dict[str, str] = Field([], description="Массив с детализациями ошибок")
 
-    errors_validator = field_validator("errors", mode="before")(
-        errors_dict_validator()
-    )
+    errors_validator = field_validator("errors", mode="before")(errors_dict_validator())

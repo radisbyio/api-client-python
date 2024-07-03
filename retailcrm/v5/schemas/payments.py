@@ -4,10 +4,10 @@ from typing import Optional
 from pydantic import BaseModel, Field, field_serializer
 
 from retailcrm.v5.enums import RefundStatuses
+from retailcrm.v5.helpers import datetime_serializer
 from retailcrm.v5.schemas.base import RetailCrmResponse
 from retailcrm.v5.schemas.requests import Customer
 from retailcrm.v5.schemas.shared import Item
-from retailcrm.v5.helpers import datetime_serializer
 
 __all__ = [
     "ApiCheckRequest",

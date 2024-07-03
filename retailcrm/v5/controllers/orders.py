@@ -1,6 +1,5 @@
 from retailcrm.exceptions import RetailCrmApiError
 from retailcrm.http_cilent import BaseHttpClient
-from retailcrm.v5.utils import pydantic_to_nested_dict
 from retailcrm.v5.api.orders import RetailCrmOrdersApi
 from retailcrm.v5.enums import IdTypes
 from retailcrm.v5.schemas.orders import OrderFilterData, OrderHistoryFilterV4Type
@@ -20,6 +19,7 @@ from retailcrm.v5.schemas.responses.orders import (
     ResponseOrders,
     ResponseOrdersUpload,
 )
+from retailcrm.v5.utils import pydantic_to_nested_dict
 
 
 class OrdersController:
