@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel, Field
@@ -149,3 +150,244 @@ class SerializedCourier(BaseModel):
     email: Optional[str] = Field(None, description="Электронная почта")
     description: Optional[str] = Field(None, description="Примечание")
     phone: Optional[CourierPhone] = Field(None, description="Контактный телефон")
+
+
+class LegalEntity(BaseModel):
+    contragentType: str = Field()
+    legalName: str = Field()
+    legalAddress: str = Field()
+    inn: str = Field()
+    okpo: str = Field()
+    kpp: str = Field()
+    ogrn: str = Field()
+    ogrnip: str = Field()
+    certificateNumber: str = Field()
+    certificateDate: datetime = Field()
+    bik: str = Field()
+    bank: str = Field()
+    bankAddress: str = Field()
+    corrAccount: str = Field()
+    bankAccount: str = Field()
+    code: str = Field()
+    countryIso: str = Field()
+    vatRate: str = Field()
+
+
+class Site(BaseModel):
+    catalogId: str = Field()
+    isCatalogMainSite: bool = Field(False)
+    isDemo: bool = Field(False)
+    id: int = Field()
+    name: str = Field()
+    url: str = Field("")
+    code: str = Field()
+    description: str = Field("")
+    phones: str = Field("")
+    address: str = Field("")
+    zip: str = Field("")
+    defaultForCrm: bool = Field(False)
+    ymlUrl: str = Field("")
+    loadFromCrm: bool = Field(False)
+    catalogUpdatedAt: Optional[datetime] = Field(None)
+    catalogLoadingAt: Optional[datetime] = Field(None)
+    ordering: int = Field()
+    contragent: Optional[LegalEntity] = Field(None)
+    countryIso: str = Field("")
+    currency: str = Field("")
+    senderEmail: str = Field("")
+    senderName: str = Field("")
+
+
+class SerializedSite(BaseModel):
+    name: Optional[str] = Field(None)
+    url: Optional[str] = Field(None)
+    code: Optional[str] = Field(None)
+    description: Optional[str] = Field(None)
+    phones: Optional[str] = Field(None)
+    address: Optional[str] = Field(None)
+    zip: Optional[str] = Field(None)
+    ymlUrl: Optional[str] = Field(None)
+    defaultForCrm: Optional[bool] = Field(None)
+    loadFromCrm: Optional[bool] = Field(None)
+    catalogUpdatedAt: Optional[datetime] = Field(None)
+    catalogLoadingAt: Optional[datetime] = Field(None)
+    countryIso: Optional[str] = Field(None)
+    contragentCode: Optional[str] = Field(None)
+    currency: Optional[str] = Field(None)
+
+
+class ResponseSites(RetailCrmResponse):
+    sites: dict[str, Site] = Field(default_factory=dict)
+
+
+class ResponseSitesEdit(RetailCrmResponse):
+    id: int = Field(description="Внутренний ID созданного объекта")
+
+
+class OrderProductStatus(BaseModel):
+    code: str = Field()
+    ordering: int = Field()
+    active: bool = Field(False)
+    createdAt: datetime = Field()
+    orderStatusByProductStatus: str = Field("")
+    orderStatusForProductStatus: str = Field("")
+    cancelStatus: bool = Field(False)
+    name: str = Field()
+
+
+class ResponseProductStatuses(RetailCrmResponse):
+    productStatuses: dict[str, OrderProductStatus] = Field(default_factory=dict)
+
+
+class SerializedOrderProductStatus(BaseModel):
+    name: Optional[str] = Field(None)
+    code: Optional[str] = Field(None)
+    type: Optional[str] = Field(None)
+    ordering: Optional[int] = Field(None)
+    active: Optional[bool] = Field(None)
+    cancelStatus: Optional[bool] = Field(None)
+    orderStatusByProductStatus: Optional[str] = Field(None)
+    orderStatusForProductStatus: Optional[str] = Field(None)
+
+
+class GeoHierarchyRow(BaseModel):
+    country: str = Field("")
+    regionId: str = Field("")
+    region: str = Field("")
+    cityId: str = Field("")
+    city: str = Field("")
+
+
+class PriceType(BaseModel):
+    id: int = Field()
+    code: str = Field()
+    name: str = Field()
+    active: bool = Field(False)
+    default: bool = Field(False)
+    description: str = Field("")
+    filterExpression: str = Field("")
+    geo: list[GeoHierarchyRow] = Field(default_factory=list)
+    groups: list[int] = Field(default_factory=list)  # TODO: проверить ответ на этот запрос
+    ordering: int = Field()
+    currency: str = Field("")
+
+
+class SerializedPriceType(BaseModel):
+    code: Optional[str] = Field(None)
+    name: Optional[str] = Field(None)
+    active: Optional[bool] = Field(None)
+    default: Optional[bool] = Field(None)
+    description: Optional[str] = Field(None)
+    filterExpression: Optional[str] = Field(None)
+    geo: list[GeoHierarchyRow] = Field(default_factory=list)
+    groups: list[int] = Field(default_factory=list)
+    ordering: Optional[int] = Field(None)
+    currency: Optional[str] = Field(None)
+
+
+class ResponsePriceTypes(RetailCrmResponse):
+    priceTypes: list[PriceType] = Field(default_factory=list)
+
+
+class IntegrationModule(BaseModel):
+    active: bool = Field(False)
+    name: str = Field("")
+    logo: str = Field("")
+
+
+class PaymentType(BaseModel):
+    name: str = Field("")
+    code: str = Field("")
+    active: bool = Field(False)
+    defaultForCrm: bool = Field(False)
+    defaultForApi: bool = Field(False)
+    description: str = Field("")
+    deliveryTypes: list[str] = Field(default_factory=list)
+    paymentStatuses: list[str] = Field(default_factory=list)
+    integrationModule: Optional[IntegrationModule] = Field(None)
+    sites: list[Site] = Field(default_factory=list)
+
+
+class SerializedPaymentType(BaseModel):
+    name: Optional[str] = Field(None)
+    code: Optional[str] = Field(None)
+    sites: list[str] = Field(default_factory=list)
+    active: bool = Field(False)
+    defaultForCrm: bool = Field(False)
+    defaultForApi: bool = Field(False)
+    description: str = Field("")
+    deliveryTypes: list[str] = Field(default_factory=list)
+    paymentStatuses: list[str] = Field(default_factory=list)
+
+
+class ResponsePaymentTypes(RetailCrmResponse):
+    paymentTypes: dict[str, PaymentType] = Field(default_factory=dict)
+
+
+class PaymentStatus(BaseModel):
+    name: str = Field("")
+    code: str = Field("")
+    active: bool = Field(False)
+    defaultForCrm: Optional[bool] = Field(False)
+    defaultForApi: Optional[bool] = Field(False)
+    paymentComplete: bool = Field(False)
+    ordering: int = Field()
+    description: str = Field("")
+    paymentTypes: list[str] = Field(default_factory=list)
+
+
+class ResponsePaymentStatuses(RetailCrmResponse):
+    paymentStatuses: dict[str, PaymentStatus] = Field(default_factory=dict)
+
+
+class SerializedPaymentStatus(BaseModel):
+    name: Optional[str] = Field(None)
+    code: Optional[str] = Field(None)
+    ordering: Optional[int] = Field(None)
+    active: Optional[bool] = Field(None)
+    defaultForCrm: Optional[bool] = Field(None)
+    defaultForApi: Optional[bool] = Field(None)
+    paymentComplete: Optional[bool] = Field(None)
+    description: Optional[str] = Field(None)
+
+
+class OrderType(BaseModel):
+    name: str = Field("")
+    code: str = Field("")
+    active: bool = Field(False)
+    defaultForCrm: Optional[bool] = Field(False)
+    defaultForApi: Optional[bool] = Field(False)
+    ordering: int = Field()
+
+
+class ResponseOrderTypes(RetailCrmResponse):
+    orderTypes: dict[str, OrderType] = Field(default_factory=dict)
+
+
+class SerializedOrderType(BaseModel):
+    name: Optional[str] = Field(None)
+    code: Optional[str] = Field(None)
+    active: Optional[bool] = Field(None)
+    defaultForCrm: Optional[bool] = Field(None)
+    defaultForApi: Optional[bool] = Field(None)
+    ordering: Optional[int] = Field(None)
+
+
+class OrderMethod(BaseModel):
+    name: str = Field("")
+    code: str = Field("")
+    active: bool = Field(False)
+    defaultForCrm: Optional[bool] = Field(False)
+    defaultForApi: Optional[bool] = Field(False)
+
+
+class ResponseOrderMethod(RetailCrmResponse):
+    orderMethods: dict[str, OrderMethod] = Field(default_factory=dict)
+
+
+class SerializedOrderMethod(BaseModel):
+    name: Optional[str] = Field(None)
+    code: Optional[str] = Field(None)
+    active: Optional[bool] = Field(None)
+    defaultForCrm: Optional[bool] = Field(None)
+    defaultForApi: Optional[bool] = Field(None)
