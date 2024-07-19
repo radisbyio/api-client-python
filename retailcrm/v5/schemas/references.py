@@ -305,7 +305,7 @@ class PaymentType(BaseModel):
     deliveryTypes: list[str] = Field(default_factory=list)
     paymentStatuses: list[str] = Field(default_factory=list)
     integrationModule: Optional[IntegrationModule] = Field(None)
-    sites: list[Site] = Field(default_factory=list)
+    sites: list[str] = Field(default_factory=list)
 
 
 class SerializedPaymentType(BaseModel):
