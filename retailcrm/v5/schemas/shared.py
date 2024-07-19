@@ -150,7 +150,7 @@ class Customer(BaseModel):
     maturationTime: Optional[int] = Field(
         0, description="Время «созревания», в секундах"
     )
-    firstName: str = Field(description="Имя")
+    firstName: str = Field("", description="Имя") # todo: remove default
     lastName: str = Field("", description="Фамилия")
     patronymic: str = Field("", description="Отчество")
     sex: str = Field("", description="Пол, возможные значения: male, female")
