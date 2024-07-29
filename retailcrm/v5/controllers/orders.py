@@ -2,8 +2,9 @@ from retailcrm.exceptions import RetailCrmApiError
 from retailcrm.http_cilent import BaseHttpClient
 from retailcrm.v5.api.orders import RetailCrmOrdersApi
 from retailcrm.v5.enums import IdTypes
-from retailcrm.v5.schemas.orders import OrderFilterData, OrderHistoryFilterV4Type
-from retailcrm.v5.schemas.requests.orders import (
+from retailcrm.v5.schemas.orders import (
+    OrderFilterData,
+    OrderHistoryFilterV4Type,
     SerializedOrder,
     SerializedOrderList,
     SerializedPayment,
@@ -35,7 +36,9 @@ class OrdersController:
         )
         response_obj = ResponseCreateOrder.model_validate_json(response.body)
         if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
+            raise RetailCrmApiError(
+                response.status_code, response_obj.errorMsg, response_obj.errors
+            )
         return response_obj
 
     async def upload(

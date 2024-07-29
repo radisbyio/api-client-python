@@ -50,26 +50,13 @@ class OrderDeliveryAddress(BaseModel):
     metro: str = ""
 
 
-class SerializedOrderDelivery(BaseModel):
-    date: Optional[datetime] = None
-    time: Optional[TimeInterval] = None
-    address: Optional[OrderDeliveryAddress] = None
-
-
-class SerializedOrderProduct(BaseModel):
-    initialPrice: float = 0
-    discountManualAmount: float = 0
-    discountManualPercent: float = 0
-    quantity: float = 0
-
-
-class SerializedOrder(BaseModel):
-    weight: float = 0
-    length: int = 0
-    width: int = 0
-    height: int = 0
-    items: list[SerializedOrderProduct] = []
-    delivery: Optional[SerializedOrderDelivery] = None
+# class SerializedOrder(BaseModel):
+#     weight: float = 0
+#     length: int = 0
+#     width: int = 0
+#     height: int = 0
+#     items: list[SerializedOrderProduct] = []
+#     delivery: Optional[SerializedOrderDelivery] = None
 
 
 class DeliveryShipment(BaseModel):

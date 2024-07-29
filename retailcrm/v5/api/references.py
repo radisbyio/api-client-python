@@ -154,7 +154,9 @@ class RetailCrmReferencesApi:
             endpoint="/reference/payment-statuses",
         )
 
-    async def payment_statuses_edit(self, code: str, payment_status_json: str) -> Response:
+    async def payment_statuses_edit(
+        self, code: str, payment_status_json: str
+    ) -> Response:
         """
         **Создание/редактирование статусов оплаты**
 
@@ -223,7 +225,9 @@ class RetailCrmReferencesApi:
             endpoint="/reference/product-statuses",
         )
 
-    async def product_statuses_edit(self, code: str, product_status_json: str) -> Response:
+    async def product_statuses_edit(
+        self, code: str, product_status_json: str
+    ) -> Response:
         """
         **Создание/редактирование статуса товара в заказе**
 

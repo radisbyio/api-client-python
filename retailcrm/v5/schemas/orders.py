@@ -1,7 +1,86 @@
 from datetime import date, datetime
-from typing import Optional
+from typing import Optional, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, RootModel, field_serializer, field_validator
+
+from retailcrm.v5.enums import VatRateTypes
+from retailcrm.v5.helpers import datetime_serializer, dict_validator
+from retailcrm.v5.schemas.requests import MGDialog
+from retailcrm.v5.schemas.shared import (
+    CodeValueModel,
+    Contact,
+    Customer,
+    OrderDeliveryAddress,
+    OrderProductProperties,
+    PriceType,
+    Source,
+    TimeInterval,
+)
+
+
+class SerializedPayment(BaseModel):
+    externalId: Optional[str] = ""
+    amount: float = 0
+    paidAt: Optional[str] = ""
+    comment: Optional[str] = ""
+    type: str = ""
+    status: str = ""
+
+
+class SerializedOrderDelivery(BaseModel):
+    date: Optional[datetime] = None
+    time: Optional[TimeInterval] = None
+    address: Optional[OrderDeliveryAddress] = None
+
+
+class SerializedOrderProductOffer(BaseModel):
+    id: Optional[int] = Field(None, description="ID торгового предложения")
+    externalId: Optional[str] = Field(
+        None, description="Внешний ID торгового предложения"
+    )
+    xmlId: Optional[str] = Field(
+        None, description="ID торгового предложения в складской системе"
+    )
+
+
+class SerializedOrderProduct(BaseModel):
+    markingCodes: list[str] = Field(default_factory=list, description="Коды маркировки")
+    initialPrice: Optional[float] = Field(
+        None, description="Цена товара/SKU (в валюте объекта)"
+    )
+    discountManualAmount: Optional[float] = Field(
+        0, description="Денежная скидка на единицу товара (в валюте объекта)"
+    )
+    discountManualPercent: Optional[float] = Field(
+        0, description="Процентная скидка на единицу товара"
+    )
+    vatRate: VatRateTypes = Field(VatRateTypes.NONE, description="Ставка НДС")
+    createdAt: Optional[datetime] = Field(
+        None, description="Дата создания позиции в системе"
+    )
+    quantity: Optional[float] = Field(0, description="Количество")
+    comment: str = Field("", description="Комментарий к позиции в заказе")
+    properties: list[OrderProductProperties] = Field(
+        default_factory=list, description="Дополнительные свойства позиции в заказе"
+    )
+    purchasePrice: float = Field(0, description="Закупочная цена (в базовой валюте)")
+    ordering: Optional[int] = Field(None, description="Порядок")
+    offer: Optional[SerializedOrderProductOffer] = Field(
+        None, description="Торговое предложение"
+    )
+    productName: Optional[str] = Field(None, description="Название товара")
+    status: Optional[str] = Field(None, description="Статус позиции в заказе")
+    priceType: Optional[PriceType] = Field(None, description="Тип цены")
+    externalIds: list[CodeValueModel] = Field(
+        default_factory=list, description="Внешние идентификаторы позиции в заказе"
+    )
+
+    properties_validator = field_validator("properties", mode="before")(
+        dict_validator()
+    )
+    createdAt_serializer = field_serializer("createdAt")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
 
 
 class OrderHistoryFilterV4Type(BaseModel):
@@ -30,3 +109,66 @@ class OrderFilterData(BaseModel):
     fullPaidAtTo: Optional[date] = Field(None, description="Дата полной оплаты (до)")
     deliveryDateFrom: Optional[date] = Field(None, description="Дата доставки (от)")
     deliveryDateTo: Optional[date] = Field(None, description="Дата доставки (до)")
+
+
+class SerializedOrder(BaseModel):
+    number: str = ""
+    externalId: str = ""
+    privilegeType: str = ""
+    countryIso: str = ""
+    created_at: Optional[datetime] = Field(None, serialization_alias="createdAt")
+    statusUpdatedAt: str = ""
+    discountManualAmount: float = 0
+    discountManualPercent: float = 0
+    mark: int = 0
+    markDatetime: str = ""
+    lastName: str = ""
+    firstName: str = ""
+    patronymic: str = ""
+    phone: str = ""
+    additionalPhone: str = ""
+    email: str = ""
+    call: bool = False
+    expired: bool = False
+    customerComment: str = ""
+    managerComment: str = ""
+    # contragent: OrderContragent
+    statusComment: str = ""
+    weight: float = 0
+    length: int = 0
+    width: int = 0
+    height: int = 0
+    shipmentDate: str = ""
+    shipped: bool = False
+    dialogId: Optional[MGDialog] = None
+    customFields: dict[str, str] = None
+    orderType: str = ""
+    orderMethod: str = ""
+    customer: Optional[Customer] = None
+    contact: Optional[Contact] = None
+    company: Optional[dict[str, Union[int, str]]] = None
+    managerId: int = 0
+    status: str = ""
+    items: list[SerializedOrderProduct] = None
+    delivery: Optional[SerializedOrderDelivery] = None
+    source: Optional[Source] = None
+    shipmentStore: str = ""
+    payments: list[SerializedPayment] = []
+    loyaltyEventDiscountId: int = 0
+    applyRound: bool = False
+    isFromCart: bool = False
+    clientId: str = ""
+
+    created_at_serializer = field_serializer("created_at")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
+
+
+class SerializedOrderList(RootModel):
+    root: list[SerializedOrder] = []
+
+
+class SerializedEntityOrder(BaseModel):
+    id: int = Field(0, description="Внутренний ID заказа")
+    external_id: str = Field("", alias="externalId", description="Внешний ID заказа")
+    number: str = Field("", description="Номер заказа")

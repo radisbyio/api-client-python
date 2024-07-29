@@ -2,9 +2,9 @@ from typing import Optional
 
 from pydantic import BaseModel, Field, field_validator
 
-__all__ = ["RetailCrmResponse", "PaginationResponse"]
-
 from retailcrm.v5.helpers import errors_dict_validator
+
+__all__ = ["RetailCrmResponse", "PaginationResponse"]
 
 
 class PaginationResponse(BaseModel):
@@ -14,11 +14,12 @@ class PaginationResponse(BaseModel):
     totalPageCount: int = 0
 
 
-# Добавить валидатор на ошибки, который переведёт dict -> list
 class RetailCrmResponse(BaseModel):
     success: bool = Field(False, description="Результат запроса (успешный/неуспешный)")
     pagination: Optional[PaginationResponse] = None
     errorMsg: str = Field("", description="Текст ошибки")
-    errors: dict[str, str] = Field([], description="Массив с детализациями ошибок")
+    errors: dict[str, str] = Field(
+        default_factory=dict, description="Массив с детализациями ошибок"
+    )
 
     errors_validator = field_validator("errors", mode="before")(errors_dict_validator())

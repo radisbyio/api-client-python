@@ -28,6 +28,9 @@ __all__ = [
     "SerializedSource",
     "Courier",
     "CourierPhone",
+    "Source",
+    "PriceType",
+    "Offer",
 ]
 
 
@@ -150,7 +153,7 @@ class Customer(BaseModel):
     maturationTime: Optional[int] = Field(
         0, description="Время «созревания», в секундах"
     )
-    firstName: str = Field("", description="Имя") # todo: remove default
+    firstName: str = Field("", description="Имя")  # todo: remove default
     lastName: str = Field("", description="Фамилия")
     patronymic: str = Field("", description="Отчество")
     sex: str = Field("", description="Пол, возможные значения: male, female")
@@ -352,6 +355,14 @@ class Company(BaseModel):
     customFields_validator = field_validator("customFields", mode="before")(
         dict_validator()
     )
+
+
+class OrderProductProperties(BaseModel):
+    code: str = Field(
+        description="Код свойства (не обязательное поле, код может передаваться в ключе свойства)"
+    )
+    name: str = Field(description="Имя свойства")
+    value: str = Field(description="Значение свойства")
 
 
 class OrderProduct(BaseModel):
@@ -605,3 +616,18 @@ class Courier(BaseModel):
     email: str = Field("", description="Электронная почта")
     phone: Optional[CourierPhone] = Field(None, description="Контактный телефон")
     description: str = Field("", description="Примечание")
+
+
+class Contact(BaseModel):
+    id: int
+    externalId: str = ""
+    browserId: str = ""
+    site: str = ""
+
+
+class Source(BaseModel):
+    source: str = ""
+    medium: str = ""
+    campaign: str = ""
+    keyword: str = ""
+    content: str = ""

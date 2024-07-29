@@ -5,9 +5,13 @@ from pydantic_core.core_schema import ValidationInfo
 
 
 def errors_dict_validator() -> Callable[[Any, ValidationInfo], Optional[dict]]:
+    """
+    Вспомогательная функция, которая позволяет преобразовать массив errors в словарь для более общей обработки.
+    """
+
     def validator(v, info: ValidationInfo) -> Optional[dict]:
-        if isinstance(v, list) and not v:
-            return {"default": [" ".join(v)]}
+        if isinstance(v, list) and v:
+            return {"default": ". ".join(v)}
         else:
             return v
 
@@ -15,6 +19,11 @@ def errors_dict_validator() -> Callable[[Any, ValidationInfo], Optional[dict]]:
 
 
 def dict_validator() -> Callable[[Any, ValidationInfo], dict]:
+    """
+    Вспомогательная функция, которая позволяет преобразовать пустой list в dict.
+    Необходим для некоторых полей, например - customFields.
+    """
+
     def validator(v, info: ValidationInfo) -> dict:
         if isinstance(v, dict):
             return v
@@ -27,6 +36,10 @@ def dict_validator() -> Callable[[Any, ValidationInfo], dict]:
 
 
 def datetime_serializer(format_str: str) -> Callable[[datetime], str]:
+    """
+    Вспомогательная функция для форматирования даты при сериализации объекта datetime
+    """
+
     def serializer(value: Optional[datetime]) -> Optional[str]:
         if value:
             return datetime.strftime(value, format_str)

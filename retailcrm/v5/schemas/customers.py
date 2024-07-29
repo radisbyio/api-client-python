@@ -1,15 +1,12 @@
 from datetime import date
 from typing import Annotated, List, Optional
 
-from pydantic import BaseModel, BeforeValidator
+from pydantic import BaseModel, BeforeValidator, field_validator
+
+from retailcrm.v5.helpers import dict_validator
 
 
-def _check_custom_field(v: list | dict) -> dict:
-    if isinstance(v, list):
-        return {}
-    return v
-
-
+# TODO: Fill
 class CustomerFilterData(BaseModel):
     ids: List[int] = []
     externalIds: List[str] = []
@@ -48,7 +45,7 @@ class CustomerFilterData(BaseModel):
     firstOrderTo: Optional[date] = None
     lastOrderFrom: Optional[date] = None
     lastOrderTo: Optional[date] = None
-    customFields: Annotated[dict, BeforeValidator(_check_custom_field)] = {}
+    customFields: dict = {}
     sex: str = ""
     isContact: bool = False
     emailMarketingUnsubscribed: bool = False
@@ -71,3 +68,7 @@ class CustomerFilterData(BaseModel):
     firstWebVisitTo: Optional[date] = None
     lastWebVisitFrom: Optional[date] = None
     lastWebVisitTo: Optional[date] = None
+
+    customFields_validator = field_validator("customFields", mode="before")(
+        dict_validator()
+    )

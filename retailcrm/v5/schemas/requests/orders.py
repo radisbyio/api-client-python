@@ -1,14 +1,9 @@
-from datetime import date, datetime
-from typing import Callable, Dict, List, Optional, Union
+from datetime import datetime
+from typing import Dict, List, Optional, Union
 
-from pydantic import BaseModel, Field, RootModel, field_serializer
+from pydantic import BaseModel, Field, field_serializer
 
-
-def datetime_serializer(format: str) -> Callable[[datetime], str]:
-    def serializer(value: datetime) -> str:
-        return datetime.strftime(value, format)
-
-    return serializer
+from retailcrm.v5.helpers import datetime_serializer
 
 
 class TimeInterval(BaseModel):
@@ -141,25 +136,6 @@ class Customer(BaseModel):
     nickName: str = ""
 
 
-class Contact(BaseModel):
-    id: int
-    externalId: str = ""
-    browserId: str = ""
-    site: str = ""
-
-
-class Source(BaseModel):
-    source: str = ""
-    medium: str = ""
-    campaign: str = ""
-    keyword: str = ""
-    content: str = ""
-
-
-class MGDialog(BaseModel):
-    pass  # Define MGDialog model if needed
-
-
 class OrderContragent(BaseModel):
     contragentType: str = ""
     legalName: str = ""
@@ -182,77 +158,5 @@ class OrderFilterData(BaseModel):
     pass
 
 
-class SerializedOrder(BaseModel):
-    number: str = ""
-    externalId: str = ""
-    privilegeType: str = ""
-    countryIso: str = ""
-    created_at: Optional[datetime] = Field(None, serialization_alias="createdAt")
-    statusUpdatedAt: str = ""
-    discountManualAmount: float = 0
-    discountManualPercent: float = 0
-    mark: int = 0
-    markDatetime: str = ""
-    lastName: str = ""
-    firstName: str = ""
-    patronymic: str = ""
-    phone: str = ""
-    additionalPhone: str = ""
-    email: str = ""
-    call: bool = False
-    expired: bool = False
-    customerComment: str = ""
-    managerComment: str = ""
-    # contragent: OrderContragent
-    statusComment: str = ""
-    weight: float = 0
-    length: int = 0
-    width: int = 0
-    height: int = 0
-    shipmentDate: str = ""
-    shipped: bool = False
-    dialogId: Optional[MGDialog] = None
-    customFields: Dict[str, str] = None
-    orderType: str = ""
-    orderMethod: str = ""
-    customer: Optional[Customer] = None
-    contact: Optional[Contact] = None
-    company: Optional[Dict[str, Union[int, str]]] = None
-    managerId: int = 0
-    status: str = ""
-    items: List[Item] = None
-    delivery: Optional[SerializedOrderDelivery] = None
-    source: Optional[Source] = None
-    shipmentStore: str = ""
-    payments: List[Payment] = []
-    loyaltyEventDiscountId: int = 0
-    applyRound: bool = False
-    isFromCart: bool = False
-    clientId: str = ""
-
-    created_at_serializer = field_serializer("created_at")(
-        datetime_serializer("%Y-%m-%d %H:%M:%S")
-    )
-
-
-class SerializedOrderList(RootModel):
-    root: list[SerializedOrder] = []
-
-
-class SerializedEntityOrder(BaseModel):
-    id: int = Field(0, description="Внутренний ID заказа")
-    external_id: str = Field("", alias="externalId", description="Внешний ID заказа")
-    number: str = Field("", description="Номер заказа")
-
-
-class SerializedPayment(BaseModel):
-    externalId: Optional[str] = ""
-    amount: float = 0
-    paidAt: Optional[str] = ""
-    comment: Optional[str] = ""
-    order: Optional[SerializedEntityOrder] = None
-    type: str = ""
-    status: str = ""
-
-
-
+class MGDialog(BaseModel):
+    pass  # Define MGDialog model if needed

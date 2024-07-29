@@ -1,7 +1,7 @@
 from retailcrm.exceptions import RetailCrmApiError
 from retailcrm.http_cilent import BaseHttpClient
 from retailcrm.v5.api.customers import RetailCrmCustomersApi
-from retailcrm.v5.schemas.requests.customers import CustomerFilterData
+from retailcrm.v5.schemas.customers import CustomerFilterData
 from retailcrm.v5.schemas.responses.customers import ResponseCustomers
 
 

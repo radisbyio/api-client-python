@@ -35,12 +35,12 @@ class PaymentController:
         return response_obj
 
     async def update_invoice(
-        self, update_invoice=ApiUpdateInvoiceRequest
+        self, update_invoice: ApiUpdateInvoiceRequest
     ) -> PaymentUpdateInvoiceResponse:
         response = await self._api.update_invoice(
             update_invoice_json=update_invoice.model_dump_json(exclude_unset=True)
         )
         response_obj = PaymentUpdateInvoiceResponse.model_validate_json(response.body)
         if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
+            raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
         return response_obj
