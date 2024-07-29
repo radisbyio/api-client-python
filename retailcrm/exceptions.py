@@ -8,10 +8,10 @@ class RetailCrmTimeoutException(RetailCrmException):
 
 
 class RetailCrmApiError(RetailCrmException):
-    def __init__(self, status_code: int, error_msg: str, errors=None):
+    def __init__(self, status_code: int, error_msg: str, errors: dict = None):
         self.status_code = status_code
         self.error_msg = error_msg
-        self.errors = errors
+        self.errors = errors or {}
 
     def __str__(self) -> str:
         return f"{self.status_code} - {self.error_msg}"
