@@ -51,10 +51,10 @@ class SerializedOrderDelivery(BaseModel):
     service: Optional[SerializedDeliveryService] = Field(None)
     cost: Optional[float] = Field(None, description="Стоимость доставки")
     netCost: Optional[float] = Field(None, description="Себестоимость доставки")
-    date: Optional[date] = Field(None, description="Дата доставки")
+    date_: Optional[date] = Field(None, description="Дата доставки")
     time: Optional[TimeInterval] = Field(None, description="Информация о временном диапазоне")
     address: Optional[OrderDeliveryAddress] = Field(None, description="Адрес доставки")
-    vatRate: str = Field(description="Ставка НДС")
+    vatRate: Optional[str] = Field(None, description="Ставка НДС")
 
 
 class SerializedPayment(BaseModel):
@@ -201,8 +201,8 @@ class SerializedOrder(BaseModel):
     )
 
 
-class SerializedOrderlist(RootModel):
-    root: list[SerializedOrder] = []
+class SerializedOrderList(RootModel):
+    root: list[SerializedOrder] = Field(default_factory=list)
 
 
 class SerializedEntityOrder(BaseModel):

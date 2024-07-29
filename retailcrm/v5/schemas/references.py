@@ -21,6 +21,8 @@ __all__ = [
     "ResponseCountries",
     "ResponseCouriers",
     "SerializedCourier",
+    "DeliveryService",
+    "SerializedDeliveryService",
 ]
 
 
