@@ -358,11 +358,12 @@ class Company(BaseModel):
 
 
 class OrderProductProperties(BaseModel):
-    code: str = Field(
+    code: Optional[str] = Field(
+        None,
         description="Код свойства (не обязательное поле, код может передаваться в ключе свойства)"
     )
-    name: str = Field(description="Имя свойства")
-    value: str = Field(description="Значение свойства")
+    name: Optional[str] = Field(None, description="Имя свойства")
+    value: Optional[str] = Field(None, description="Значение свойства")
 
 
 class OrderProduct(BaseModel):
