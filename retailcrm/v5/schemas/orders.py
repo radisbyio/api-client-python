@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field, RootModel, field_serializer, field_valida
 
 from retailcrm.v5.enums import VatRateTypes
 from retailcrm.v5.helpers import datetime_serializer, dict_validator
+from retailcrm.v5.schemas.references import SerializedDeliveryService
 from retailcrm.v5.schemas.requests import MGDialog
 from retailcrm.v5.schemas.shared import (
     CodeValueModel,
@@ -18,19 +19,55 @@ from retailcrm.v5.schemas.shared import (
 )
 
 
-class SerializedPayment(BaseModel):
-    externalId: Optional[str] = ""
-    amount: float = 0
-    paidAt: Optional[str] = ""
-    comment: Optional[str] = ""
-    type: str = ""
-    status: str = ""
+# TODO: make itemDeclaredValues
+# TODO: make packages
+class GenericData(BaseModel):
+    externalId: Optional[str] = Field(None, description="Идентификатор в службе доставки")
+    trackNumber: Optional[str] = Field(None, description="Номер отправления (поле deprecated на запись)")
+    locked: bool = Field(False, description="Не синхронизировать со службой доставки")
+    tariff: Optional[str] = Field(None, description="Код тарифа")
+    pickuppointId: Optional[str] = Field(None, description="Идентификатор пункта самовывоза")
+    payerType: Optional[str] = Field(None, description="	Плательщик за доставку")
+    shipmentpointId: Optional[str] = Field(None, description="Идентификатор терминала отгрузки")
+    extraData: Optional[list[dict[str, str]]] = Field(None,
+                                                      description="Дополнительные данные доставки (deliveryDataField.code => значение)")
+    itemDeclaredValues: Optional[list[dict[str, Union[int, float]]]] = None
+    packages: list[
+        dict[str, Union[str, float, int, list[dict[str, Union[int, str]]]]]
+    ] = Field(default_factory=list, description="Упаковки")
 
 
+class DeliveryService(BaseModel):
+    name: str
+    code: str = ""
+    active: bool = False
+    deliveryType: str = ""
+
+
+# todo: update vatRate to enum
 class SerializedOrderDelivery(BaseModel):
-    date: Optional[datetime] = None
-    time: Optional[TimeInterval] = None
-    address: Optional[OrderDeliveryAddress] = None
+    code: Optional[str] = Field(None, description="Код типа доставки")
+    data: Optional[GenericData] = Field(None, description="Данные службы доставки, подключенной через API")
+    service: Optional[SerializedDeliveryService] = Field(None)
+    cost: Optional[float] = Field(None, description="Стоимость доставки")
+    netCost: Optional[float] = Field(None, description="Себестоимость доставки")
+    date: Optional[date] = Field(None, description="Дата доставки")
+    time: Optional[TimeInterval] = Field(None, description="Информация о временном диапазоне")
+    address: Optional[OrderDeliveryAddress] = Field(None, description="Адрес доставки")
+    vatRate: str = Field(description="Ставка НДС")
+
+
+class SerializedPayment(BaseModel):
+    externalId: Optional[str] = Field(None, description="Внешний ID платежа")
+    amount: float = Field(None, description="Сумма платежа (в валюте объекта)")
+    paidAt: Optional[datetime] = Field(None, description="Дата оплаты")
+    comment: Optional[str] = Field(None, description="Комментарий")
+    type: Optional[str] = Field(None, description="Тип оплаты")
+    status: Optional[str] = Field(None, description="Статус оплаты")
+
+    paidAt_serializer = field_serializer("paidAt")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
 
 
 class SerializedOrderProductOffer(BaseModel):
@@ -164,7 +201,7 @@ class SerializedOrder(BaseModel):
     )
 
 
-class SerializedOrderList(RootModel):
+class SerializedOrderlist(RootModel):
     root: list[SerializedOrder] = []
 
 

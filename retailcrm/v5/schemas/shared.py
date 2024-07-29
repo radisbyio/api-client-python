@@ -31,6 +31,11 @@ __all__ = [
     "Source",
     "PriceType",
     "Offer",
+    "CodeValueModel",
+    "Contact",
+    "OrderDeliveryAddress",
+    "OrderProductProperties",
+    "TimeInterval"
 ]
 
 

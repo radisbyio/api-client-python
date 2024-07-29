@@ -1,30 +1,9 @@
 from datetime import datetime
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field, field_serializer
 
 from retailcrm.v5.helpers import datetime_serializer
-
-
-class TimeInterval(BaseModel):
-    from_time: str = ""
-    to_time: str = ""
-    custom: str = ""
-
-
-class GenericData(BaseModel):
-    externalId: str = ""
-    trackNumber: str = ""
-    locked: bool = False
-    tariff: str = ""
-    pickuppointId: str = ""
-    payerType: str = ""
-    shipmentpointId: str = ""
-    extraData: Optional[List[Dict[str, str]]] = None
-    itemDeclaredValues: Optional[List[Dict[str, Union[int, float]]]] = None
-    packages: List[
-        Dict[str, Union[str, float, int, List[Dict[str, Union[int, str]]]]]
-    ] = []
 
 
 class PackageItemOrderProduct(BaseModel):
@@ -45,13 +24,6 @@ class Package(BaseModel):
     width: int = 0
     height: int = 0
     items: List[PackageItem] = []
-
-
-class DeliveryService(BaseModel):
-    name: str
-    code: str = ""
-    active: bool = False
-    deliveryType: str = ""
 
 
 class OrderDeliveryAddress(BaseModel):
@@ -113,18 +85,6 @@ class Item(BaseModel):
     priceType: Dict[str, str] = {}
     externalId: str = ""
     externalIds: List[Dict[str, str]] = []
-
-
-class SerializedOrderDelivery(BaseModel):
-    code: str = ""
-    data: Optional[GenericData] = None
-    service: Optional[DeliveryService] = None
-    cost: float = 0
-    netCost: float = 0
-    date: str = ""
-    time: Optional[TimeInterval] = None
-    address: Optional[OrderDeliveryAddress] = None
-    vatRate: str = ""
 
 
 class Customer(BaseModel):
