@@ -6,7 +6,7 @@ import respx
 
 from retailcrm import RetailCrmApiClientV5, RetailCrmApiError
 from retailcrm.v5.schemas.orders import OrderHistoryFilterV4Type
-from retailcrm.v5.schemas.requests import (
+from retailcrm.v5.schemas import (
     SerializedOrder,
     SerializedOrderList,
     SerializedPayment,

@@ -3,7 +3,7 @@ import pytest
 import respx
 
 from retailcrm import RetailCrmApiClientV5, RetailCrmApiError
-from retailcrm.v5.schemas.requests import CustomerFilterData
+from retailcrm.v5.schemas import CustomerFilterData
 
 
 @pytest.mark.asyncio

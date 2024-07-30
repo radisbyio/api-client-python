@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from retailcrm.http_cilent import BaseHttpClient, HttpClient
+from retailcrm.v5.controllers.custom_fields import CustomFieldsController
 from retailcrm.v5.controllers.customers import CustomersController
 from retailcrm.v5.controllers.delivery import DeliveryController
 from retailcrm.v5.controllers.orders import OrdersController
@@ -19,6 +20,7 @@ class RetailCrmApiClientV5:
     _customers_controller: Optional[CustomersController]
     _delivery_controller: Optional[DeliveryController]
     _references_controller: Optional[ReferencesController]
+    _custom_fields_controller: Optional[CustomFieldsController]
 
     def __init__(self, crm_url: str, api_key: str, client: BaseHttpClient = None):
         self._crm_url = crm_url
@@ -34,6 +36,7 @@ class RetailCrmApiClientV5:
         self._customers_controller = None
         self._delivery_controller = None
         self._references_controller = None
+        self._custom_fields_controller = None
 
     @property
     def crm_url(self):
@@ -72,3 +75,9 @@ class RetailCrmApiClientV5:
         if not self._references_controller:
             self._references_controller = ReferencesController(self._client)
         return self._references_controller
+
+    @property
+    def custom_fields(self) -> CustomFieldsController:
+        if not self._custom_fields_controller:
+            self._custom_fields_controller = CustomFieldsController(self._client)
+        return self._custom_fields_controller
