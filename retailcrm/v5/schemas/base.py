@@ -7,6 +7,10 @@ from retailcrm.v5.helpers import errors_dict_validator
 __all__ = ["RetailCrmResponse", "PaginationResponse"]
 
 
+class BaseRetailCrmScheme(BaseModel):
+    model_config = ConfigDict(use_enum_values=True)
+
+
 class PaginationResponse(BaseModel):
     limit: int = 0
     totalCount: int = 0
@@ -15,8 +19,6 @@ class PaginationResponse(BaseModel):
 
 
 class RetailCrmResponse(BaseModel):
-    model_config = ConfigDict(use_enum_values=True)
-
     success: bool = Field(False, description="Результат запроса (успешный/неуспешный)")
     pagination: Optional[PaginationResponse] = None
     errorMsg: str = Field("", description="Текст ошибки")

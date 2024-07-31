@@ -1,9 +1,9 @@
 from enum import Enum
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
-from retailcrm.v5.schemas.base import RetailCrmResponse
+from retailcrm.v5.schemas.base import RetailCrmResponse, BaseRetailCrmScheme
 
 
 class CustomFieldsTypes(str, Enum):
@@ -48,7 +48,7 @@ class EntityTypes(str, Enum):
     ORDER = "order"
 
 
-class CustomFieldFilter(BaseModel):
+class CustomFieldFilter(BaseRetailCrmScheme):
     name: Optional[str] = None
     code: Optional[str] = None
     type: Optional[CustomFieldsTypes] = None
@@ -58,7 +58,7 @@ class CustomFieldFilter(BaseModel):
     inFilter: Optional[int] = None
 
 
-class CustomFieldApiDocModel(BaseModel):
+class CustomFieldApiDocModel(BaseRetailCrmScheme):
     name: str = Field(description="Название")
     code: str = Field(description="Символьный код")
     required: bool = Field(False, description="Обязательное")
@@ -78,18 +78,18 @@ class CustomFieldsResponse(RetailCrmResponse):
     customFields: list[CustomFieldApiDocModel] = Field(default_factory=list)
 
 
-class CustomDictionaryFilter(BaseModel):
+class CustomDictionaryFilter(BaseRetailCrmScheme):
     name: Optional[str] = None
     code: Optional[str] = None
 
 
-class SerializedCustomDictionaryElement(BaseModel):
+class SerializedCustomDictionaryElement(BaseRetailCrmScheme):
     name: str = Field(description="Название")
     code: str = Field(description="Символьный код")
     ordering: int = Field(description="Сортировка")
 
 
-class CustomDictionary(BaseModel):
+class CustomDictionary(BaseRetailCrmScheme):
     name: str = Field(description="Название")
     code: str = Field(description="Символьный код")
     elements: list[SerializedCustomDictionaryElement] = Field(description="Элемент справочника")
