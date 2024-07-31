@@ -112,9 +112,6 @@ class SerializedOrderProduct(BaseModel):
         default_factory=list, description="Внешние идентификаторы позиции в заказе"
     )
 
-    properties_validator = field_validator("properties", mode="before")(
-        dict_validator()
-    )
     createdAt_serializer = field_serializer("createdAt")(
         datetime_serializer("%Y-%m-%d %H:%M:%S")
     )
