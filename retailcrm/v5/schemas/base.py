@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, ConfigDict
 
 from retailcrm.v5.helpers import errors_dict_validator
 
@@ -15,6 +15,8 @@ class PaginationResponse(BaseModel):
 
 
 class RetailCrmResponse(BaseModel):
+    model_config = ConfigDict(use_enum_values=True)
+
     success: bool = Field(False, description="Результат запроса (успешный/неуспешный)")
     pagination: Optional[PaginationResponse] = None
     errorMsg: str = Field("", description="Текст ошибки")
