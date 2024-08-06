@@ -97,7 +97,7 @@ class ResponseCustomersFilter(RetailCrmResponse):
     customers: list[Customer] = Field(default_factory=list, description="Клиенты")
 
 
-class CustomerContragent(BaseModel):
+class CustomerContragent(BaseRetailCrmScheme):
     contragentType: Optional[str] = Field(None, description="Тип контрагента")
     legalName: Optional[str] = Field(None, description="Полное наименование")
     legalAddress: Optional[str] = Field(None, description="Адрес регистрации")
@@ -115,7 +115,7 @@ class CustomerContragent(BaseModel):
     bankAccount: Optional[str] = Field(None, description="Расчётный счёт")
 
 
-class SerializedCustomer(BaseModel):
+class SerializedCustomer(BaseRetailCrmScheme):
     externalId: Optional[str] = Field(None, description="Внешний ID клиента")
     isContact: Optional[bool] = Field(
         None,
@@ -128,7 +128,7 @@ class SerializedCustomer(BaseModel):
         None,
         description="`deprecated` Реквизиты (Поля объекта следует использовать только при неактивированной функциональности \"Корпоративные клиенты\")",
     )
-    customFields: Optional[List] = Field(
+    customFields: Optional[dict] = Field(
         None, description="Ассоциативный массив пользовательских полей"
     )
     personalDiscount: Optional[float] = Field(None, description="Персональная скидка")
