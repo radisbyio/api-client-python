@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field, field_validator, ConfigDict
 
 from retailcrm.v5.helpers import errors_dict_validator
 
-__all__ = ["RetailCrmResponse", "PaginationResponse"]
+__all__ = ["BaseRetailCrmScheme", "RetailCrmResponse", "PaginationResponse"]
 
 
 class BaseRetailCrmScheme(BaseModel):

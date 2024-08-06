@@ -21,3 +21,19 @@ class RetailCrmCustomersApi:
             endpoint=f"/customers",
             params={"limit": limit, "page": page, **filter},
         )
+
+    async def create(self, customer_json: str, site: str) -> Response:
+        """
+        **Создание клиента**
+        Метод создает клиента и возвращает внутренний ID созданного клиента.
+
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-customers-create
+        :param customer_json: Json строка
+        :param site: Символьный код магазина
+        :return: Response
+        """
+        return await self._client.post(
+            endpoint=f"/customers/create",
+            params={"site": site},
+            data={"customer": customer_json}
+        )

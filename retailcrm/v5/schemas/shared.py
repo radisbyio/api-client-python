@@ -141,7 +141,7 @@ class Customer(BaseModel):
         None, description="Последняя метка клиента Google Analytics"
     )
     customFields: dict = Field(
-        {}, description="Ассоциативный массив пользовательских полей"
+        default_factory=dict, description="Ассоциативный массив пользовательских полей"
     )
     discountCardNumber: Optional[str] = Field(
         None, description="Номер дисконтной карты"
@@ -169,7 +169,7 @@ class Customer(BaseModel):
     phones: list[CustomerPhone] = Field([], description="Телефоны")
     birthday: Optional[datetime] = Field(None, description="День рождения")
     source: Optional[SerializedSource] = Field(None, description="Источник клиента")
-    mgCustomers: list["MGCustomer"] = Field([], description="Клиенты MessageGateway")
+    mgCustomers: list[MGCustomer] = Field([], description="Клиенты MessageGateway")
     photoUrl: Optional[str] = Field(None, description="URL фотографии")
     contragentType: str = Field(
         "",
