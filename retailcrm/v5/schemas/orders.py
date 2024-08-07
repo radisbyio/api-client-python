@@ -233,10 +233,10 @@ class OrderHistory(BaseRetailCrmScheme):
     source: Optional[str] = Field(None, description="Источник изменения")
     user: Optional[User] = Field(None, description="Пользователь")
     field: Optional[str] = Field(None, description="Имя изменившегося поля")
-    old_value: Optional[str | int | dict] = Field(
+    old_value: Optional[str | int | float | dict] = Field(
         None, description="Старое значение свойства", validation_alias="oldValue"
     )
-    new_value: Optional[str | int | dict] = Field(
+    new_value: Optional[str | int | float | dict] = Field(
         None, description="Новое значение свойства", validation_alias="newValue"
     )
     api_key: Optional[ApiKey] = Field(
