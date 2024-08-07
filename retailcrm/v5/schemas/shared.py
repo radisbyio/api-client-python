@@ -1,7 +1,7 @@
 from datetime import datetime, time
 from typing import Any, Optional
 
-from pydantic import BaseModel, Field, field_serializer, field_validator
+from pydantic import Field, field_serializer, field_validator
 
 from retailcrm.v5.enums import (
     DiscountTypes,
@@ -10,6 +10,7 @@ from retailcrm.v5.enums import (
     PrivilegeType,
     VatRateTypes,
 )
+from retailcrm.v5.schemas.base import BaseRetailCrmScheme
 from retailcrm.v5.helpers import datetime_serializer, dict_validator, payments_validator
 
 __all__ = [
@@ -39,7 +40,7 @@ __all__ = [
 ]
 
 
-class Item(BaseModel):
+class Item(BaseRetailCrmScheme):
     name: str = Field("", description="Наименование")
     price: float = Field(0, description="Цена")
     quantity: float = Field(0, description="Количество")
@@ -57,13 +58,13 @@ class Item(BaseModel):
     markingCode: str = Field("", description="Код маркировки")
 
 
-class CustomerTagLink(BaseModel):
+class CustomerTagLink(BaseRetailCrmScheme):
     name: str = Field("")
     colorCode: str = Field("")
     attached: bool = Field(False)
 
 
-class CustomerAddress(BaseModel):
+class CustomerAddress(BaseRetailCrmScheme):
     id: Optional[int] = Field(None, description="ID адреса")
     index: Optional[str] = Field(None, description="Индекс")
     countryIso: Optional[str] = Field(
@@ -92,11 +93,11 @@ class CustomerAddress(BaseModel):
     name: Optional[str] = Field(None, description="Наменование адреса")
 
 
-class CustomerPhone(BaseModel):
+class CustomerPhone(BaseRetailCrmScheme):
     number: str = Field("", description="Номер телефона")
 
 
-class MGChannel(BaseModel):
+class MGChannel(BaseRetailCrmScheme):
     id: Optional[int] = Field(None, description="ID канала")
     externalId: Optional[int] = Field(None, description="Внешний ID канала")
     type: Optional[str] = Field(None, description="Тип канала")
@@ -104,7 +105,7 @@ class MGChannel(BaseModel):
     name: Optional[str] = Field(None, description="Название канала")
 
 
-class MGCustomer(BaseModel):
+class MGCustomer(BaseRetailCrmScheme):
     id: int = Field(description="ID клиента")
     externalId: Optional[int] = Field(
         None, description="Внешний ID MessageGateway клиента"
@@ -112,7 +113,7 @@ class MGCustomer(BaseModel):
     mgChannel: Optional[MGChannel] = Field(None, description="MessageGateway канал")
 
 
-class SerializedSource(BaseModel):
+class SerializedSource(BaseRetailCrmScheme):
     source: str = Field("", description="Источник")
     medium: str = Field("", description="Канал")
     campaign: str = Field("", description="Кампания")
@@ -120,7 +121,7 @@ class SerializedSource(BaseModel):
     content: str = Field("", description="Содержание кампании")
 
 
-class Customer(BaseModel):
+class Customer(BaseRetailCrmScheme):
     type: Optional[str] = Field(None, description="Тип клиента")
     id: Optional[int] = Field(None, description="ID клиента")
     externalId: Optional[str] = Field(None, description="Внешний ID клиента")
@@ -194,29 +195,29 @@ class Customer(BaseModel):
     )
 
 
-class CodeValueModel(BaseModel):
+class CodeValueModel(BaseRetailCrmScheme):
     code: Optional[str] = Field(None, description="Код")
     value: Optional[str] = Field(None, description="Значение")
 
 
-class Unit(BaseModel):
+class Unit(BaseRetailCrmScheme):
     code: str = Field(description="Символьный код")
     name: str = Field(description="Название")
     sym: str = Field(description="Краткое обозначение")
 
 
 # todo: заполнить
-class LoyaltyLevel(BaseModel):
+class LoyaltyLevel(BaseRetailCrmScheme):
     id: Optional[int] = Field(None)
     name: str = Field("")
 
 
 # todo: заполнить
-class LoyaltyEventDiscount(BaseModel):
+class LoyaltyEventDiscount(BaseRetailCrmScheme):
     id: int
 
 
-class PackageItemOrderProduct(BaseModel):
+class PackageItemOrderProduct(BaseRetailCrmScheme):
     id: int = Field(description="ID позиции в заказе")
     externalId: Optional[str] = Field(
         None, description="[deprecated] Внешний ID позиции в заказе"
@@ -227,13 +228,13 @@ class PackageItemOrderProduct(BaseModel):
 
 
 # todo: заполнить
-class PackageItem(BaseModel):
+class PackageItem(BaseRetailCrmScheme):
     orderProduct: PackageItemOrderProduct = Field(None, description="Позиция в заказе")
     quantity: Optional[float] = Field(0, description="Количество товара в упаковке")
 
 
 # todo: заполнить
-class Package(BaseModel):
+class Package(BaseRetailCrmScheme):
     packageId: Optional[str] = Field(None)
     weight: Optional[float] = Field(None)
     length: Optional[int] = Field(None)
@@ -243,12 +244,12 @@ class Package(BaseModel):
 
 
 # todo: заполнить
-class DeclaredValueItem(BaseModel):
+class DeclaredValueItem(BaseRetailCrmScheme):
     orderProduct: Optional[PackageItemOrderProduct] = Field(None)
     value: Optional[float] = Field(None)
 
 
-class TimeInterval(BaseModel):
+class TimeInterval(BaseRetailCrmScheme):
     from_: Optional[time] = Field(None, description='Время "с"', alias="from")
     to: Optional[time] = Field(None, description='Время "до"')
     custom: Optional[str] = Field(
@@ -256,13 +257,13 @@ class TimeInterval(BaseModel):
     )
 
 
-class LinkedOrder(BaseModel):
+class LinkedOrder(BaseRetailCrmScheme):
     id: int = Field(description="ID связанного заказа")
     number: Optional[str] = Field(None, description="Номер связанного заказа")
     externalId: Optional[str] = Field(None, description="Внешний ID связанного заказа")
 
 
-class OrderLink(BaseModel):
+class OrderLink(BaseRetailCrmScheme):
     order: Optional[LinkedOrder] = Field(None, description="Связанный заказ")
     createdAt: Optional[datetime] = Field(
         None, description="Дата/время создания связи с заказом"
@@ -274,7 +275,7 @@ class OrderLink(BaseModel):
     )
 
 
-class OrderProductPriceItem(BaseModel):
+class OrderProductPriceItem(BaseRetailCrmScheme):
     price: float = Field(
         0,
         description="Итоговая цена c учетом всех скидок на товар и заказ (в валюте объекта)",
@@ -282,17 +283,17 @@ class OrderProductPriceItem(BaseModel):
     quantity: float = Field(0, description="Количество товара по заданной цене")
 
 
-class AbstractDiscount(BaseModel):
+class AbstractDiscount(BaseRetailCrmScheme):
     type: DiscountTypes = Field(description="Тип скидки")
     amount: float = Field(0, description="Сумма скидки")
 
 
-class PriceType(BaseModel):
+class PriceType(BaseRetailCrmScheme):
     code: str = Field(description="Код типа цены")
 
 
 # todo: заполнить
-class OrderContragent(BaseModel):
+class OrderContragent(BaseRetailCrmScheme):
     contragentType: Optional[str] = Field(None)
     legalName: Optional[str] = Field(None)
     legalAddress: Optional[str] = Field(None)
@@ -311,7 +312,7 @@ class OrderContragent(BaseModel):
 
 
 # todo: заполнить
-class CompanyContragent(BaseModel):
+class CompanyContragent(BaseRetailCrmScheme):
     contragentType: Optional[str] = Field(None)
     legalName: Optional[str] = Field(None)
     legalAddress: Optional[str] = Field(None)
@@ -330,7 +331,7 @@ class CompanyContragent(BaseModel):
 
 
 # todo: заполнить
-class SerializedEntityCustomer(BaseModel):
+class SerializedEntityCustomer(BaseRetailCrmScheme):
     site: Optional[str] = Field(None)
     id: Optional[int] = Field(None)
     externalId: Optional[str] = Field(None)
@@ -338,7 +339,7 @@ class SerializedEntityCustomer(BaseModel):
 
 
 # todo: заполнить
-class Company(BaseModel):
+class Company(BaseRetailCrmScheme):
     id: Optional[int] = Field(None)
     externalId: Optional[str] = Field(None)
     customer: Optional[SerializedEntityCustomer] = Field(None)
@@ -362,7 +363,7 @@ class Company(BaseModel):
     )
 
 
-class OrderProductProperties(BaseModel):
+class OrderProductProperties(BaseRetailCrmScheme):
     code: Optional[str] = Field(
         None,
         description="Код свойства (не обязательное поле, код может передаваться в ключе свойства)"
@@ -371,7 +372,7 @@ class OrderProductProperties(BaseModel):
     value: Optional[str] = Field(None, description="Значение свойства")
 
 
-class OrderProduct(BaseModel):
+class OrderProduct(BaseRetailCrmScheme):
     id: Optional[int] = Field(description="ID позиции в заказе")
     externalIds: list[CodeValueModel] = Field(
         [], description="Внешние идентификаторы позиции в заказе"
@@ -419,7 +420,7 @@ class OrderProduct(BaseModel):
     )
 
 
-class Offer(BaseModel):
+class Offer(BaseRetailCrmScheme):
     id: Optional[int] = Field(description="ID торгового предложения")
     externalId: Optional[str] = Field(
         "", description="ID торгового предложения в магазине"
@@ -440,7 +441,7 @@ class Offer(BaseModel):
     )
 
 
-class Payment(BaseModel):
+class Payment(BaseRetailCrmScheme):
     id: int = Field(description="Внутренний ID")
     type: str = Field(None, description="Тип оплаты")
     external_id: Optional[str] = Field(
@@ -456,7 +457,7 @@ class Payment(BaseModel):
     )
 
 
-class OrderDeliveryAddress(BaseModel):
+class OrderDeliveryAddress(BaseRetailCrmScheme):
     index: Optional[str] = Field(None, description="Индекс")
     countryIso: Optional[str] = Field(
         None, description="ISO код страны (ISO 3166-1 alpha-2)"
@@ -482,7 +483,7 @@ class OrderDeliveryAddress(BaseModel):
     text: Optional[str] = Field(None, description="Адрес в текстовом виде")
 
 
-class SerializedOrderDelivery(BaseModel):
+class SerializedOrderDelivery(BaseRetailCrmScheme):
     code: str = Field(None, description="Код типа доставки")
     integrationCode: Optional[str] = Field(
         None, description="Интеграционный код типа доставки"
@@ -501,7 +502,7 @@ class SerializedOrderDelivery(BaseModel):
     date_serializer = field_serializer("date")(datetime_serializer("%Y-%m-%d %H:%M:%S"))
 
 
-class Order(BaseModel):
+class Order(BaseRetailCrmScheme):
     id: int = Field(0, description="ID заказа")
     externalId: str = Field(
         "",
@@ -609,11 +610,11 @@ class Order(BaseModel):
     )
 
 
-class CourierPhone(BaseModel):
+class CourierPhone(BaseRetailCrmScheme):
     number: str = Field("", description="Номер телефона")
 
 
-class Courier(BaseModel):
+class Courier(BaseRetailCrmScheme):
     id: int = Field(description="ID курьера")
     firstName: str = Field("", description="Имя")
     lastName: str = Field("", description="Фамилия")
@@ -624,14 +625,14 @@ class Courier(BaseModel):
     description: str = Field("", description="Примечание")
 
 
-class Contact(BaseModel):
+class Contact(BaseRetailCrmScheme):
     id: int
     externalId: str = ""
     browserId: str = ""
     site: str = ""
 
 
-class Source(BaseModel):
+class Source(BaseRetailCrmScheme):
     source: str = ""
     medium: str = ""
     campaign: str = ""

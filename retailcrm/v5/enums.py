@@ -8,7 +8,7 @@ __all__ = [
     "RefundStatuses",
     "DiscountTypes",
     "PrivilegeType",
-    "ContragentTypes"
+    "ContragentTypes",
     "SexTypes",
 ]
 
