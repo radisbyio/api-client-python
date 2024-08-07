@@ -9,13 +9,6 @@ from retailcrm.v5.schemas.requests.delivery import (  # SerializedOrder,
     StatusUpdates,
 )
 from retailcrm.v5.schemas.responses.deliveries import ResponseCalculation
-from retailcrm.v5.schemas.responses.orders import (
-    ResponseCreateOrderPayment,
-    ResponseDeleteOrderPayment,
-    ResponseEditOrder,
-    ResponseEditOrderPayment,
-    ResponseGetOrder,
-)
 
 
 class DeliveryController:
@@ -47,16 +40,16 @@ class DeliveryController:
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
-
-    async def shipments(
-        self, filter_data: DeliveryShipmentFilterData, limit: int = 20, page: int = 1
-    ) -> ResponseGetOrder:
-        response = await self._api.shipments(
-            filter_json=filter_data.model_dump_json(exclude_unset=True, by_alias=True),
-            limit=limit,
-            page=page,
-        )
-        response_obj = ResponseGetOrder.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+    #
+    # async def shipments(
+    #     self, filter_data: DeliveryShipmentFilterData, limit: int = 20, page: int = 1
+    # ) -> ResponseGetOrder:
+    #     response = await self._api.shipments(
+    #         filter_json=filter_data.model_dump_json(exclude_unset=True, by_alias=True),
+    #         limit=limit,
+    #         page=page,
+    #     )
+    #     response_obj = ResponseGetOrder.model_validate_json(response.body)
+    #     if response.status_code >= 400:
+    #         raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
+    #     return response_obj

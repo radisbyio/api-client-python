@@ -9,16 +9,16 @@ from retailcrm.v5.schemas.orders import (
     SerializedOrderList,
     SerializedPayment,
 )
-from retailcrm.v5.schemas.responses.orders import (
-    ResponseCreateOrder,
+from retailcrm.v5.schemas import (
+    ResponseOrderHistory,
     ResponseCreateOrderPayment,
     ResponseDeleteOrderPayment,
     ResponseEditOrder,
     ResponseEditOrderPayment,
     ResponseGetOrder,
-    ResponseOrderHistory,
     ResponseOrders,
     ResponseOrdersUpload,
+    ResponseCreateOrder,
 )
 from retailcrm.v5.utils import pydantic_to_nested_dict
 

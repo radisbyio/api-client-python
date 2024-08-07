@@ -2,7 +2,6 @@ from retailcrm.exceptions import RetailCrmApiError
 from retailcrm.http_cilent import BaseHttpClient
 from retailcrm.v5.api.customers import RetailCrmCustomersApi
 from retailcrm.v5.schemas.customers import CustomerFilterData, SerializedCustomer, ResponseCustomerCreate
-from retailcrm.v5.schemas.responses import ResponseCreateOrder
 from retailcrm.v5.schemas.responses.customers import ResponseCustomers
 from retailcrm.v5.utils import pydantic_to_nested_dict
 

@@ -2,11 +2,10 @@ from setuptools import find_packages, setup
 
 setup(
     name="radis-retailcrm-api",
-    version="0.0.49",
+    version="0.0.50",
     description="RetailCRM API client",
     url="https://github.com/retailcrm/api-client-python",
     author="Radis.by",
-    license="MIT",
     packages=find_packages(exclude=("tests",)),
     package_data={},
     install_requires=["httpx", "pydantic"],

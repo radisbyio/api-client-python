@@ -1,10 +1,11 @@
 from datetime import date, datetime
 from typing import Optional, Union
 
-from pydantic import BaseModel, Field, RootModel, field_serializer, field_validator
+from pydantic import Field, RootModel, field_serializer
 
 from retailcrm.v5.enums import VatRateTypes
-from retailcrm.v5.helpers import datetime_serializer, dict_validator
+from retailcrm.v5.helpers import datetime_serializer
+from retailcrm.v5.schemas import RetailCrmResponse, BaseRetailCrmScheme
 from retailcrm.v5.schemas.references import SerializedDeliveryService
 from retailcrm.v5.schemas.requests import MGDialog
 from retailcrm.v5.schemas.shared import (
@@ -15,13 +16,13 @@ from retailcrm.v5.schemas.shared import (
     OrderProductProperties,
     PriceType,
     Source,
-    TimeInterval,
+    TimeInterval, Order, OrderProduct, Payment,
 )
 
 
 # TODO: make itemDeclaredValues
 # TODO: make packages
-class GenericData(BaseModel):
+class GenericData(BaseRetailCrmScheme):
     externalId: Optional[str] = Field(None, description="Идентификатор в службе доставки")
     trackNumber: Optional[str] = Field(None, description="Номер отправления (поле deprecated на запись)")
     locked: bool = Field(False, description="Не синхронизировать со службой доставки")
@@ -37,7 +38,7 @@ class GenericData(BaseModel):
     ] = Field(default_factory=list, description="Упаковки")
 
 
-class DeliveryService(BaseModel):
+class DeliveryService(BaseRetailCrmScheme):
     name: str
     code: str = ""
     active: bool = False
@@ -45,7 +46,7 @@ class DeliveryService(BaseModel):
 
 
 # todo: update vatRate to enum
-class SerializedOrderDelivery(BaseModel):
+class SerializedOrderDelivery(BaseRetailCrmScheme):
     code: Optional[str] = Field(None, description="Код типа доставки")
     data: Optional[GenericData] = Field(None, description="Данные службы доставки, подключенной через API")
     service: Optional[SerializedDeliveryService] = Field(None)
@@ -57,7 +58,7 @@ class SerializedOrderDelivery(BaseModel):
     vatRate: Optional[str] = Field(None, description="Ставка НДС")
 
 
-class SerializedPayment(BaseModel):
+class SerializedPayment(BaseRetailCrmScheme):
     externalId: Optional[str] = Field(None, description="Внешний ID платежа")
     amount: float = Field(None, description="Сумма платежа (в валюте объекта)")
     paidAt: Optional[datetime] = Field(None, description="Дата оплаты")
@@ -70,7 +71,7 @@ class SerializedPayment(BaseModel):
     )
 
 
-class SerializedOrderProductOffer(BaseModel):
+class SerializedOrderProductOffer(BaseRetailCrmScheme):
     id: Optional[int] = Field(None, description="ID торгового предложения")
     externalId: Optional[str] = Field(
         None, description="Внешний ID торгового предложения"
@@ -80,7 +81,7 @@ class SerializedOrderProductOffer(BaseModel):
     )
 
 
-class SerializedOrderProduct(BaseModel):
+class SerializedOrderProduct(BaseRetailCrmScheme):
     markingCodes: list[str] = Field(default_factory=list, description="Коды маркировки")
     initialPrice: Optional[float] = Field(
         None, description="Цена товара/SKU (в валюте объекта)"
@@ -117,7 +118,7 @@ class SerializedOrderProduct(BaseModel):
     )
 
 
-class OrderHistoryFilterV4Type(BaseModel):
+class OrderHistoryFilterV4Type(BaseRetailCrmScheme):
     orderId: Optional[int] = Field(None, description="ID заказа")
     sinceId: Optional[int] = Field(None, description="Начиная с ID истории заказов")
     externalId: Optional[str] = Field(None, description="Внешний ID заказа")
@@ -126,7 +127,7 @@ class OrderHistoryFilterV4Type(BaseModel):
 
 
 # todo: заполнить
-class OrderFilterData(BaseModel):
+class OrderFilterData(BaseRetailCrmScheme):
     ids: list[int] = Field([], description="Массив ID заказов")
     externalIds: list[str] = Field([], description="Массив externalID заказов")
     numbers: list[str] = Field([], description="Массив номеров заказов")
@@ -145,7 +146,7 @@ class OrderFilterData(BaseModel):
     deliveryDateTo: Optional[date] = Field(None, description="Дата доставки (до)")
 
 
-class SerializedOrder(BaseModel):
+class SerializedOrder(BaseRetailCrmScheme):
     number: str = ""
     externalId: str = ""
     privilegeType: str = ""
@@ -202,7 +203,125 @@ class SerializedOrderList(RootModel):
     root: list[SerializedOrder] = Field(default_factory=list)
 
 
-class SerializedEntityOrder(BaseModel):
+class SerializedEntityOrder(BaseRetailCrmScheme):
     id: int = Field(0, description="Внутренний ID заказа")
     external_id: str = Field("", alias="externalId", description="Внешний ID заказа")
     number: str = Field("", description="Номер заказа")
+
+
+class ApiKey(BaseRetailCrmScheme):
+    current: Optional[bool] = Field(
+        None,
+        description="Изменение было сделано с помощью ключа, используемого в данный момент",
+    )
+    id: Optional[int] = Field(None, description="ID API-ключа")
+
+
+class User(BaseRetailCrmScheme):
+    id: int = Field(description="ID пользователя")
+
+
+class OrderHistory(BaseRetailCrmScheme):
+    id: Optional[int] = Field(
+        None, alias="id", description="Внутренний идентификатор записи в истории"
+    )
+    created_at: Optional[datetime] = Field(
+        None, description="Дата внесения изменения", validation_alias="createdAt"
+    )
+    created: Optional[bool] = Field(None, description="Признак создания сущности")
+    deleted: Optional[bool] = Field(None, description="Признак удаления сущности")
+    source: Optional[str] = Field(None, description="Источник изменения")
+    user: Optional[User] = Field(None, description="Пользователь")
+    field: Optional[str] = Field(None, description="Имя изменившегося поля")
+    old_value: Optional[str | int | dict] = Field(
+        None, description="Старое значение свойства", validation_alias="oldValue"
+    )
+    new_value: Optional[str | int | dict] = Field(
+        None, description="Новое значение свойства", validation_alias="newValue"
+    )
+    api_key: Optional[ApiKey] = Field(
+        None,
+        description="Информация о ключе api, использовавшемся для этого изменения",
+        validation_alias="apiKey",
+    )
+    order: Optional[Order] = Field(None, description="Заказ")
+    item: Optional[OrderProduct] = Field(None, description="Позиция в заказе")
+    payment: Optional[Payment] = Field(None, description="Платёж")
+    combined_to: Optional[Order] = Field(
+        None,
+        description="Информация о заказе который получился после объединения с текущим заказом",
+        validation_alias="combinedTo",
+    )
+    ancestor: Optional[Order] = Field(
+        None, description="Информация о заказе из которого был создан текущий заказ"
+    )
+
+
+class ResponseOrderHistory(RetailCrmResponse):
+    generated_at: Optional[datetime] = Field(
+        None, description="Время формирования ответа", validation_alias="generatedAt"
+    )
+    history: list[OrderHistory] = []
+
+
+class FixExternalRow(BaseRetailCrmScheme):
+    id: Optional[int] = Field(None, description="Внутренний ID")
+    external_id: Optional[str] = Field(
+        None, description="Внешний ID", validation_alias="externalId"
+    )
+
+
+class EntityWithExternalId(BaseRetailCrmScheme):
+    external_id: Optional[str] = Field(
+        None, description="Внешний ID (при наличии)", validation_alias="externalId"
+    )
+
+class ResponseOrdersUpload(RetailCrmResponse):
+    uploaded_orders: list[FixExternalRow] = Field(
+        [],
+        description="Идентификаторы загруженных объектов",
+        validation_alias="uploadedOrders",
+    )
+    failed_orders: list[FixExternalRow] = Field(
+        [],
+        description="Идентификаторы незагруженных объектов",
+        validation_alias="failedOrders",
+    )
+    orders: list[Order] = Field([], description="Список заказов")
+
+
+class ResponseEditOrder(RetailCrmResponse):
+    id: Optional[int] = None
+    order: Optional[Order] = None
+
+
+class ResponseCreateOrderPayment(RetailCrmResponse):
+    id: Optional[int] = 0
+
+
+class ResponseEditOrderPayment(RetailCrmResponse):
+    id: Optional[int] = 0
+
+
+class ResponseDeleteOrderPayment(RetailCrmResponse):
+    pass
+
+
+class ResponseGetOrder(RetailCrmResponse):
+    order: Optional[Order] = None
+
+
+class ResponseOrders(RetailCrmResponse):
+    orders: list[Order] = Field([], description="Список заказов")
+
+
+# todo: заполнить
+class CreateOrder(BaseRetailCrmScheme):
+    id: int
+    externalId: Optional[str] = None
+
+
+# todo: заполнить
+class ResponseCreateOrder(RetailCrmResponse):
+    order: Optional[CreateOrder] = None
+

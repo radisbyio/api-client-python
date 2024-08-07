@@ -13,15 +13,7 @@ from retailcrm.v5.schemas.shared import (
 )
 
 
-# todo: заполнить
-class CreateOrder(BaseModel):
-    id: int
-    externalId: Optional[str] = None
 
-
-# todo: заполнить
-class ResponseCreateOrder(RetailCrmResponse):
-    order: Optional[CreateOrder] = None
 
 
 class GenericData(BaseModel):
@@ -164,108 +156,4 @@ class KazPostData(BaseModel):
     packages: Optional[List["Package"]] = Field(None)
 
 
-class User(BaseModel):
-    id: int = Field(description="ID пользователя")
 
-
-class ApiKey(BaseModel):
-    current: Optional[bool] = Field(
-        None,
-        description="Изменение было сделано с помощью ключа, используемого в данный момент",
-    )
-    id: Optional[int] = Field(None, description="ID API-ключа")
-
-
-class OrderHistory(BaseModel):
-    id: Optional[int] = Field(
-        None, alias="id", description="Внутренний идентификатор записи в истории"
-    )
-    created_at: Optional[datetime] = Field(
-        None, description="Дата внесения изменения", validation_alias="createdAt"
-    )
-    created: Optional[bool] = Field(None, description="Признак создания сущности")
-    deleted: Optional[bool] = Field(None, description="Признак удаления сущности")
-    source: Optional[str] = Field(None, description="Источник изменения")
-    user: Optional[User] = Field(None, description="Пользователь")
-    field: Optional[str] = Field(None, description="Имя изменившегося поля")
-    old_value: Optional[str | int | datetime | dict] = Field(
-        None, description="Старое значение свойства", validation_alias="oldValue"
-    )
-    new_value: Optional[str | int | datetime | dict] = Field(
-        None, description="Новое значение свойства", validation_alias="newValue"
-    )
-    api_key: Optional[ApiKey] = Field(
-        None,
-        description="Информация о ключе api, использовавшемся для этого изменения",
-        validation_alias="apiKey",
-    )
-    order: Optional[Order] = Field(None, description="Заказ")
-    item: Optional[OrderProduct] = Field(None, description="Позиция в заказе")
-    payment: Optional[Payment] = Field(None, description="Платёж")
-    combined_to: Optional[Order] = Field(
-        None,
-        description="Информация о заказе который получился после объединения с текущим заказом",
-        validation_alias="combinedTo",
-    )
-    ancestor: Optional[Order] = Field(
-        None, description="Информация о заказе из которого был создан текущий заказ"
-    )
-
-
-class ResponseGetOrder(RetailCrmResponse):
-    order: Optional[Order] = None
-
-
-class ResponseOrders(RetailCrmResponse):
-    orders: list[Order] = Field([], description="Список заказов")
-
-
-class FixExternalRow(BaseModel):
-    id: Optional[int] = Field(None, description="Внутренний ID")
-    external_id: Optional[str] = Field(
-        None, description="Внешний ID", validation_alias="externalId"
-    )
-
-
-class EntityWithExternalId(BaseModel):
-    external_id: Optional[str] = Field(
-        None, description="Внешний ID (при наличии)", validation_alias="externalId"
-    )
-
-
-class ResponseOrdersUpload(RetailCrmResponse):
-    uploaded_orders: list[FixExternalRow] = Field(
-        [],
-        description="Идентификаторы загруженных объектов",
-        validation_alias="uploadedOrders",
-    )
-    failed_orders: list[FixExternalRow] = Field(
-        [],
-        description="Идентификаторы незагруженных объектов",
-        validation_alias="failedOrders",
-    )
-    orders: list[Order] = Field([], description="Список заказов")
-
-
-class ResponseEditOrder(RetailCrmResponse):
-    id: Optional[int] = None
-    order: Optional[Order] = None
-
-
-class ResponseCreateOrderPayment(RetailCrmResponse):
-    id: Optional[int] = 0
-
-
-class ResponseEditOrderPayment(RetailCrmResponse):
-    id: Optional[int] = 0
-
-
-class ResponseOrderHistory(RetailCrmResponse):
-    generated_at: Optional[datetime] = Field(
-        None, description="Время формирования ответа", validation_alias="generatedAt"
-    )
-    history: list[OrderHistory] = []
-
-
-class ResponseDeleteOrderPayment(RetailCrmResponse):
-    pass
