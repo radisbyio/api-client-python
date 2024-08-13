@@ -139,6 +139,8 @@ class OrderFilterData(BaseRetailCrmScheme):
     createdAtFrom: Optional[date] = Field(
         None, description="Дата оформления заказа (от)"
     )
+    orderTypes: list[str] = Field(default_factory=list, description="Типы заказа")
+    extendedStatus: list[str] = Field(default_factory=list, description="Статус заказа")
     createdAtTo: Optional[date] = Field(None, description="Дата оформления заказа (до)")
     fullPaidAtFrom: Optional[date] = Field(None, description="Дата полной оплаты (от)")
     fullPaidAtTo: Optional[date] = Field(None, description="Дата полной оплаты (до)")
