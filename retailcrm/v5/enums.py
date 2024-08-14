@@ -10,6 +10,7 @@ __all__ = [
     "PrivilegeType",
     "ContragentTypes",
     "SexTypes",
+    "UserStatuses"
 ]
 
 
@@ -70,3 +71,10 @@ class ContragentTypes(str, Enum):
 class SexTypes(str, Enum):
     FEMALE = "female"
     MALE = "male"
+
+
+class UserStatuses(str, Enum):
+    BREAK = "break"
+    BUSY = "busy"
+    DINNER = "dinner"
+    FREE = "free"

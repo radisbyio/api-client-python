@@ -8,6 +8,7 @@ from retailcrm.v5.controllers.delivery import DeliveryController
 from retailcrm.v5.controllers.orders import OrdersController
 from retailcrm.v5.controllers.payments import PaymentController
 from retailcrm.v5.controllers.references import ReferencesController
+from retailcrm.v5.controllers.users import UsersController
 
 
 @dataclass(slots=True)
@@ -21,6 +22,7 @@ class RetailCrmApiClientV5:
     _delivery_controller: Optional[DeliveryController]
     _references_controller: Optional[ReferencesController]
     _custom_fields_controller: Optional[CustomFieldsController]
+    _users_controller: Optional[UsersController]
 
     def __init__(self, crm_url: str, api_key: str, client: BaseHttpClient = None):
         self._crm_url = crm_url
@@ -81,3 +83,9 @@ class RetailCrmApiClientV5:
         if not self._custom_fields_controller:
             self._custom_fields_controller = CustomFieldsController(self._client)
         return self._custom_fields_controller
+
+    @property
+    def users(self) -> UsersController:
+        if not self._users_controller:
+            self._users_controller = UsersController(self._client)
+        return self._users_controller
