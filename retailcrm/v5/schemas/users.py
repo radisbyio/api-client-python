@@ -53,11 +53,11 @@ class ApiUserFilter(BaseRetailCrmScheme):
     createdAtFrom: Optional[datetime] = Field(None, description="Дата создания пользователя (от)")
     createdAtTo: Optional[datetime] = Field(None, description="Дата создания пользователя (до)")
 
-    createdAtFrom_serializer = field_serializer("created_at")(
+    createdAtFrom_serializer = field_serializer("createdAtFrom")(
         datetime_serializer("%Y-%m-%d %H:%M:%S")
     )
 
-    createdAtTo_serializer = field_serializer("created_at")(
+    createdAtTo_serializer = field_serializer("createdAtTo")(
         datetime_serializer("%Y-%m-%d %H:%M:%S")
     )
 
