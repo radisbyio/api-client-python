@@ -34,7 +34,7 @@ class RetailCrmUsersApi:
         :return: Response
         """
         return await self._client.get(
-            endpoint="/payment/create-invoice",
+            endpoint="/users",
             params={
                 "limit": limit,
                 "page": page,
