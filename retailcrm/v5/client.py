@@ -39,6 +39,7 @@ class RetailCrmApiClientV5:
         self._delivery_controller = None
         self._references_controller = None
         self._custom_fields_controller = None
+        self._users_controller = None
 
     @property
     def crm_url(self):
