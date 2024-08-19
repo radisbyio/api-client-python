@@ -92,7 +92,7 @@ class SerializedUser(BaseRetailCrmScheme):
     language: Optional[str] = Field(None, description="Язык интерфейса")
 
 
-class UserlistResponse(RetailCrmResponse):
+class UserListResponse(RetailCrmResponse):
     users: Optional[list[SerializedUser]] = Field(None, description="Информация о пользователях")
 
 

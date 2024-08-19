@@ -11,7 +11,7 @@ from retailcrm.v5.enums import (
     VatRateTypes,
 )
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme
-from retailcrm.v5.helpers import datetime_serializer, dict_validator, payments_validator
+from retailcrm.v5.helpers import datetime_serializer, dict_validator, payments_validator, time_serializer
 
 __all__ = [
     "Item",
@@ -250,10 +250,17 @@ class DeclaredValueItem(BaseRetailCrmScheme):
 
 
 class TimeInterval(BaseRetailCrmScheme):
-    from_: Optional[time] = Field(None, description='Время "с"', alias="from")
+    from_: Optional[time] = Field(None, description='Время "с"')
     to: Optional[time] = Field(None, description='Время "до"')
     custom: Optional[str] = Field(
         "", description="Временной диапазон в свободной форме"
+    )
+
+    from_serializer = field_serializer("from_")(
+        time_serializer("%H:%M")
+    )
+    to_serializer = field_serializer("to")(
+        time_serializer("%H:%M")
     )
 
 

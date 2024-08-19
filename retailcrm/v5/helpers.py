@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, time
 from typing import Any, Callable, Optional
 
 from pydantic_core.core_schema import ValidationInfo
@@ -35,7 +35,7 @@ def dict_validator() -> Callable[[Any, ValidationInfo], dict]:
     return validator
 
 
-def datetime_serializer(format_str: str) -> Callable[[datetime], str]:
+def datetime_serializer(format_str: str) -> Callable[[Optional[datetime]], str]:
     """
     Вспомогательная функция для форматирования даты при сериализации объекта datetime
     """
@@ -43,6 +43,20 @@ def datetime_serializer(format_str: str) -> Callable[[datetime], str]:
     def serializer(value: Optional[datetime]) -> Optional[str]:
         if value:
             return datetime.strftime(value, format_str)
+        else:
+            return None
+
+    return serializer
+
+
+def time_serializer(format_str: str) -> Callable[[Optional[time]], str]:
+    """
+    Вспомогательная функция для форматирования времени при сериализации объекта time
+    """
+
+    def serializer(value: Optional[time]) -> Optional[str]:
+        if value:
+            return value.strftime(format_str)
         else:
             return None
 
