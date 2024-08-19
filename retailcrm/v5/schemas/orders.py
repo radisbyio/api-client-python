@@ -52,7 +52,7 @@ class SerializedOrderDelivery(BaseRetailCrmScheme):
     service: Optional[SerializedDeliveryService] = Field(None)
     cost: Optional[float] = Field(None, description="Стоимость доставки")
     netCost: Optional[float] = Field(None, description="Себестоимость доставки")
-    date_: Optional[date] = Field(None, description="Дата доставки")
+    date_: Optional[date] = Field(None, description="Дата доставки", serialization_alias="date")
     time: Optional[TimeInterval] = Field(None, description="Информация о временном диапазоне")
     address: Optional[OrderDeliveryAddress] = Field(None, description="Адрес доставки")
     vatRate: Optional[str] = Field(None, description="Ставка НДС")

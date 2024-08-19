@@ -250,7 +250,7 @@ class DeclaredValueItem(BaseRetailCrmScheme):
 
 
 class TimeInterval(BaseRetailCrmScheme):
-    from_: Optional[time] = Field(None, description='Время "с"')
+    from_: Optional[time] = Field(None, description='Время "с"', serialization_alias="from")
     to: Optional[time] = Field(None, description='Время "до"')
     custom: Optional[str] = Field(
         "", description="Временной диапазон в свободной форме"
