@@ -1,12 +1,18 @@
 from datetime import date, datetime
 from typing import List, Optional
 
-from pydantic import BaseModel, field_validator, Field, field_serializer
+from pydantic import BaseModel, Field, field_serializer, field_validator
 
 from retailcrm.v5.enums import ContragentTypes, SexTypes
-from retailcrm.v5.helpers import dict_validator, datetime_serializer
+from retailcrm.v5.helpers import datetime_serializer, dict_validator
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme, RetailCrmResponse
-from retailcrm.v5.schemas.shared import Customer, CustomerAddress, CustomerPhone, SerializedSource, MGCustomer
+from retailcrm.v5.schemas.shared import (
+    Customer,
+    CustomerAddress,
+    CustomerPhone,
+    MGCustomer,
+    SerializedSource,
+)
 
 
 class CustomerFilterCustomerSubscriptionData(BaseModel):
@@ -17,7 +23,9 @@ class CustomerFilterCustomerSubscriptionData(BaseModel):
 
 class CustomerFilterData(BaseRetailCrmScheme):
     ids: Optional[List[int]] = Field(None, description="Массив ID клиентов")
-    externalIds: Optional[List[str]] = Field(None, description="Массив externalID клиентов")
+    externalIds: Optional[List[str]] = Field(
+        None, description="Массив externalID клиентов"
+    )
     name: Optional[str] = Field(None, description="Клиент")
     city: Optional[str] = Field(None, description="Город")
     region: Optional[str] = Field(None, description="Регион")
@@ -27,27 +35,39 @@ class CustomerFilterData(BaseRetailCrmScheme):
     notes: Optional[str] = Field(None, description="Заметки")
     vip: Optional[bool] = Field(None, description="Важный клиент")
     bad: Optional[bool] = Field(None, description="Плохой клиент")
-    discountCardNumber: Optional[str] = Field(None, description="Номер дисконтной карты")
-    attachments: Optional[int] = Field(None, description="Прикрепленные объекты (вложения)")
+    discountCardNumber: Optional[str] = Field(
+        None, description="Номер дисконтной карты"
+    )
+    attachments: Optional[int] = Field(
+        None, description="Прикрепленные объекты (вложения)"
+    )
     tasksCounts: Optional[int] = Field(None, description="Задачи")
     email: Optional[str] = Field(None, description="E-mail")
     contragentName: Optional[str] = Field(None, description="Полное наименование")
-    contragentTypes: Optional[List[ContragentTypes]] = Field(None,
-                                                             description="Типы контрагента")  # Несостыковка в документации
+    contragentTypes: Optional[List[ContragentTypes]] = Field(
+        None, description="Типы контрагента"
+    )  # Несостыковка в документации
     contragentInn: Optional[str] = Field(None, description="ИНН")
     contragentKpp: Optional[str] = Field(None, description="КПП")
     contragentBik: Optional[str] = Field(None, description="БИК банка")
     contragentCorrAccount: Optional[str] = Field(None, description="Корр. счет банка")
     contragentBankAccount: Optional[str] = Field(None, description="Расчетный счет")
-    classSegment: Optional[str] = Field(None, description="Сегмент", )
+    classSegment: Optional[str] = Field(
+        None,
+        description="Сегмент",
+    )
     minOrdersCount: Optional[int] = Field(None, description="Количество заказов (от)")
     maxOrdersCount: Optional[int] = Field(None, description="Количество заказов (до)")
     minAverageSumm: Optional[int] = Field(None, description="Средний чек (от)")
     maxAverageSumm: Optional[int] = Field(None, description="Средний чек (до)")
     minTotalSumm: Optional[int] = Field(None, description="Сумма по заказам (от)")
     maxTotalSumm: Optional[int] = Field(None, description="Сумма по заказам (до)")
-    minCostSumm: Optional[int] = Field(None, description="Сумма расходов по заказам (от)")
-    maxCostSumm: Optional[int] = Field(None, description="Сумма расходов по заказам (до)")
+    minCostSumm: Optional[int] = Field(
+        None, description="Сумма расходов по заказам (от)"
+    )
+    maxCostSumm: Optional[int] = Field(
+        None, description="Сумма расходов по заказам (до)"
+    )
     dateFrom: Optional[date] = Field(None, description="Дата регистрации (от)")
     dateTo: Optional[date] = Field(None, description="Дата регистрации (до)")
     firstOrderFrom: Optional[date] = Field(None, description="Первый заказ (от)")
@@ -56,9 +76,12 @@ class CustomerFilterData(BaseRetailCrmScheme):
     lastOrderTo: Optional[date] = Field(None, description="Последний заказ (до)")
     customFields: Optional[dict] = Field(None, description="Пользовательские поля")
     sex: Optional[SexTypes] = Field(None, description="Пол")
-    isContact: Optional[bool] = Field(None, description="Клиент является контактным лицом")
-    subscriptions: Optional[List[CustomerFilterCustomerSubscriptionData]] = Field(None,
-                                                                                  description="Фильтр по подпискам пользователя")
+    isContact: Optional[bool] = Field(
+        None, description="Клиент является контактным лицом"
+    )
+    subscriptions: Optional[List[CustomerFilterCustomerSubscriptionData]] = Field(
+        None, description="Фильтр по подпискам пользователя"
+    )
     online: Optional[bool] = Field(None, description="Клиент на сайте")
     segment: Optional[str] = Field(None, description="Сегмент")
     commentary: Optional[str] = Field(None, description="Комментарий оператора")
@@ -85,7 +108,9 @@ class CustomerFilterData(BaseRetailCrmScheme):
     )
     firstWebVisitFrom: Optional[date] = Field(None, description="Первое посещение (от)")
     firstWebVisitTo: Optional[date] = Field(None, description="Первое посещение (до)")
-    lastWebVisitFrom: Optional[date] = Field(None, description="Последнее посещение (от)")
+    lastWebVisitFrom: Optional[date] = Field(
+        None, description="Последнее посещение (от)"
+    )
     lastWebVisitTo: Optional[date] = Field(None, description="Последнее посещение (до)")
 
     customFields_validator = field_validator("customFields", mode="before")(
@@ -126,13 +151,15 @@ class SerializedCustomer(BaseRetailCrmScheme):
     bad: Optional[bool] = Field(None, description="Плохой клиент")
     contragent: Optional[CustomerContragent] = Field(
         None,
-        description="`deprecated` Реквизиты (Поля объекта следует использовать только при неактивированной функциональности \"Корпоративные клиенты\")",
+        description='`deprecated` Реквизиты (Поля объекта следует использовать только при неактивированной функциональности "Корпоративные клиенты")',
     )
     customFields: Optional[dict] = Field(
         None, description="Ассоциативный массив пользовательских полей"
     )
     personalDiscount: Optional[float] = Field(None, description="Персональная скидка")
-    discountCardNumber: Optional[str] = Field(None, description="Номер дисконтной карты")
+    discountCardNumber: Optional[str] = Field(
+        None, description="Номер дисконтной карты"
+    )
     address: Optional[CustomerAddress] = Field(None, description="Адрес клиента")
     firstName: Optional[str] = Field(None, description="Имя")
     lastName: Optional[str] = Field(None, description="Фамилия")
@@ -155,7 +182,9 @@ class SerializedCustomer(BaseRetailCrmScheme):
     )
     tags: Optional[List[str]] = Field(None, description="Теги")
     attachedTag: Optional[str] = Field(None, description="Прикреплённый тег")
-    browserId: Optional[str] = Field(None, description="Идентификатор устройства в Collector")
+    browserId: Optional[str] = Field(
+        None, description="Идентификатор устройства в Collector"
+    )
 
     createdAt_serializer = field_serializer("createdAt")(
         datetime_serializer("%Y-%m-%d %H:%M:%S")

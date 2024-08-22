@@ -42,5 +42,7 @@ class PaymentController:
         )
         response_obj = PaymentUpdateInvoiceResponse.model_validate_json(response.body)
         if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
+            raise RetailCrmApiError(
+                response.status_code, response_obj.errorMsg, response_obj.errors
+            )
         return response_obj

@@ -2,23 +2,23 @@ from retailcrm.exceptions import RetailCrmApiError
 from retailcrm.http_cilent import BaseHttpClient
 from retailcrm.v5.api.orders import RetailCrmOrdersApi
 from retailcrm.v5.enums import IdTypes
+from retailcrm.v5.schemas import (
+    ResponseCreateOrder,
+    ResponseCreateOrderPayment,
+    ResponseDeleteOrderPayment,
+    ResponseEditOrder,
+    ResponseEditOrderPayment,
+    ResponseGetOrder,
+    ResponseOrderHistory,
+    ResponseOrders,
+    ResponseOrdersUpload,
+)
 from retailcrm.v5.schemas.orders import (
     OrderFilterData,
     OrderHistoryFilterV4Type,
     SerializedOrder,
     SerializedOrderList,
     SerializedPayment,
-)
-from retailcrm.v5.schemas import (
-    ResponseOrderHistory,
-    ResponseCreateOrderPayment,
-    ResponseDeleteOrderPayment,
-    ResponseEditOrder,
-    ResponseEditOrderPayment,
-    ResponseGetOrder,
-    ResponseOrders,
-    ResponseOrdersUpload,
-    ResponseCreateOrder,
 )
 from retailcrm.v5.utils import pydantic_to_nested_dict
 
@@ -124,7 +124,9 @@ class OrdersController:
         )
         response_obj = ResponseEditOrderPayment.model_validate_json(response.body)
         if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
+            raise RetailCrmApiError(
+                response.status_code, response_obj.errorMsg, response_obj.errors
+            )
         return response_obj
 
     async def payment_delete(self, payment_id: str) -> ResponseDeleteOrderPayment:

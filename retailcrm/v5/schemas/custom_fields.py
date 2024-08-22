@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
-from retailcrm.v5.schemas.base import RetailCrmResponse, BaseRetailCrmScheme
+from retailcrm.v5.schemas.base import BaseRetailCrmScheme, RetailCrmResponse
 
 
 class CustomFieldsTypes(str, Enum):
@@ -68,9 +68,13 @@ class CustomFieldApiDocModel(BaseRetailCrmScheme):
     type: CustomFieldsTypes = Field(description="Тип поля")
     entityType: Optional[EntityTypes] = Field(None, description="Поля для таблицы")
     ordering: int = Field(description="Сортировка")
-    displayArea: Optional[DisplayAreaTypes] = Field(None, description="Область отображения")
+    displayArea: Optional[DisplayAreaTypes] = Field(
+        None, description="Область отображения"
+    )
     viewMode: Optional[ViewModeTypes] = Field(None, description="Вид поля в форме")
-    viewModeMobile: Optional[ViewModeMobileTypes] = Field(None, description="Вид поля в мобильном приложении")
+    viewModeMobile: Optional[ViewModeMobileTypes] = Field(
+        None, description="Вид поля в мобильном приложении"
+    )
     dictionary: Optional[str] = Field(None, description="Связанный словарь")
 
 
@@ -92,8 +96,12 @@ class SerializedCustomDictionaryElement(BaseRetailCrmScheme):
 class CustomDictionary(BaseRetailCrmScheme):
     name: str = Field(description="Название")
     code: str = Field(description="Символьный код")
-    elements: list[SerializedCustomDictionaryElement] = Field(description="Элемент справочника")
+    elements: list[SerializedCustomDictionaryElement] = Field(
+        description="Элемент справочника"
+    )
 
 
 class CustomDictionariesResponse(RetailCrmResponse):
-    customDictionaries: list[CustomDictionary] = Field(default_factory=list, description="Справочник")
+    customDictionaries: list[CustomDictionary] = Field(
+        default_factory=list, description="Справочник"
+    )

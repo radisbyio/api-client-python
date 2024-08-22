@@ -10,8 +10,13 @@ from retailcrm.v5.enums import (
     PrivilegeType,
     VatRateTypes,
 )
+from retailcrm.v5.helpers import (
+    datetime_serializer,
+    dict_validator,
+    payments_validator,
+    time_serializer,
+)
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme
-from retailcrm.v5.helpers import datetime_serializer, dict_validator, payments_validator, time_serializer
 
 __all__ = [
     "Item",
@@ -36,7 +41,8 @@ __all__ = [
     "Contact",
     "OrderDeliveryAddress",
     "OrderProductProperties",
-    "TimeInterval"
+    "TimeInterval",
+    "Task",
 ]
 
 
@@ -250,18 +256,16 @@ class DeclaredValueItem(BaseRetailCrmScheme):
 
 
 class TimeInterval(BaseRetailCrmScheme):
-    from_: Optional[time] = Field(None, description='Время "с"', serialization_alias="from")
+    from_: Optional[time] = Field(
+        None, description='Время "с"', serialization_alias="from"
+    )
     to: Optional[time] = Field(None, description='Время "до"')
     custom: Optional[str] = Field(
         "", description="Временной диапазон в свободной форме"
     )
 
-    from_serializer = field_serializer("from_")(
-        time_serializer("%H:%M")
-    )
-    to_serializer = field_serializer("to")(
-        time_serializer("%H:%M")
-    )
+    from_serializer = field_serializer("from_")(time_serializer("%H:%M"))
+    to_serializer = field_serializer("to")(time_serializer("%H:%M"))
 
 
 class LinkedOrder(BaseRetailCrmScheme):
@@ -373,7 +377,7 @@ class Company(BaseRetailCrmScheme):
 class OrderProductProperties(BaseRetailCrmScheme):
     code: Optional[str] = Field(
         None,
-        description="Код свойства (не обязательное поле, код может передаваться в ключе свойства)"
+        description="Код свойства (не обязательное поле, код может передаваться в ключе свойства)",
     )
     name: Optional[str] = Field(None, description="Имя свойства")
     value: Optional[str] = Field(None, description="Значение свойства")
@@ -645,3 +649,47 @@ class Source(BaseRetailCrmScheme):
     campaign: str = ""
     keyword: str = ""
     content: str = ""
+
+
+class AbstractCustomer(BaseRetailCrmScheme):
+    type: str = Field(description="Тип клиента")
+    id: int = Field(description="ID клиента")
+    externalId: Optional[str] = Field(None, description="Внешний ID клиента")
+    site: Optional[str] = Field(None, description="Магазин, с которого пришел клиент")
+
+
+class Task(BaseRetailCrmScheme):
+    id: int = Field(description="ID задачи")
+    text: str = Field("", description="Текст задачи")
+    commentary: str = Field("", description="Комментарий к задаче")
+    datetime_: Optional[datetime] = Field(
+        None, description="Время выполнения задачи", validation_alias="datetime"
+    )
+    createdAt: Optional[datetime] = Field(None, description="Дата создания")
+    complete: bool = Field(False, description="Признак выполнения задачи")
+    creator: Optional[int] = Field(None, description="Автор задачи")
+    performer: Optional[int] = Field(None, description="Исполнитель задачи")
+    performerType: Optional[str] = Field(None, description="Тип исполнителя задачи")
+    customer: Optional[AbstractCustomer] = Field(
+        None, description="Клиент, к которому привязана задача"
+    )
+    order: Optional[Order] = Field(
+        None, description="Заказ, к которому привязана задача"
+    )
+    phone: Optional[str] = Field(None, description="Телефон связанный с задачей")
+    phoneSite: Optional[str] = Field(
+        None, description="Магазин, связанный с задачей на перезвон"
+    )
+    completedAt: Optional[datetime] = Field(None, description="Время завершения задачи")
+
+
+class ApiKey(BaseRetailCrmScheme):
+    current: Optional[bool] = Field(
+        None,
+        description="Изменение было сделано с помощью ключа, используемого в данный момент",
+    )
+    id: Optional[int] = Field(None, description="ID API-ключа")
+
+
+class User(BaseRetailCrmScheme):
+    id: int = Field(description="ID пользователя")

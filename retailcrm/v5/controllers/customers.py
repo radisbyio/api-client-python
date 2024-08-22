@@ -1,7 +1,11 @@
 from retailcrm.exceptions import RetailCrmApiError
 from retailcrm.http_cilent import BaseHttpClient
 from retailcrm.v5.api.customers import RetailCrmCustomersApi
-from retailcrm.v5.schemas.customers import CustomerFilterData, SerializedCustomer, ResponseCustomerCreate
+from retailcrm.v5.schemas.customers import (
+    CustomerFilterData,
+    ResponseCustomerCreate,
+    SerializedCustomer,
+)
 from retailcrm.v5.schemas.responses.customers import ResponseCustomers
 from retailcrm.v5.utils import pydantic_to_nested_dict
 
@@ -24,7 +28,9 @@ class CustomersController:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
 
-    async def create(self, customer: SerializedCustomer, site: str) -> ResponseCustomerCreate:
+    async def create(
+        self, customer: SerializedCustomer, site: str
+    ) -> ResponseCustomerCreate:
         response = await self._api.create(
             customer_json=customer.model_dump_json(exclude_unset=True, by_alias=True),
             site=site,

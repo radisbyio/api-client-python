@@ -5,33 +5,48 @@ from pydantic import Field, RootModel, field_serializer
 
 from retailcrm.v5.enums import VatRateTypes
 from retailcrm.v5.helpers import datetime_serializer
-from retailcrm.v5.schemas import RetailCrmResponse, BaseRetailCrmScheme
+from retailcrm.v5.schemas import BaseRetailCrmScheme, RetailCrmResponse
 from retailcrm.v5.schemas.references import SerializedDeliveryService
 from retailcrm.v5.schemas.requests import MGDialog
 from retailcrm.v5.schemas.shared import (
+    ApiKey,
     CodeValueModel,
     Contact,
     Customer,
+    Order,
     OrderDeliveryAddress,
+    OrderProduct,
     OrderProductProperties,
+    Payment,
     PriceType,
     Source,
-    TimeInterval, Order, OrderProduct, Payment,
+    TimeInterval,
+    User,
 )
 
 
 # TODO: make itemDeclaredValues
 # TODO: make packages
 class GenericData(BaseRetailCrmScheme):
-    externalId: Optional[str] = Field(None, description="Идентификатор в службе доставки")
-    trackNumber: Optional[str] = Field(None, description="Номер отправления (поле deprecated на запись)")
+    externalId: Optional[str] = Field(
+        None, description="Идентификатор в службе доставки"
+    )
+    trackNumber: Optional[str] = Field(
+        None, description="Номер отправления (поле deprecated на запись)"
+    )
     locked: bool = Field(False, description="Не синхронизировать со службой доставки")
     tariff: Optional[str] = Field(None, description="Код тарифа")
-    pickuppointId: Optional[str] = Field(None, description="Идентификатор пункта самовывоза")
+    pickuppointId: Optional[str] = Field(
+        None, description="Идентификатор пункта самовывоза"
+    )
     payerType: Optional[str] = Field(None, description="	Плательщик за доставку")
-    shipmentpointId: Optional[str] = Field(None, description="Идентификатор терминала отгрузки")
-    extraData: Optional[list[dict[str, str]]] = Field(None,
-                                                      description="Дополнительные данные доставки (deliveryDataField.code => значение)")
+    shipmentpointId: Optional[str] = Field(
+        None, description="Идентификатор терминала отгрузки"
+    )
+    extraData: Optional[list[dict[str, str]]] = Field(
+        None,
+        description="Дополнительные данные доставки (deliveryDataField.code => значение)",
+    )
     itemDeclaredValues: Optional[list[dict[str, Union[int, float]]]] = None
     packages: list[
         dict[str, Union[str, float, int, list[dict[str, Union[int, str]]]]]
@@ -48,12 +63,18 @@ class DeliveryService(BaseRetailCrmScheme):
 # todo: update vatRate to enum
 class SerializedOrderDelivery(BaseRetailCrmScheme):
     code: Optional[str] = Field(None, description="Код типа доставки")
-    data: Optional[GenericData] = Field(None, description="Данные службы доставки, подключенной через API")
+    data: Optional[GenericData] = Field(
+        None, description="Данные службы доставки, подключенной через API"
+    )
     service: Optional[SerializedDeliveryService] = Field(None)
     cost: Optional[float] = Field(None, description="Стоимость доставки")
     netCost: Optional[float] = Field(None, description="Себестоимость доставки")
-    date_: Optional[date] = Field(None, description="Дата доставки", serialization_alias="date")
-    time: Optional[TimeInterval] = Field(None, description="Информация о временном диапазоне")
+    date_: Optional[date] = Field(
+        None, description="Дата доставки", serialization_alias="date"
+    )
+    time: Optional[TimeInterval] = Field(
+        None, description="Информация о временном диапазоне"
+    )
     address: Optional[OrderDeliveryAddress] = Field(None, description="Адрес доставки")
     vatRate: Optional[str] = Field(None, description="Ставка НДС")
 
@@ -211,18 +232,6 @@ class SerializedEntityOrder(BaseRetailCrmScheme):
     number: str = Field("", description="Номер заказа")
 
 
-class ApiKey(BaseRetailCrmScheme):
-    current: Optional[bool] = Field(
-        None,
-        description="Изменение было сделано с помощью ключа, используемого в данный момент",
-    )
-    id: Optional[int] = Field(None, description="ID API-ключа")
-
-
-class User(BaseRetailCrmScheme):
-    id: int = Field(description="ID пользователя")
-
-
 class OrderHistory(BaseRetailCrmScheme):
     id: Optional[int] = Field(
         None, alias="id", description="Внутренний идентификатор записи в истории"
@@ -278,6 +287,7 @@ class EntityWithExternalId(BaseRetailCrmScheme):
         None, description="Внешний ID (при наличии)", validation_alias="externalId"
     )
 
+
 class ResponseOrdersUpload(RetailCrmResponse):
     uploaded_orders: list[FixExternalRow] = Field(
         [],
@@ -326,4 +336,3 @@ class CreateOrder(BaseRetailCrmScheme):
 # todo: заполнить
 class ResponseCreateOrder(RetailCrmResponse):
     order: Optional[CreateOrder] = None
-

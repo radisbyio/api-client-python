@@ -35,5 +35,5 @@ class RetailCrmCustomersApi:
         return await self._client.post(
             endpoint=f"/customers/create",
             params={"site": site},
-            data={"customer": customer_json}
+            data={"customer": customer_json},
         )

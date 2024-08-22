@@ -6,7 +6,9 @@ class RetailCrmCustomFieldsApi:
     def __init__(self, client: BaseHttpClient):
         self._client = client
 
-    async def get_all(self, filter_dict: dict, limit: int = 20, page: int = 1) -> Response:
+    async def get_all(
+        self, filter_dict: dict, limit: int = 20, page: int = 1
+    ) -> Response:
         """
         **Получение списка пользовательских полей, удовлетворяющих заданному фильтру**
 
@@ -25,7 +27,9 @@ class RetailCrmCustomFieldsApi:
             },
         )
 
-    async def dictionaries(self, filter_dict: dict, limit: int = 20, page: int = 1) -> Response:
+    async def dictionaries(
+        self, filter_dict: dict, limit: int = 20, page: int = 1
+    ) -> Response:
         """
         **Получение списка справочников, удовлетворяющих заданному фильтру**
 

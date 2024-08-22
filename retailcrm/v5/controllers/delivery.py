@@ -40,6 +40,7 @@ class DeliveryController:
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
+
     #
     # async def shipments(
     #     self, filter_data: DeliveryShipmentFilterData, limit: int = 20, page: int = 1

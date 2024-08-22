@@ -12,7 +12,9 @@ class BaseHttpClient:
     async def get(self, endpoint: str, params: dict = None) -> Response:
         raise NotImplementedError
 
-    async def post(self, endpoint: str, params=None, data: dict = None) -> Response:
+    async def post(
+        self, endpoint: str, params: dict = None, data: dict = None
+    ) -> Response:
         raise NotImplementedError
 
 

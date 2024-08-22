@@ -23,7 +23,9 @@ class RetailCrmUsersApi:
             },
         )
 
-    async def users(self, filter_dict: dict, limit: int = 20, page: int = 1) -> Response:
+    async def users(
+        self, filter_dict: dict, limit: int = 20, page: int = 1
+    ) -> Response:
         """
         **Получение списка пользователей, удовлетворяющих заданному фильтру**
 
@@ -35,11 +37,7 @@ class RetailCrmUsersApi:
         """
         return await self._client.get(
             endpoint="/users",
-            params={
-                "limit": limit,
-                "page": page,
-                **filter_dict
-            },
+            params={"limit": limit, "page": page, **filter_dict},
         )
 
     async def user(self, user_id: int) -> Response:
@@ -57,7 +55,7 @@ class RetailCrmUsersApi:
 
     async def user_set_status(self, user_id: int, status: str) -> Response:
         """
-        **Получение информации о пользователе**
+        **Смена статуса пользователя**
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-users-id-status
         :param user_id: ID пользователя
