@@ -4,7 +4,6 @@ from typing import Optional
 from retailcrm.http_cilent import BaseHttpClient, HttpClient
 from retailcrm.v5.controllers.custom_fields import CustomFieldsController
 from retailcrm.v5.controllers.customers import CustomersController
-from retailcrm.v5.controllers.delivery import DeliveryController
 from retailcrm.v5.controllers.orders import OrdersController
 from retailcrm.v5.controllers.payments import PaymentController
 from retailcrm.v5.controllers.references import ReferencesController
@@ -22,7 +21,6 @@ class RetailCrmApiClientV5:
     _payment_controller: Optional[PaymentController]
     _orders_controller: Optional[OrdersController]
     _customers_controller: Optional[CustomersController]
-    _delivery_controller: Optional[DeliveryController]
     _references_controller: Optional[ReferencesController]
     _custom_fields_controller: Optional[CustomFieldsController]
     _users_controller: Optional[UsersController]
@@ -40,7 +38,6 @@ class RetailCrmApiClientV5:
         self._payment_controller = None
         self._orders_controller = None
         self._customers_controller = None
-        self._delivery_controller = None
         self._references_controller = None
         self._custom_fields_controller = None
         self._users_controller = None
@@ -71,12 +68,6 @@ class RetailCrmApiClientV5:
         if not self._customers_controller:
             self._customers_controller = CustomersController(self._client)
         return self._customers_controller
-
-    @property
-    def delivery(self) -> DeliveryController:
-        if not self._delivery_controller:
-            self._delivery_controller = DeliveryController(self._client)
-        return self._delivery_controller
 
     @property
     def references(self) -> ReferencesController:

@@ -19,6 +19,7 @@ from retailcrm.v5.helpers import (
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme
 
 __all__ = [
+    "ApiKey",
     "Item",
     "Customer",
     "MGCustomer",
@@ -26,6 +27,7 @@ __all__ = [
     "CustomerPhone",
     "CustomerTagLink",
     "MGChannel",
+    "MGDialog",
     "OrderProduct",
     "Payment",
     "Order",
@@ -43,6 +45,7 @@ __all__ = [
     "OrderProductProperties",
     "TimeInterval",
     "Task",
+    "User",
 ]
 
 
@@ -693,3 +696,7 @@ class ApiKey(BaseRetailCrmScheme):
 
 class User(BaseRetailCrmScheme):
     id: int = Field(description="ID пользователя")
+
+
+class MGDialog(BaseRetailCrmScheme):
+    pass # TODO: reailize if need

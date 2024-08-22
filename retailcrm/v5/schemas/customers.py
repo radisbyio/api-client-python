@@ -118,7 +118,7 @@ class CustomerFilterData(BaseRetailCrmScheme):
     )
 
 
-class ResponseCustomersFilter(RetailCrmResponse):
+class ResponseCustomersGetAll(RetailCrmResponse):
     customers: list[Customer] = Field(default_factory=list, description="Клиенты")
 
 

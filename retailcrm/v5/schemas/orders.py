@@ -7,12 +7,12 @@ from retailcrm.v5.enums import VatRateTypes
 from retailcrm.v5.helpers import datetime_serializer
 from retailcrm.v5.schemas import BaseRetailCrmScheme, RetailCrmResponse
 from retailcrm.v5.schemas.references import SerializedDeliveryService
-from retailcrm.v5.schemas.requests import MGDialog
 from retailcrm.v5.schemas.shared import (
     ApiKey,
     CodeValueModel,
     Contact,
     Customer,
+    MGDialog,
     Order,
     OrderDeliveryAddress,
     OrderProduct,
