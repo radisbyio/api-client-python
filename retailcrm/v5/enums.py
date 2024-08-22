@@ -10,7 +10,8 @@ __all__ = [
     "PrivilegeType",
     "ContragentTypes",
     "SexTypes",
-    "UserStatuses"
+    "UserStatuses",
+    "TasksStatuses",
 ]
 
 
@@ -78,3 +79,8 @@ class UserStatuses(str, Enum):
     BUSY = "busy"
     DINNER = "dinner"
     FREE = "free"
+
+
+class TasksStatuses(str, Enum):
+    COMPLETED = "completed"
+    PERFORMING = "performing"
