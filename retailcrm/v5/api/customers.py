@@ -22,6 +22,28 @@ class RetailCrmCustomersApi:
             params={"limit": limit, "page": page, **filter},
         )
 
+    async def get_by_id(self, client_id: str | int, site: str = None, by: str = None) -> Response:
+        """
+        **Получение информации о клиенте**
+        Метод возвращает полную информацию по клиенту.
+
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-customers
+        :param client_id: Словарь полей фильтра
+        :param site: Код магазина
+        :param by:
+        :return: Response
+        """
+        params = {}
+        if site is not None:
+            params["site"] = site
+        if by is not None:
+            params["by"] = by
+        return await self._client.get(
+            endpoint=f"/customers/{client_id}",
+            params=params,
+        )
+
+
     async def create(self, customer_json: str, site: str) -> Response:
         """
         **Создание клиента**

@@ -122,6 +122,10 @@ class ResponseCustomersGetAll(RetailCrmResponse):
     customers: list[Customer] = Field(default_factory=list, description="Клиенты")
 
 
+class GetByIdCustomerResponse(RetailCrmResponse):
+    customer: Optional[Customer] = Field(None, description="Клиент")
+
+
 class CustomerContragent(BaseRetailCrmScheme):
     contragentType: Optional[str] = Field(None, description="Тип контрагента")
     legalName: Optional[str] = Field(None, description="Полное наименование")
