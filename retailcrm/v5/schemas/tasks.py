@@ -129,6 +129,10 @@ class TaskResponse(RetailCrmResponse):
     task: Optional[Task] = Field(None, description="Задача")
 
 
+class TaskCreateResponse(RetailCrmResponse):
+    id: Optional[int] = Field(None, description="ИД задачи")
+
+
 class TaskCommentsResponse(RetailCrmResponse):
     comments: list[TaskComment] = Field(
         default_factory=list, description="Комментарий пользователя к задаче"

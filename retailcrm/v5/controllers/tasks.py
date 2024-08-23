@@ -12,6 +12,7 @@ from retailcrm.v5.schemas.tasks import (
     TaskHistoryResponse,
     TaskResponse,
     TasksResponse,
+    TaskCreateResponse
 )
 from retailcrm.v5.utils import pydantic_to_nested_dict
 
@@ -36,11 +37,11 @@ class TasksController:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
 
-    async def create(self, task: SerializedTask, site: str = None) -> RetailCrmResponse:
+    async def create(self, task: SerializedTask, site: str = None) -> TaskCreateResponse:
         response = await self._api.create(
             task_json=task.model_dump_json(exclude_none=True, by_alias=True), site=site
         )
-        response_obj = RetailCrmResponse.model_validate_json(response.body)
+        response_obj = TaskCreateResponse.model_validate_json(response.body)
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
