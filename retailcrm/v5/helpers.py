@@ -78,3 +78,16 @@ def payments_validator() -> Callable[[Any, ValidationInfo], dict]:
             raise ValueError("cannot validate payment")
 
     return validator
+
+
+def bool_flag_serializer() -> Callable[[Optional[time]], int]:
+    """
+    Вспомогательная функция, которая позволяет преобразовать флаги типа bool в int значение
+    """
+    def serializer(value: Optional[bool]) -> Optional[int]:
+        if value is None:
+            return None
+        else:
+            return int(value)
+
+    return serializer

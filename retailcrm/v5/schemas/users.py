@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import BaseModel, Field, field_serializer
 
 from retailcrm.v5.enums import UserStatuses
-from retailcrm.v5.helpers import datetime_serializer
+from retailcrm.v5.helpers import datetime_serializer, bool_flag_serializer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme, RetailCrmResponse
 
 
@@ -66,9 +66,20 @@ class ApiUserFilter(BaseRetailCrmScheme):
     createdAtFrom_serializer = field_serializer("createdAtFrom")(
         datetime_serializer("%Y-%m-%d %H:%M:%S")
     )
-
     createdAtTo_serializer = field_serializer("createdAtTo")(
         datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
+    online_serializer = field_serializer("online")(
+        bool_flag_serializer()
+    )
+    active_serializer = field_serializer("active")(
+        bool_flag_serializer()
+    )
+    isManager_serializer = field_serializer("isManager")(
+        bool_flag_serializer()
+    )
+    isAdmin_serializer = field_serializer("isAdmin")(
+        bool_flag_serializer()
     )
 
 
