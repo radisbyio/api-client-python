@@ -54,7 +54,7 @@ class Item(BaseRetailCrmScheme):
     price: float = Field(0, description="Цена")
     quantity: float = Field(0, description="Количество")
     measurementUnit: str = Field("шт.", description="Единица измерения")
-    vat: VatRateTypes = Field(VatRateTypes.NONE, description="Ставка НДС")
+    vat: Optional[str] = Field(None, description="Ставка НДС")
     paymentMethod: PaymentMethods = Field(
         PaymentMethods.FULL_PREPAYMENT, description="Признак способа расчета"
     )
