@@ -340,6 +340,3 @@ class ResponseCreateOrder(RetailCrmResponse):
 
 class SerializedOrderReference(RetailCrmResponse):
     id: Optional[int] = Field(None, description="Внутренний ID заказа")
-    result_order: Optional[int] = Field(None, description="Внутренний ID заказа")
-    technique: Optional[CombineTechniqueTypes] = Field(None,
-                                     description="Способ объединения в случае одинаковых товаров в составах заказов")
