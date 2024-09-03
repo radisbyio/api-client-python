@@ -199,7 +199,7 @@ class RetailCrmOrdersApi:
         data = {
             "order": order_json,
             "resultOrder": result_order_json,
-            "technique": str
+            "technique": technique
         }
 
         return await self._client.post(
