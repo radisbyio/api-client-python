@@ -84,3 +84,9 @@ class UserStatuses(str, Enum):
 class TasksStatuses(str, Enum):
     COMPLETED = "completed"
     PERFORMING = "performing"
+
+
+class CombineTechniqueTypes(str, Enum):
+    OURS = "ours"
+    SUMM = "summ"
+    THEIRS = "theirs"

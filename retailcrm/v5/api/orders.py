@@ -43,7 +43,7 @@ class RetailCrmOrdersApi:
         )
 
     async def edit(
-        self, order_id: str, by: str, order_json: str, site: str
+            self, order_id: str, by: str, order_json: str, site: str
     ) -> Response:
         """
         **Редактирование заказа**
@@ -85,7 +85,7 @@ class RetailCrmOrdersApi:
         return await self._client.get(endpoint=f"/orders/{order_id}", params=params)
 
     async def get_all(
-        self, filter_dict: dict, limit: int = 20, page: int = 1
+            self, filter_dict: dict, limit: int = 20, page: int = 1
     ) -> Response:
         """
         **Получение списка заказов, удовлетворяющих заданному фильтру.**
@@ -107,7 +107,7 @@ class RetailCrmOrdersApi:
         )
 
     async def history(
-        self, filter_dict: dict, limit: int = 20, page: int = 1
+            self, filter_dict: dict, limit: int = 20, page: int = 1
     ) -> Response:
         """
         **Получение списка заказов, удовлетворяющих заданному фильтру.**
@@ -147,7 +147,7 @@ class RetailCrmOrdersApi:
         )
 
     async def payment_edit(
-        self, payment_id: str, payment_json: str, by: str, site: str = None
+            self, payment_id: str, payment_json: str, by: str, site: str = None
     ) -> Response:
         """
         **Редактирование платежа**
@@ -183,4 +183,26 @@ class RetailCrmOrdersApi:
 
         return await self._client.post(
             endpoint=f"/orders/payments/{payment_id}/delete",
+        )
+
+    async def combine(self, order_json: str, result_order_json: str, technique: str) -> Response:
+        """
+        **Объединение заказов**
+        Метод позволяет удалить платёж.
+
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-orders-combine
+        :param order_json: 	Заказ будет удален в результате объединения
+        :param resul_order_json: Заказ, в который произойдет объединение
+        :param technique: Способ объединения в случае одинаковых товаров в составах заказов
+        :return: Response
+        """
+        data = {
+            "order": order_json,
+            "resultOrder": result_order_json,
+            "technique": str
+        }
+
+        return await self._client.post(
+            endpoint=f"/orders/combine",
+            data=data,
         )

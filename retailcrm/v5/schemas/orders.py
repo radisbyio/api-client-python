@@ -3,7 +3,7 @@ from typing import Optional, Union
 
 from pydantic import Field, RootModel, field_serializer
 
-from retailcrm.v5.enums import VatRateTypes
+from retailcrm.v5.enums import VatRateTypes, CombineTechniqueTypes
 from retailcrm.v5.helpers import datetime_serializer
 from retailcrm.v5.schemas import BaseRetailCrmScheme, RetailCrmResponse
 from retailcrm.v5.schemas.references import SerializedDeliveryService
@@ -336,3 +336,10 @@ class CreateOrder(BaseRetailCrmScheme):
 # todo: заполнить
 class ResponseCreateOrder(RetailCrmResponse):
     order: Optional[CreateOrder] = None
+
+
+class SerializedOrderReference(RetailCrmResponse):
+    id: Optional[int] = Field(None, description="Внутренний ID заказа")
+    result_order: Optional[int] = Field(None, description="Внутренний ID заказа")
+    technique: Optional[CombineTechniqueTypes] = Field(None,
+                                     description="Способ объединения в случае одинаковых товаров в составах заказов")
