@@ -446,7 +446,7 @@ class Offer(BaseRetailCrmScheme):
     displayName: Optional[str] = Field("", description="Название SKU")
     name: Optional[str] = Field("", description="")
     article: Optional[str] = Field("", description="Артикул")
-    vatRate: VatRateTypes = Field(VatRateTypes.NONE, description="Ставка НДС")
+    vatRate: Optional[str] = Field(None, description="Ставка НДС")
     unit: Optional[Unit] = Field(None, description="Единица измерения")
     barcode: Optional[str] = Field("", description="Символьный код")
 
