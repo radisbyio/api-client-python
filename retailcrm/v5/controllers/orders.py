@@ -94,7 +94,7 @@ class OrdersController:
         )
         response_obj = ResponseEditOrder.model_validate_json(response.body)
         if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
+            raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
         return response_obj
 
     async def payment_create(
