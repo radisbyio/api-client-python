@@ -244,24 +244,22 @@ class OrderHistory(BaseRetailCrmScheme):
     source: Optional[str] = Field(None, description="Источник изменения")
     user: Optional[User] = Field(None, description="Пользователь")
     field: Optional[str] = Field(None, description="Имя изменившегося поля")
-    old_value: Optional[str | int | float | dict] = Field(
-        None, description="Старое значение свойства", validation_alias="oldValue"
+    oldValue: Optional[str | int | float | dict] = Field(
+        None, description="Старое значение свойства"
     )
-    new_value: Optional[str | int | float | dict] = Field(
-        None, description="Новое значение свойства", validation_alias="newValue"
+    newValue: Optional[str | int | float | dict] = Field(
+        None, description="Новое значение свойства"
     )
-    api_key: Optional[ApiKey] = Field(
+    apiKey: Optional[ApiKey] = Field(
         None,
         description="Информация о ключе api, использовавшемся для этого изменения",
-        validation_alias="apiKey",
     )
     order: Optional[Order] = Field(None, description="Заказ")
     item: Optional[OrderProduct] = Field(None, description="Позиция в заказе")
     payment: Optional[Payment] = Field(None, description="Платёж")
-    combined_to: Optional[Order] = Field(
+    combinedTo: Optional[Order] = Field(
         None,
         description="Информация о заказе который получился после объединения с текущим заказом",
-        validation_alias="combinedTo",
     )
     ancestor: Optional[Order] = Field(
         None, description="Информация о заказе из которого был создан текущий заказ"
