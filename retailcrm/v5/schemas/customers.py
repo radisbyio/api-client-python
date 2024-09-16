@@ -201,3 +201,7 @@ class SerializedCustomer(BaseRetailCrmScheme):
 
 class ResponseCustomerCreate(RetailCrmResponse):
     id: Optional[int] = Field(None, description="Внутренний ID созданного клиента")
+
+
+class ResponseCustomerEdit(RetailCrmResponse):
+    id: Optional[int] = Field(None, description="Внутренний ID созданного клиента")

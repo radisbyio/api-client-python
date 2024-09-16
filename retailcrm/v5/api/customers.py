@@ -59,3 +59,27 @@ class RetailCrmCustomersApi:
             params={"site": site},
             data={"customer": customer_json},
         )
+
+    async def edit(self, customer_id: str, customer_json: str, site: str = None, by: str = None) -> Response:
+        """
+        **Редактирование клиента**
+        Метод создает клиента и возвращает внутренний ID созданного клиента.
+
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-customers-create
+        :param customer_id: Идентификатор пользователя
+        :param by:
+        :param customer_json: Json строка
+        :param site: Символьный код магазина
+        :return: Response
+        """
+        params = {}
+        if site is not None:
+            params["site"] = site
+        if by is not None:
+            params["by"] = by
+
+        return await self._client.post(
+            endpoint=f"/customers/{customer_id}/edit",
+            params=params,
+            data={"customer": customer_json},
+        )
