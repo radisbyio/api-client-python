@@ -90,3 +90,37 @@ class CombineTechniqueTypes(str, Enum):
     OURS = "ours"
     SUMM = "summ"
     THEIRS = "theirs"
+
+
+class CustomFieldEntityTypes(str, Enum):
+    CUSTOMER = "customer"
+    LOYALTY_ACCOUNT = "loyalty_account"
+    ORDER = "order"
+
+
+class EntityTypes(str, Enum):
+    ORDER = "order"
+
+
+class DisplayAreaTypes(str, Enum):
+    ADDRESS = "address"
+    CUSTOMER = "customer"
+    DELIVERY = "delivery"
+    DIMENSIONS = "dimensions"
+    LEGAL_DETAILS = "legal_details"
+    MAIN_DATA = "main_data"
+    PAYMENT = "payment"
+    SHIPMENT = "shipment"
+
+
+class CustomFieldTypes(str, Enum):
+    BOOLEAN = "boolean"
+    DATE = "date"
+    DATETIME = "datetime"
+    DICTIONARY = "dictionary"
+    EMAIL = "email"
+    INTEGER = "integer"
+    MULTISELECT_DICTIONARY = "multiselect_dictionary"
+    NUMERIC = "numeric"
+    STRING = "string"
+    TEXT = "text"
