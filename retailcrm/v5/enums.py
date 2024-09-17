@@ -12,6 +12,12 @@ __all__ = [
     "SexTypes",
     "UserStatuses",
     "TasksStatuses",
+    "NotificationTypes",
+    "EntityTypes",
+    "CustomFieldEntityTypes",
+    "DisplayAreaTypes",
+    "CustomFieldTypes",
+    "CombineTechniqueTypes",
 ]
 
 
@@ -124,3 +130,8 @@ class CustomFieldTypes(str, Enum):
     NUMERIC = "numeric"
     STRING = "string"
     TEXT = "text"
+
+
+class NotificationTypes(str, Enum):
+    API_INFO = "api.info"
+    API_ERROR = "api.error"
