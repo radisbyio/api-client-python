@@ -11,6 +11,7 @@ from retailcrm.v5.schemas.shared import (
     CustomerAddress,
     CustomerPhone,
     MGCustomer,
+    SerializedEntityCustomer,
     SerializedSource,
 )
 
@@ -52,10 +53,7 @@ class CustomerFilterData(BaseRetailCrmScheme):
     contragentBik: Optional[str] = Field(None, description="БИК банка")
     contragentCorrAccount: Optional[str] = Field(None, description="Корр. счет банка")
     contragentBankAccount: Optional[str] = Field(None, description="Расчетный счет")
-    classSegment: Optional[str] = Field(
-        None,
-        description="Сегмент",
-    )
+    classSegment: Optional[str] = Field(None, description="Сегмент")
     minOrdersCount: Optional[int] = Field(None, description="Количество заказов (от)")
     maxOrdersCount: Optional[int] = Field(None, description="Количество заказов (до)")
     minAverageSumm: Optional[int] = Field(None, description="Средний чек (от)")
@@ -118,11 +116,11 @@ class CustomerFilterData(BaseRetailCrmScheme):
     )
 
 
-class ResponseCustomersGetAll(RetailCrmResponse):
+class ResponseCustomersFilter(RetailCrmResponse):
     customers: list[Customer] = Field(default_factory=list, description="Клиенты")
 
 
-class GetByIdCustomerResponse(RetailCrmResponse):
+class ResponseCustomerRetrieve(RetailCrmResponse):
     customer: Optional[Customer] = Field(None, description="Клиент")
 
 
@@ -205,3 +203,82 @@ class ResponseCustomerCreate(RetailCrmResponse):
 
 class ResponseCustomerEdit(RetailCrmResponse):
     id: Optional[int] = Field(None, description="Внутренний ID созданного клиента")
+
+
+class SerializedCustomerReference(BaseRetailCrmScheme):
+    id: Optional[int] = Field(None, description="Внутренний ID клиента")
+
+
+class CustomerHistoryFilterV4Type(BaseRetailCrmScheme):
+    customerId: Optional[int] = Field(
+        None, description="ID клиента", ge=0, le=4294967295
+    )
+    sinceId: Optional[int] = Field(
+        None, description="Начиная с ID истории клиентов", ge=0, le=4294967295
+    )
+    customerExternalId: Optional[str] = Field(
+        None, description="Внешний ID клиента", max_length=255
+    )
+    startDate: Optional[datetime] = Field(None, description="Дата/время изменения (от)")
+    endDate: Optional[datetime] = Field(None, description="Дата/время изменения (до)")
+
+    startDate_serializer = field_serializer("startDate")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
+    endDate_serializer = field_serializer("endDate")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
+
+
+class SerializedSubscription(BaseRetailCrmScheme):
+    channel: str = Field(
+        ..., description="Канал подписки", max_length=255, min_length=1
+    )
+    subscription: Optional[str] = Field(None, description="Код категории подписки")
+    active: bool = Field(..., description="Флаг подписки")
+    messageId: Optional[int] = Field(None, description="Идентификатор сообщения")
+
+
+class CustomerAddressWithIsMain(BaseModel):
+    id: int = Field(description="ID адреса клиента")
+    externalId: Optional[str] = Field(None, description="Внешний ID")
+    name: Optional[str] = Field(None, description="Наменование адреса")
+    isMain: bool = Field(description="Адрес клиента является основным")
+
+
+class CustomerNote(BaseModel):
+    customer: SerializedEntityCustomer = Field(description="Клиент")
+    managerId: Optional[int] = Field(None, description="ID менеджера")
+    id: int = Field(description="ID заметки")
+    text: str = Field(description="Текст заметки")
+    createdAt: datetime = Field(description="Дата/время создания")
+
+
+class CustomerNoteFilter(BaseRetailCrmScheme):
+    ids: Optional[List[int]] = Field(None, description="ID заметок")
+    customerIds: Optional[List[int]] = Field(None, description="Внутренние ID клиентов")
+    customerExternalIds: Optional[List[str]] = Field(
+        None, description="Внешние ID клиентов"
+    )
+    managerIds: Optional[List[int]] = Field(None, description="ID менеджеров")
+    text: Optional[str] = Field(None, description="Текст заметки")
+    createdAtFrom: Optional[str] = Field(None, description="Дата/время создания (от)")
+    createdAtTo: Optional[str] = Field(None, description="Дата/время создания (до)")
+
+
+class SerializedCustomerNote(BaseRetailCrmScheme):
+    managerId: Optional[int] = Field(None, description="Внутренний ID менеджера")
+    text: Optional[str] = Field(None, description="Текст заметки")
+    customer: Optional[SerializedEntityCustomer] = Field(None, description="Клиент")
+
+
+class ResponseCustomerNotesFilter(RetailCrmResponse):
+    notes: list[CustomerNote] = Field(default_factory=list, description="Заметки")
+
+
+class ResponseCustomerNotesCreate(RetailCrmResponse):
+    id: Optional[int] = Field(None, description="Внутренний ID созданной заметки")
+
+
+class ResponseCustomerNotesDelete(RetailCrmResponse):
+    pass
