@@ -84,6 +84,7 @@ def bool_flag_serializer() -> Callable[[Optional[time]], int]:
     """
     Вспомогательная функция, которая позволяет преобразовать флаги типа bool в int значение
     """
+
     def serializer(value: Optional[bool]) -> Optional[int]:
         if value is None:
             return None
