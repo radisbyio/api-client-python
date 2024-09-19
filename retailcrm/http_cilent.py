@@ -27,21 +27,16 @@ class HttpClient(BaseHttpClient):
 
         headers = {"X-API-KEY": self._api_key}
         self._client = httpx.AsyncClient(
-            headers=headers,
-            base_url=crm_url + "/api/" + version,
+            headers=headers, base_url=crm_url + "/api/" + version
         )
 
     async def get(self, endpoint: str, params: dict = None) -> Response:
         try:
             logger.debug(f"Request to {endpoint} with params: {params}")
-            response = await self._client.get(
-                endpoint,
-                params=params,
-                timeout=15.0,
-            )
+            response = await self._client.get(endpoint, params=params, timeout=15.0)
             logger.debug(f"Received {response.status_code} with {response.text}")
         except httpx.TimeoutException:
-            raise RetailCrmTimeoutException
+            raise RetailCrmTimeoutException()
         else:
             return Response(response.status_code, response.text)
 
@@ -51,13 +46,10 @@ class HttpClient(BaseHttpClient):
                 f"Request to {endpoint} with params: {params} and body: {data}"
             )
             response = await self._client.post(
-                endpoint,
-                params=params,
-                data=data,
-                timeout=15.0,
+                endpoint, params=params, data=data, timeout=15.0
             )
             logger.debug(f"Received {response.status_code} with {response.text}")
         except httpx.TimeoutException:
-            raise RetailCrmTimeoutException
+            raise RetailCrmTimeoutException()
         else:
             return Response(response.status_code, response.text)
