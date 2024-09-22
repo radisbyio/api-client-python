@@ -14,7 +14,9 @@ class RetailCrmApiError(RetailCrmException):
         self.errors = errors or {}
 
     def __str__(self) -> str:
-        return f"{self.error_msg} - {self.errors or str()}"
+        if self.errors:
+            return f"{self.error_msg} - {self.errors or str()}"
+        return f"{self.error_msg}"
 
 
 class RetailCrmUnauthorizedError(RetailCrmException):

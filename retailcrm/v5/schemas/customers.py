@@ -282,3 +282,11 @@ class ResponseCustomerNotesCreate(RetailCrmResponse):
 
 class ResponseCustomerNotesDelete(RetailCrmResponse):
     pass
+
+
+class ResponseCustomersCombine(RetailCrmResponse):
+    pass
+
+
+class ResponseCustomersFixExternalIds(RetailCrmResponse):
+    pass

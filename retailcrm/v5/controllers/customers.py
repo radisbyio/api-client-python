@@ -17,6 +17,8 @@ from retailcrm.v5.schemas.customers import (
     SerializedCustomerNote,
     SerializedCustomerReference,
     SerializedSubscription,
+    ResponseCustomersFixExternalIds,
+    ResponseCustomersCombine,
 )
 from retailcrm.v5.utils import pydantic_to_nested_dict
 
@@ -28,7 +30,8 @@ class CustomersController:
     async def filter(
         self, filter_data: CustomerFilterData, limit: int = 20, page: int = 1
     ) -> ResponseCustomersFilter:
-        """Получение списка клиентов, удовлетворяющих заданному фильтру
+        """
+        Получение списка клиентов, удовлетворяющих заданному фильтру
 
         Результат возвращается постранично. В поле pagination содержится информация о постраничной разбивке.
 
@@ -53,9 +56,10 @@ class CustomersController:
         return response_obj
 
     async def get(
-        self, customer_id: str, site: str = None, by: IdTypes = IdTypes.EXTERNAL_ID
+        self, customer_id: str | int, site: str = None, by: IdTypes = IdTypes.EXTERNAL_ID
     ) -> ResponseCustomerRetrieve:
-        """Получение информации о клиенте
+        """
+        Получение информации о клиенте
 
         Метод возвращает полную информацию по клиенту.
 
@@ -69,7 +73,7 @@ class CustomersController:
         if site is not None:
             params["site"] = site
         if by is not None:
-            params["by"] = by
+            params["by"] = by.value
 
         response = await self._client.get(
             endpoint=f"/customers/{customer_id}", params=params
@@ -83,7 +87,8 @@ class CustomersController:
     async def create(
         self, customer: SerializedCustomer, site: str
     ) -> ResponseCustomerCreate:
-        """Создание клиента
+        """
+        Создание клиента
 
         Метод создает клиента и возвращает внутренний ID созданного клиента.
 
@@ -109,12 +114,13 @@ class CustomersController:
 
     async def edit(
         self,
-        customer_id: str,
+        customer_id: str | int,
         customer: SerializedCustomer,
         site: str = None,
         by: IdTypes = IdTypes.EXTERNAL_ID,
     ) -> ResponseCustomerEdit:
-        """Редактирование клиента
+        """
+        Редактирование клиента
 
         Метод редактирует клиента и возвращает внутренний ID измененного клиента.
 
@@ -123,13 +129,13 @@ class CustomersController:
         :param customer: Данные клиента для редактирования
         :param site: Символьный код магазина
         :param by: Тип идентификатора (id или externalId)
-        :return: Response
+        :return: ResponseCustomerEdit
         """
         params = {}
         if site is not None:
             params["site"] = site
         if by is not None:
-            params["by"] = by
+            params["by"] = by.value
 
         response = await self._client.post(
             endpoint=f"/customers/{customer_id}/edit",
@@ -148,13 +154,14 @@ class CustomersController:
         self,
         result_customer: SerializedCustomerReference,
         customers: list[SerializedCustomerReference],
-    ) -> RetailCrmResponse:
-        """Объединение клиентов
+    ) -> ResponseCustomersCombine:
+        """
+        Объединение клиентов
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-customers-combine
         :param result_customer: Клиент, в которого произойдет объединение
         :param customers: Массив клиентов для объединения
-        :return: RetailCrmResponse
+        :return: ResponseCustomersCombine
         """
         response = await self._client.post(
             "/customers/combine",
@@ -169,7 +176,7 @@ class CustomersController:
             },
         )
 
-        response_obj = RetailCrmResponse.model_validate_json(response.body)
+        response_obj = ResponseCustomersCombine.model_validate_json(response.body)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
@@ -178,12 +185,13 @@ class CustomersController:
 
     async def fix_external_ids(
         self, customers: list[SerializedCustomerReference]
-    ) -> RetailCrmResponse:
-        """Массовая запись внешних ID клиентов
+    ) -> ResponseCustomersFixExternalIds:
+        """
+        Массовая запись внешних ID клиентов
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-customers-fix-external-ids
         :param customers: Массив клиентов с внешними ID
-        :return: RetailCrmResponse
+        :return: ResponseCustomersFixExternalIds
         """
         response = await self._client.post(
             "/customers/fix-external-ids",
@@ -195,7 +203,7 @@ class CustomersController:
             },
         )
 
-        response_obj = RetailCrmResponse.model_validate_json(response.body)
+        response_obj = ResponseCustomersFixExternalIds.model_validate_json(response.body)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
@@ -205,7 +213,8 @@ class CustomersController:
     async def history(
         self, filter_obj: CustomerHistoryFilterV4Type, limit: int = 20, page: int = 1
     ) -> RetailCrmResponse:
-        """Получение истории изменения клиентов
+        """
+        Получение истории изменения клиентов
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-customers-history
         :param filter_obj: Фильтр для истории
@@ -231,12 +240,13 @@ class CustomersController:
 
     async def subscriptions(
         self,
-        customer_id: str,
+        customer_id: str | int,
         subscriptions: list[SerializedSubscription],
         site: str = None,
         by: IdTypes = IdTypes.EXTERNAL_ID,
     ) -> RetailCrmResponse:
-        """Подписка/отписка клиента на рассылки
+        """
+        Подписка/отписка клиента на рассылки
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-customers-externalId-subscriptions
         :param customer_id: ID клиента
@@ -272,7 +282,8 @@ class CustomersController:
     async def notes_filter(
         self, filter_data: CustomerNoteFilter, limit: int = 20, page: int = 1
     ) -> ResponseCustomerNotesFilter:
-        """Получение заметок
+        """
+        Получение заметок
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-customers-notes
         :param filter_data: Фильтр
@@ -299,7 +310,8 @@ class CustomersController:
     async def note_create(
         self, note: SerializedCustomerNote, site: str
     ) -> ResponseCustomerNotesCreate:
-        """Создание заметки
+        """
+        Создание заметки
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-customers-notes-create
         :param note: Данные заметки
@@ -320,7 +332,8 @@ class CustomersController:
         return response_obj
 
     async def note_delete(self, note_id: int) -> ResponseCustomerNotesDelete:
-        """Удаление заметки
+        """
+        Удаление заметки
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-customers-notes-id-delete
         :param note_id: ID заметки

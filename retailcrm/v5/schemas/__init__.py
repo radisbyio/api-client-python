@@ -5,3 +5,4 @@ from .payments import *
 from .references import *
 from .shared import *
 from .tasks import *
+from .loyalty import *
