@@ -6,7 +6,7 @@ from pydantic import Field, field_serializer
 from retailcrm.v5.enums import TasksStatuses
 from retailcrm.v5.helpers import datetime_serializer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme, RetailCrmResponse
-from retailcrm.v5.schemas.shared import ApiKey, Task, User
+from retailcrm.v5.schemas.shared import ApiKey, SerializedEntityCustomer, Task, User
 
 
 class TagsFilter(BaseRetailCrmScheme):
@@ -17,9 +17,7 @@ class TagsFilter(BaseRetailCrmScheme):
 class TaskFilterData(BaseRetailCrmScheme):
     ids: Optional[list[int]] = Field(None, description="Массив ID задач")
     orderNumber: Optional[str] = Field(
-        None,
-        description="Номер заказа, связанного с задачей",
-        max_length=255,
+        None, description="Номер заказа, связанного с задачей", max_length=255
     )
     customer: Optional[str] = Field(None, description="Клиент, связанный с задачей")
     performers: Optional[list[int]] = Field(None, description="Исполнители задачи")
@@ -47,11 +45,6 @@ class SerializedEntityOrder(BaseRetailCrmScheme):
     number: Optional[str] = Field(None, description="Номер заказа")
 
 
-class SerializedEntityCustomer(BaseRetailCrmScheme):
-    id: Optional[int] = Field(None, description="Внутренний ID клиента")
-    externalId: Optional[str] = Field(None, description="Внешний ID клиента")
-
-
 class SerializedTask(BaseRetailCrmScheme):
     text: Optional[str] = Field(None, description="Текст задачи")
     commentary: Optional[str] = Field(None, description="Комментарий к задаче")
@@ -71,8 +64,12 @@ class SerializedTask(BaseRetailCrmScheme):
         None, description="Магазин, связанный с задачей на перезвон"
     )
 
+    datetime_serializer = field_serializer("datetime_")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
 
-class TasksResponse(RetailCrmResponse):
+
+class ResponseTasks(RetailCrmResponse):
     tasks: Optional[list[Task]] = Field(None, description="Задача")
 
 
@@ -120,20 +117,20 @@ class TaskHistory(BaseRetailCrmScheme):
     )
 
 
-class TaskHistoryResponse(RetailCrmResponse):
+class ResponseTaskHistory(RetailCrmResponse):
     generatedAt: datetime = Field(description="Время формирования ответа")
     history: list[TaskHistory] = Field(default_factory=list, description="История")
 
 
-class TaskResponse(RetailCrmResponse):
+class ResponseTaskResponse(RetailCrmResponse):
     task: Optional[Task] = Field(None, description="Задача")
 
 
-class TaskCreateResponse(RetailCrmResponse):
+class ResponseTaskCreate(RetailCrmResponse):
     id: Optional[int] = Field(None, description="ИД задачи")
 
 
-class TaskCommentsResponse(RetailCrmResponse):
+class ResponseTaskComments(RetailCrmResponse):
     comments: list[TaskComment] = Field(
         default_factory=list, description="Комментарий пользователя к задаче"
     )
