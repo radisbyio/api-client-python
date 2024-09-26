@@ -64,8 +64,8 @@ class SerializedTask(BaseRetailCrmScheme):
         None, description="Магазин, связанный с задачей на перезвон"
     )
 
-    datetime_serializer = field_serializer("datetime")(
-        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    datetime_serializer = field_serializer("datetime_")(
+        datetime_serializer("%Y-%m-%d %H:%M")
     )
 
 
