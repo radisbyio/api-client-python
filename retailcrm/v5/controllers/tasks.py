@@ -5,14 +5,14 @@ from retailcrm.http_cilent import BaseHttpClient
 from retailcrm.v5.api.tasks import RetailCrmTasksApi
 from retailcrm.v5.schemas.base import RetailCrmResponse
 from retailcrm.v5.schemas.tasks import (
-    SerializedTask,
     ResponseTaskComments,
     ResponseTaskCreate,
-    TaskFilterData,
-    TaskHistoryFilterType,
     ResponseTaskHistory,
     ResponseTaskResponse,
     ResponseTasks,
+    SerializedTask,
+    TaskFilterData,
+    TaskHistoryFilterType,
 )
 from retailcrm.v5.utils import pydantic_to_nested_dict
 

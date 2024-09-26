@@ -2,14 +2,17 @@ from dataclasses import dataclass
 from typing import Optional
 
 from retailcrm.http_cilent import BaseHttpClient, HttpClient
-from retailcrm.v5.controllers.custom_fields import CustomFieldsController
-from retailcrm.v5.controllers.customers import CustomersController
-from retailcrm.v5.controllers.orders import OrdersController
-from retailcrm.v5.controllers.payments import PaymentController
-from retailcrm.v5.controllers.references import ReferencesController
-from retailcrm.v5.controllers.tasks import TasksController
-from retailcrm.v5.controllers.users import UsersController
-from retailcrm.v5.controllers.loyalty import LoyaltyController
+from retailcrm.v5.controllers import (
+    CustomersController,
+    CustomFieldsController,
+    LoyaltyController,
+    OrdersController,
+    PaymentController,
+    ReferencesController,
+    StoreController,
+    TasksController,
+    UsersController,
+)
 
 __all__ = ["RetailCrmApiClientV5"]
 
@@ -27,6 +30,7 @@ class RetailCrmApiClientV5:
     _users_controller: Optional[UsersController]
     _tasks_controller: Optional[TasksController]
     _loyalty_controller: Optional[LoyaltyController]
+    _store_controller: Optional[StoreController]
 
     def __init__(self, crm_url: str, api_key: str, client: BaseHttpClient = None):
         self._crm_url = crm_url
@@ -45,6 +49,7 @@ class RetailCrmApiClientV5:
         self._users_controller = None
         self._tasks_controller = None
         self._loyalty_controller = None
+        self._store_controller = None
 
     @property
     def crm_url(self):
@@ -101,3 +106,9 @@ class RetailCrmApiClientV5:
         if not self._loyalty_controller:
             self._loyalty_controller = LoyaltyController(self._client)
         return self._loyalty_controller
+
+    @property
+    def store(self) -> StoreController:
+        if not self._store_controller:
+            self._store_controller = StoreController(self._client)
+        return self._store_controller

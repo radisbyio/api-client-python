@@ -12,13 +12,13 @@ from retailcrm.v5.schemas.customers import (
     ResponseCustomerNotesDelete,
     ResponseCustomerNotesFilter,
     ResponseCustomerRetrieve,
+    ResponseCustomersCombine,
     ResponseCustomersFilter,
+    ResponseCustomersFixExternalIds,
     SerializedCustomer,
     SerializedCustomerNote,
     SerializedCustomerReference,
     SerializedSubscription,
-    ResponseCustomersFixExternalIds,
-    ResponseCustomersCombine,
 )
 from retailcrm.v5.utils import pydantic_to_nested_dict
 

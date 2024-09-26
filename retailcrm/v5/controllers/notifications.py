@@ -14,11 +14,11 @@ class NotificationsController:
         self, notification: SerializedApiNotification
     ) -> SendNotificationResponse:
         """
-        **Отправка оповещения**
+        Отправка оповещения
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-custom-fields
         :param notification:
-        :return: Response
+        :return: SendNotificationResponse
         """
         response = await self._client.post(
             endpoint="/notifications/send",
