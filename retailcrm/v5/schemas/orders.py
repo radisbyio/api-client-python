@@ -3,7 +3,7 @@ from typing import Optional, Union
 
 from pydantic import Field, RootModel, field_serializer
 
-from retailcrm.v5.enums import VatRateTypes, CombineTechniqueTypes
+from retailcrm.v5.enums import CombineTechniqueTypes, PrivilegeType, VatRateTypes
 from retailcrm.v5.helpers import datetime_serializer
 from retailcrm.v5.schemas import BaseRetailCrmScheme, RetailCrmResponse
 from retailcrm.v5.schemas.references import SerializedDeliveryService
@@ -19,38 +19,11 @@ from retailcrm.v5.schemas.shared import (
     OrderProductProperties,
     Payment,
     PriceType,
+    SerializedOrderDelivery,
     Source,
     TimeInterval,
     User,
 )
-
-
-# TODO: make itemDeclaredValues
-# TODO: make packages
-class GenericData(BaseRetailCrmScheme):
-    externalId: Optional[str] = Field(
-        None, description="Идентификатор в службе доставки"
-    )
-    trackNumber: Optional[str] = Field(
-        None, description="Номер отправления (поле deprecated на запись)"
-    )
-    locked: bool = Field(False, description="Не синхронизировать со службой доставки")
-    tariff: Optional[str] = Field(None, description="Код тарифа")
-    pickuppointId: Optional[str] = Field(
-        None, description="Идентификатор пункта самовывоза"
-    )
-    payerType: Optional[str] = Field(None, description="	Плательщик за доставку")
-    shipmentpointId: Optional[str] = Field(
-        None, description="Идентификатор терминала отгрузки"
-    )
-    extraData: Optional[list[dict[str, str]]] = Field(
-        None,
-        description="Дополнительные данные доставки (deliveryDataField.code => значение)",
-    )
-    itemDeclaredValues: Optional[list[dict[str, Union[int, float]]]] = None
-    packages: list[
-        dict[str, Union[str, float, int, list[dict[str, Union[int, str]]]]]
-    ] = Field(default_factory=list, description="Упаковки")
 
 
 class DeliveryService(BaseRetailCrmScheme):
@@ -58,25 +31,6 @@ class DeliveryService(BaseRetailCrmScheme):
     code: str = ""
     active: bool = False
     deliveryType: str = ""
-
-
-# todo: update vatRate to enum
-class SerializedOrderDelivery(BaseRetailCrmScheme):
-    code: Optional[str] = Field(None, description="Код типа доставки")
-    data: Optional[GenericData] = Field(
-        None, description="Данные службы доставки, подключенной через API"
-    )
-    service: Optional[SerializedDeliveryService] = Field(None)
-    cost: Optional[float] = Field(None, description="Стоимость доставки")
-    netCost: Optional[float] = Field(None, description="Себестоимость доставки")
-    date_: Optional[date] = Field(
-        None, description="Дата доставки", serialization_alias="date"
-    )
-    time: Optional[TimeInterval] = Field(
-        None, description="Информация о временном диапазоне"
-    )
-    address: Optional[OrderDeliveryAddress] = Field(None, description="Адрес доставки")
-    vatRate: Optional[str] = Field(None, description="Ставка НДС")
 
 
 class SerializedPayment(BaseRetailCrmScheme):
@@ -147,7 +101,6 @@ class OrderHistoryFilterV4Type(BaseRetailCrmScheme):
     endDate: Optional[datetime] = Field(None, description="Дата/время изменения (до)")
 
 
-# todo: заполнить
 class OrderFilterData(BaseRetailCrmScheme):
     ids: list[int] = Field([], description="Массив ID заказов")
     externalIds: list[str] = Field([], description="Массив externalID заказов")
@@ -170,54 +123,90 @@ class OrderFilterData(BaseRetailCrmScheme):
 
 
 class SerializedOrder(BaseRetailCrmScheme):
-    number: str = ""
-    externalId: str = ""
-    privilegeType: str = ""
-    countryIso: str = ""
-    created_at: Optional[datetime] = Field(None, serialization_alias="createdAt")
-    statusUpdatedAt: str = ""
-    discountManualAmount: float = 0
-    discountManualPercent: float = 0
-    mark: int = 0
-    markDatetime: str = ""
-    lastName: str = ""
-    firstName: str = ""
-    patronymic: str = ""
-    phone: str = ""
-    additionalPhone: str = ""
-    email: str = ""
-    call: bool = False
-    expired: bool = False
-    customerComment: str = ""
-    managerComment: str = ""
-    # contragent: OrderContragent
-    statusComment: str = ""
-    weight: float = 0
-    length: int = 0
-    width: int = 0
-    height: int = 0
-    shipmentDate: str = ""
-    shipped: bool = False
-    dialogId: Optional[MGDialog] = None
-    customFields: dict[str, str] = None
-    orderType: str = ""
-    orderMethod: str = ""
-    customer: Optional[Customer] = None
-    contact: Optional[Contact] = None
-    company: Optional[dict[str, Union[int, str]]] = None
-    managerId: int = 0
-    status: str = ""
-    items: list[SerializedOrderProduct] = None
-    delivery: Optional[SerializedOrderDelivery] = None
-    source: Optional[Source] = None
-    shipmentStore: str = ""
-    payments: list[SerializedPayment] = []
-    loyaltyEventDiscountId: int = 0
-    applyRound: bool = False
-    isFromCart: bool = False
-    clientId: str = ""
+    number: Optional[str] = Field(None, description="Номер заказа")
+    externalId: Optional[str] = Field(None, description="Внешний ID заказа")
+    privilegeType: Optional[PrivilegeType] = Field(
+        PrivilegeType.NONE, description="Тип привилегии"
+    )
+    countryIso: Optional[str] = Field(
+        None, description="ISO код страны (ISO 3166-1 alpha-2)"
+    )
+    createdAt: Optional[datetime] = Field(None, description="Дата оформления заказа")
+    statusUpdatedAt: Optional[datetime] = Field(
+        None, description="Дата последнего изменения статуса"
+    )
+    discountManualAmount: Optional[float] = Field(
+        None, description="Денежная скидка на весь заказ (в валюте объекта)"
+    )
+    discountManualPercent: Optional[float] = Field(
+        None, description="Процентная скидка на весь заказ"
+    )
+    mark: Optional[int] = Field(None, description="Оценка заказа")
+    markDatetime: Optional[datetime] = Field(
+        None, description="Дата и время получение оценки от покупателя"
+    )
+    lastName: Optional[str] = Field(None, description="Фамилия")
+    firstName: Optional[str] = Field(None, description="Имя")
+    patronymic: Optional[str] = Field(None, description="Отчество")
+    phone: Optional[str] = Field(None, description="Телефон")
+    additionalPhone: Optional[str] = Field(None, description="Дополнительный телефон")
+    email: Optional[str] = Field(None, description="E-mail")
+    call: Optional[bool] = Field(None, description="Требуется позвонить")
+    expired: Optional[bool] = Field(None, description="Просрочен")
+    customerComment: Optional[str] = Field(None, description="Комментарий клиента")
+    managerComment: Optional[str] = Field(None, description="Комментарий оператора")
+    statusComment: Optional[str] = Field(
+        None, description="Комментарий к последнему изменению статуса"
+    )
+    weight: Optional[float] = Field(None, description="Вес")
+    length: Optional[int] = Field(None, description="Длина")
+    width: Optional[int] = Field(None, description="Ширина")
+    height: Optional[int] = Field(None, description="Высота")
+    shipmentDate: Optional[datetime] = Field(None, description="Дата отгрузки")
+    shipped: Optional[bool] = Field(None, description="Заказ отгружен")
+    dialogId: Optional[MGDialog] = Field(
+        None, description="Идентификатор диалога Чатов"
+    )
+    customFields: Optional[dict] = Field(
+        None, description="Ассоциативный массив пользовательских полей"
+    )
+    orderType: Optional[str] = Field(None, description="Тип заказа")
+    orderMethod: Optional[str] = Field(None, description="Способ оформления")
+    customer: Optional[Customer] = Field(None, description="Клиент")
+    contact: Optional[Contact] = Field(None, description="Контактное лицо")
+    company: Optional[dict[str, Union[int, str]]] = Field(None, description="Компания")
+    managerId: Optional[int] = Field(
+        None, description="Менеджер, прикрепленный к заказу"
+    )
+    status: Optional[str] = Field(None, description="Статус заказа")
+    items: Optional[list[SerializedOrderProduct]] = Field(
+        None, description="Позиции в заказе"
+    )
+    delivery: Optional[SerializedOrderDelivery] = Field(
+        None, description="Данные о доставке"
+    )
+    source: Optional[Source] = Field(None, description="Источник заказа")
+    shipmentStore: Optional[str] = Field(None, description="Склад отгрузки")
+    payments: Optional[list[SerializedPayment]] = Field(None, description="Платежи")
+    loyaltyEventDiscountId: Optional[int] = Field(
+        None, description="ID скидки по событию программы лояльности"
+    )
+    applyRound: Optional[bool] = Field(
+        None, description="Применять настройку округления стоимости заказа"
+    )
+    isFromCart: Optional[bool] = Field(None, description="Заказ создан из корзины")
+    clientId: Optional[str] = Field(None, description="Метка клиента Google Analytics")
 
-    created_at_serializer = field_serializer("created_at")(
+    createdAt_serializer = field_serializer("createdAt")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
+    statusUpdatedAt_serializer = field_serializer("statusUpdatedAt")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
+    markDatetime_serializer = field_serializer("markDatetime")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
+    shipmentDate_serializer = field_serializer("shipmentDate")(
         datetime_serializer("%Y-%m-%d %H:%M:%S")
     )
 
@@ -251,8 +240,7 @@ class OrderHistory(BaseRetailCrmScheme):
         None, description="Новое значение свойства"
     )
     apiKey: Optional[ApiKey] = Field(
-        None,
-        description="Информация о ключе api, использовавшемся для этого изменения",
+        None, description="Информация о ключе api, использовавшемся для этого изменения"
     )
     order: Optional[Order] = Field(None, description="Заказ")
     item: Optional[OrderProduct] = Field(None, description="Позиция в заказе")

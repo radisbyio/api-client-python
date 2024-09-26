@@ -1,11 +1,14 @@
 from datetime import datetime
-from typing import Optional, List, Union
+from typing import List, Optional, Union
 
 from pydantic import BaseModel, Field, field_serializer
 
 from retailcrm.v5.helpers import datetime_serializer
-from retailcrm.v5.schemas.shared import SerializedEntityCustomer, SerializedOrderDelivery
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme, RetailCrmResponse
+from retailcrm.v5.schemas.shared import (
+    SerializedEntityCustomer,
+    SerializedOrderDelivery,
+)
 
 __all__ = [
     "ResponseLoyaltyAccounts",
@@ -19,7 +22,20 @@ __all__ = [
     "LoyaltyCalculation",
     "LoyaltyEventDiscount",
     "LoyaltyBonusStatisticResponse",
-    "LoyaltyApiFilterData"
+    "LoyaltyApiFilterData",
+    "LoyaltyAccountFilterData",
+    "LoyaltyAccountBonusApiFilterType",
+    "LoyaltyBonusOperationsApiFilterType",
+    "LoyaltyAccountBonusOperationsApiFilterType",
+    "ResponseLoyaltiesFilter",
+    "SerializedCreateLoyaltyAccount",
+    "ResponseLoyaltyRetrieve",
+    "SerializedEditLoyaltyAccount",
+    "ResponseActivateLoyaltyAccount",
+    "ResponseCreateLoyaltyAccount",
+    "ResponseChargeLoyaltyAccountBonus",
+    "ResponseLoyaltyBonusOperations",
+    "ResponseCreditLoyaltyAccountBonus",
 ]
 
 
@@ -79,9 +95,7 @@ class Loyalty(BaseModel):
 class SerializedLoyalty(BaseRetailCrmScheme):
     currency: Optional[str] = Field(None, description="Валюта")
     name: Optional[str] = Field(None, description="Название программы лояльности")
-    chargeRate: Optional[float] = Field(
-        None, description="Курс при списании бонусов"
-    )
+    chargeRate: Optional[float] = Field(None, description="Курс при списании бонусов")
 
 
 class SmsVerification(BaseModel):
@@ -167,7 +181,9 @@ class PriceType(BaseRetailCrmScheme):
 
 class OrderProduct(BaseRetailCrmScheme):
     id: Optional[int] = Field(description="ID позиции в заказе")
-    externalIds: List[str] = Field([], description="Внешние идентификаторы позиции в заказе")
+    externalIds: List[str] = Field(
+        [], description="Внешние идентификаторы позиции в заказе"
+    )
     discounts: List[AbstractDiscount] = Field([], description="Массив скидок")
     offer: Optional["Offer"] = Field(None, description="Торговое предложение")
 
@@ -213,7 +229,8 @@ class SerializedLoyaltyOrder(BaseRetailCrmScheme):
     bonusesChargeTotal: float = Field(0, description="Количество списанных бонусов")
     currency: Optional[str] = Field(None, description="Валюта")
     privilegeType: Optional[str] = Field(
-        None, description="Тип привилегии. Возможные значения: none, personal_discount, loyalty_level, loyalty_event"
+        None,
+        description="Тип привилегии. Возможные значения: none, personal_discount, loyalty_level, loyalty_event",
     )
     totalSumm: float = Field(
         0, description="Общая сумма с учетом скидки (в валюте объекта)"
@@ -228,8 +245,7 @@ class SerializedLoyaltyOrder(BaseRetailCrmScheme):
         None, description="Уровень участия в программе лояльности"
     )
     loyaltyEventDiscount: Optional[LoyaltyEventDiscount] = Field(
-        None,
-        description="Скидка по событию программы лояльности",
+        None, description="Скидка по событию программы лояльности"
     )
     customer: Optional[Customer] = Field(None, description="Клиент")
     delivery: Optional[SerializedOrderDelivery] = Field(
@@ -264,7 +280,9 @@ class ResponseLoyaltyCalculate(RetailCrmResponse):
 
 
 class LoyaltyAccountFilterData(BaseRetailCrmScheme):
-    ids: Optional[List[int]] = Field(None, description="Массив ID участий в программе лояльности")
+    ids: Optional[List[int]] = Field(
+        None, description="Массив ID участий в программе лояльности"
+    )
     id: Optional[int] = Field(None, description="ID участия")
     customer: Optional[str] = Field(None, description="Клиент", max_length=255)
     loyalties: Optional[List[int]] = Field(
@@ -290,7 +308,9 @@ class LoyaltyAccountFilterData(BaseRetailCrmScheme):
     burnDateFrom: Optional[datetime] = Field(
         None, description="Дата сгорания бонусов (от)"
     )
-    burnDateTo: Optional[datetime] = Field(None, description="Дата сгорания бонусов (до)")
+    burnDateTo: Optional[datetime] = Field(
+        None, description="Дата сгорания бонусов (до)"
+    )
     minOrdersSum: Optional[int] = Field(None, description="Сумма покупок (от)")
     maxOrdersSum: Optional[int] = Field(None, description="Сумма покупок (до)")
     minAmount: Optional[int] = Field(None, description="Баланс бонусов (от)")
@@ -310,7 +330,9 @@ class OperationOrder(BaseModel):
 
 
 class OperationBonus(BaseModel):
-    activationDate: Optional[datetime] = Field(None, description="Дата активации бонусов")
+    activationDate: Optional[datetime] = Field(
+        None, description="Дата активации бонусов"
+    )
 
 
 class OperationEvent(BaseModel):
@@ -367,9 +389,7 @@ class BonusDetail(BaseModel):
     )
     amount: Optional[float] = Field(None, description="Количество бонусов")
 
-    date_serializer = field_serializer("date")(
-        datetime_serializer("%Y-%m-%d %H:%M:%S")
-    )
+    date_serializer = field_serializer("date")(datetime_serializer("%Y-%m-%d %H:%M:%S"))
 
 
 class LoyaltyAccountBonusApiFilterType(BaseRetailCrmScheme):
@@ -401,9 +421,7 @@ class ResponseLoyaltiesFilter(RetailCrmResponse):
 
 
 class ResponseLoyaltyRetrieve(RetailCrmResponse):
-    loyalty: Optional[Loyalty] = Field(
-        None, description="Программа лояльности"
-    )
+    loyalty: Optional[Loyalty] = Field(None, description="Программа лояльности")
 
 
 class SerializedCreateLoyaltyAccount(BaseRetailCrmScheme):
@@ -437,9 +455,7 @@ class ResponseActivateLoyaltyAccount(RetailCrmResponse):
     loyaltyAccount: Optional[LoyaltyAccount] = Field(
         None, description="Участие в программе лояльности"
     )
-    verification: Optional[SmsVerification] = Field(
-        None, description="SMS-верификация"
-    )
+    verification: Optional[SmsVerification] = Field(None, description="SMS-верификация")
 
 
 class ResponseChargeLoyaltyAccountBonus(RetailCrmResponse):

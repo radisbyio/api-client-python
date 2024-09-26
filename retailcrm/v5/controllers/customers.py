@@ -56,7 +56,10 @@ class CustomersController:
         return response_obj
 
     async def get(
-        self, customer_id: str | int, site: str = None, by: IdTypes = IdTypes.EXTERNAL_ID
+        self,
+        customer_id: str | int,
+        site: str = None,
+        by: IdTypes = IdTypes.EXTERNAL_ID,
     ) -> ResponseCustomerRetrieve:
         """
         Получение информации о клиенте
@@ -203,7 +206,9 @@ class CustomersController:
             },
         )
 
-        response_obj = ResponseCustomersFixExternalIds.model_validate_json(response.body)
+        response_obj = ResponseCustomersFixExternalIds.model_validate_json(
+            response.body
+        )
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)

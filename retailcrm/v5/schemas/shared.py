@@ -1,5 +1,5 @@
-from datetime import datetime, time
-from typing import Any, Optional
+from datetime import date, datetime, time
+from typing import Any, Generic, Optional, TypeVar
 
 from pydantic import Field, field_serializer, field_validator
 
@@ -46,7 +46,11 @@ __all__ = [
     "TimeInterval",
     "Task",
     "User",
+    "SerializedEntityCustomer",
+    "SerializedOrderDelivery",
 ]
+
+DeliveryType = TypeVar("DeliveryType")
 
 
 class Item(BaseRetailCrmScheme):
@@ -497,38 +501,60 @@ class OrderDeliveryAddress(BaseRetailCrmScheme):
     text: Optional[str] = Field(None, description="Адрес в текстовом виде")
 
 
-class SerializedOrderDelivery(BaseRetailCrmScheme):
-    code: str = Field(None, description="Код типа доставки")
-    integrationCode: Optional[str] = Field(
-        None, description="Интеграционный код типа доставки"
+# TODO: make itemDeclaredValues
+# TODO: make packages
+class GenericData(BaseRetailCrmScheme):
+    externalId: Optional[str] = Field(
+        None, description="Идентификатор в службе доставки"
     )
-    # data: "OrderDeliveryData"
-    # service: "SerializedDeliveryService"
-    cost: float = Field(0, description="Стоимость доставки")
-    netCost: float = Field(0, description="Себестоимость доставки")
-    date: Optional[datetime] = Field(None, description="Дата доставки")
+    trackNumber: Optional[str] = Field(
+        None, description="Номер отправления (поле deprecated на запись)"
+    )
+    locked: bool = Field(False, description="Не синхронизировать со службой доставки")
+    tariff: Optional[str] = Field(None, description="Код тарифа")
+    pickuppointId: Optional[str] = Field(
+        None, description="Идентификатор пункта самовывоза"
+    )
+    payerType: Optional[str] = Field(None, description="	Плательщик за доставку")
+    shipmentpointId: Optional[str] = Field(
+        None, description="Идентификатор терминала отгрузки"
+    )
+    extraData: Optional[list[dict[str, str]]] = Field(
+        None,
+        description="Дополнительные данные доставки (deliveryDataField.code => значение)",
+    )
+    itemDeclaredValues: Optional[list[dict[str, int | float]]] = None
+    packages: list[dict[str, str | float | int | list[dict[str, int | str]]]] = Field(
+        default_factory=list, description="Упаковки"
+    )
+
+
+# todo: update vatRate to enum
+class SerializedOrderDelivery(BaseRetailCrmScheme):
+    code: Optional[str] = Field(None, description="Код типа доставки")
+    data: Optional[GenericData] = Field(
+        None, description="Данные службы доставки, подключенной через API"
+    )
+    # service: Optional[SerializedDeliveryService] = Field(None)  # todo realize
+    cost: Optional[float] = Field(None, description="Стоимость доставки")
+    netCost: Optional[float] = Field(None, description="Себестоимость доставки")
+    date_: Optional[date] = Field(
+        None, description="Дата доставки", serialization_alias="date"
+    )
     time: Optional[TimeInterval] = Field(
         None, description="Информация о временном диапазоне"
     )
     address: Optional[OrderDeliveryAddress] = Field(None, description="Адрес доставки")
     vatRate: Optional[str] = Field(None, description="Ставка НДС")
 
-    date_serializer = field_serializer("date")(datetime_serializer("%Y-%m-%d %H:%M:%S"))
-
 
 class Order(BaseRetailCrmScheme):
     id: int = Field(0, description="ID заказа")
-    externalId: str = Field(
-        "",
-        description="Внешний ID заказа",
-    )
+    externalId: str = Field("", description="Внешний ID заказа")
     number: str = Field("", description="Номер заказа")
     site: str = Field("", description="Магазин")
     status: str = Field("", description="Статус заказа")
-    statusComment: str = Field(
-        "",
-        description="Комментарий к статусу доставки",
-    )
+    statusComment: str = Field("", description="Комментарий к статусу доставки")
     managerId: Optional[int] = Field(
         None, description="Менеджер, прикрепленный к заказу"
     )
@@ -560,8 +586,7 @@ class Order(BaseRetailCrmScheme):
         None, description="Уровень участия в программе лояльности"
     )
     loyaltyEventDiscount: Optional[LoyaltyEventDiscount] = Field(
-        None,
-        description="Скидка по событию программы лояльности",
+        None, description="Скидка по событию программы лояльности"
     )
     mark: Optional[int] = Field(None, description="Оценка заказа")
     markDatetime: Optional[datetime] = Field(
@@ -699,4 +724,4 @@ class User(BaseRetailCrmScheme):
 
 
 class MGDialog(BaseRetailCrmScheme):
-    pass # TODO: reailize if need
+    pass  # TODO: reailize if need

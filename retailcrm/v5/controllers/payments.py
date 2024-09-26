@@ -16,7 +16,7 @@ class PaymentController:
 
     async def check_payment(self, check: ApiCheckRequest) -> PaymentCheckResponse:
         response = await self._api.check(
-            check_json=check.model_dump_json(exclude_unset=True),
+            check_json=check.model_dump_json(exclude_unset=True)
         )
         response_obj = PaymentCheckResponse.model_validate_json(response.body)
         if response.status_code >= 400:
@@ -27,7 +27,7 @@ class PaymentController:
         self, create_invoice: ApiCreateInvoiceRequest
     ) -> PaymentCreateInvoiceResponse:
         response = await self._api.create_invoice(
-            create_invoice_json=create_invoice.model_dump_json(exclude_unset=True),
+            create_invoice_json=create_invoice.model_dump_json(exclude_unset=True)
         )
         response_obj = PaymentCreateInvoiceResponse.model_validate_json(response.body)
         if response.status_code >= 400:

@@ -299,16 +299,16 @@ class LoyaltyController:
             },
         )
 
-        response_obj = ResponseLoyaltyBonusOperations.model_validate_json(
-            response.body
-        )
+        response_obj = ResponseLoyaltyBonusOperations.model_validate_json(response.body)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
 
         return response_obj
 
-    async def calculate(self, site: str, order: SerializedOrder, bonuses: float = 0) -> ResponseLoyaltyCalculate:
+    async def calculate(
+        self, site: str, order: SerializedOrder, bonuses: float = 0
+    ) -> ResponseLoyaltyCalculate:
         """
         **Расчёт максимальной скидки**
 
@@ -321,10 +321,8 @@ class LoyaltyController:
             "/loyalty/calculate",
             params={"site": site},
             data={
-                "order": order.model_dump_json(
-                    exclude_none=True, by_alias=True
-                ),
-                "bonuses": bonuses
+                "order": order.model_dump_json(exclude_none=True, by_alias=True),
+                "bonuses": bonuses,
             },
         )
         response_obj = ResponseLoyaltyCalculate.model_validate_json(response.body)

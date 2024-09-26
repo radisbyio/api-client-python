@@ -23,6 +23,7 @@ __all__ = [
     "SerializedCourier",
     "DeliveryService",
     "SerializedDeliveryService",
+    "PaymentType",
 ]
 
 
