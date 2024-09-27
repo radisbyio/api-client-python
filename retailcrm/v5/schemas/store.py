@@ -37,7 +37,7 @@ class ProductGroup(BaseRetailCrmScheme):
     id: int = Field(description="ID")
     externalId: Optional[str] = Field(None, description="Внешний ID товарной группы")
     parentId: Optional[int] = Field(None, description="ID родительской группы")
-    site: str = Field(description="Магазин")
+    site: Optional[str] = Field(None, description="Магазин")
     lvl: Optional[int] = Field(None, description="Уровень вложенности")
     active: bool = Field(False, description="Активность")
 

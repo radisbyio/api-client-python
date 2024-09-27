@@ -26,7 +26,7 @@ class TasksController:
     def __init__(self, client: BaseHttpClient):
         self._api = RetailCrmTasksApi(client)
 
-    async def get_all(
+    async def filter(
         self, filter_obj: TaskFilterData, limit: int = 20, page: int = 1
     ) -> ResponseTasks:
         response = await self._api.get_all(
@@ -45,7 +45,7 @@ class TasksController:
         )
         response_obj = ResponseTaskCreate.model_validate_json(response.body)
         if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
+            raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
         return response_obj
 
     async def history(
@@ -61,7 +61,7 @@ class TasksController:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
 
-    async def get_by_id(self, task_id: int) -> ResponseTaskResponse:
+    async def get(self, task_id: int) -> ResponseTaskResponse:
         response = await self._api.get_by_id(task_id)
         response_obj = ResponseTaskResponse.model_validate_json(response.body)
         if response.status_code >= 400:
@@ -85,5 +85,5 @@ class TasksController:
         )
         response_obj = RetailCrmResponse.model_validate_json(response.body)
         if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
+            raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
         return response_obj
