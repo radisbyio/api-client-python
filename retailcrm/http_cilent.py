@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 
 import httpx
 
@@ -9,11 +10,11 @@ logger = logging.getLogger("retailcrm.http_client")
 
 
 class BaseHttpClient:
-    async def get(self, endpoint: str, params: dict = None) -> Response:
+    async def get(self, endpoint: str, params: Optional[dict] = None) -> Response:
         raise NotImplementedError
 
     async def post(
-        self, endpoint: str, params: dict = None, data: dict = None
+        self, endpoint: str, params: Optional[dict] = None, data: Optional[dict] = None
     ) -> Response:
         raise NotImplementedError
 
@@ -30,7 +31,7 @@ class HttpClient(BaseHttpClient):
             headers=headers, base_url=crm_url + "/api/" + version
         )
 
-    async def get(self, endpoint: str, params: dict = None) -> Response:
+    async def get(self, endpoint: str, params: Optional[dict] = None) -> Response:
         try:
             logger.debug(f"Request to {endpoint} with params: {params}")
             response = await self._client.get(endpoint, params=params, timeout=15.0)
@@ -40,7 +41,7 @@ class HttpClient(BaseHttpClient):
         else:
             return Response(response.status_code, response.text)
 
-    async def post(self, endpoint: str, params=None, data: dict = None) -> Response:
+    async def post(self, endpoint: str, params: Optional[dict] = None, data: Optional[dict] = None) -> Response:
         try:
             logger.debug(
                 f"Request to {endpoint} with params: {params} and body: {data}"
