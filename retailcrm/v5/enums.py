@@ -18,6 +18,8 @@ __all__ = [
     "DisplayAreaTypes",
     "CustomFieldTypes",
     "CombineTechniqueTypes",
+    "DeliveryStatusTypes",
+    "ProductTypes",
 ]
 
 
@@ -135,3 +137,17 @@ class CustomFieldTypes(str, Enum):
 class NotificationTypes(str, Enum):
     API_INFO = "api.info"
     API_ERROR = "api.error"
+
+
+class DeliveryStatusTypes(str, Enum):
+    CANCEL = "cancel"
+    CANCEL_FORCE = "cancel_force"
+    ERROR = "error"
+    NONE = "none"
+    PROCESSING = "processing"
+    SUCCESS = "success"
+
+
+class ProductTypes(str, Enum):
+    PRODUCT = "product"
+    SERVICE = "service"

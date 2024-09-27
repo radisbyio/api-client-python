@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 from retailcrm import RetailCrmApiError
 from retailcrm.http_cilent import BaseHttpClient
@@ -78,12 +79,12 @@ class TasksController:
         return response_obj
 
     async def edit(
-        self, task_id: int, task: SerializedTask, site: str = None
+        self, task_id: int, task: SerializedTask, site: Optional[str] = None
     ) -> RetailCrmResponse:
         response = await self._api.edit(
             task_id, task.model_dump_json(exclude_unset=True, by_alias=True), site
         )
         response_obj = RetailCrmResponse.model_validate_json(response.body)
         if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
+            raise RetailCrmApiError(response.status_code, response_obj.errorMsg, errors=response_obj.errors)
         return response_obj

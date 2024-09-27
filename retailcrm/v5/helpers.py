@@ -35,7 +35,7 @@ def dict_validator() -> Callable[[Any, ValidationInfo], dict]:
     return validator
 
 
-def datetime_serializer(format_str: str) -> Callable[[Optional[datetime]], str]:
+def datetime_serializer(format_str: str) -> Callable[[Optional[datetime]], Optional[str]]:
     """
     Вспомогательная функция для форматирования даты при сериализации объекта datetime
     """
@@ -49,7 +49,7 @@ def datetime_serializer(format_str: str) -> Callable[[Optional[datetime]], str]:
     return serializer
 
 
-def time_serializer(format_str: str) -> Callable[[Optional[time]], str]:
+def time_serializer(format_str: str) -> Callable[[Optional[time]], Optional[str]]:
     """
     Вспомогательная функция для форматирования времени при сериализации объекта time
     """
@@ -80,7 +80,7 @@ def payments_validator() -> Callable[[Any, ValidationInfo], dict]:
     return validator
 
 
-def bool_flag_serializer() -> Callable[[Optional[time]], int]:
+def bool_flag_serializer() -> Callable[[Optional[bool]], Optional[int]]:
     """
     Вспомогательная функция, которая позволяет преобразовать флаги типа bool в int значение
     """

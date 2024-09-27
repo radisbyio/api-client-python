@@ -1,8 +1,9 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import Optional, Union
 
 from pydantic import Field, field_serializer
 
+from retailcrm.v5.enums import ProductTypes
 from retailcrm.v5.helpers import datetime_serializer
 from retailcrm.v5.schemas import Offer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme, RetailCrmResponse
@@ -61,13 +62,13 @@ class Product(BaseRetailCrmScheme):
     stock: Optional[bool] = Field(None, description="Метка Лучшая цена")
     novelty: Optional[bool] = Field(None, description="Метка Новинка")
     recommended: Optional[bool] = Field(None, description="Метка Рекомендуем")
-    options: Optional[List[str]] = Field(None, description="Массив опций товара")
-    groups: Optional[List[ProductGroup]] = Field(
+    options: Optional[list[str]] = Field(None, description="Массив опций товара")
+    groups: Optional[list[ProductGroup]] = Field(
         None, description="Товарные группы, которым принадлежит товар"
     )
     externalId: Optional[str] = Field(None, description="Внешний ID товара")
     manufacturer: Optional[str] = Field(None, description="Производитель")
-    offers: Optional[List[Offer]] = Field(None, description="Торговые предложения")
+    offers: Optional[list[Offer]] = Field(None, description="Торговые предложения")
     updatedAt: Optional[datetime] = Field(
         None, description="Дата редактирования товара в системе"
     )
@@ -81,25 +82,25 @@ class Product(BaseRetailCrmScheme):
 
 
 class InventoryAlternativeFilterData(BaseRetailCrmScheme):
-    ids: Optional[List[int]] = Field(None, description="Массив ID торговых предложений")
-    sites: Optional[List[str]] = Field(None, description="Магазины")
-    catalogs: Optional[List[int]] = Field(None, description="Массив ID каталогов")
+    ids: Optional[list[int]] = Field(None, description="Массив ID торговых предложений")
+    sites: Optional[list[str]] = Field(None, description="Магазины")
+    catalogs: Optional[list[int]] = Field(None, description="Массив ID каталогов")
     productExternalId: Optional[str] = Field(
         None, description="Внешний ID товара", max_length=255
     )
-    productArticle: Optional[List[str]] = Field(
+    productArticle: Optional[list[str]] = Field(
         None, description="Массив артикулов товаров"
     )
     productActive: Optional[bool] = Field(
         None, description="Возвращать остатки только по активным товарам"
     )
-    offerExternalId: Optional[List[str]] = Field(
+    offerExternalId: Optional[list[str]] = Field(
         None, description="Массив внешних ID торговых предложений"
     )
-    offerXmlId: Optional[List[str]] = Field(
+    offerXmlId: Optional[list[str]] = Field(
         None, description="Массив XmlId торговых предложений"
     )
-    offerArticle: Optional[List[str]] = Field(
+    offerArticle: Optional[list[str]] = Field(
         None, description="Массив артикулов торговых предложений"
     )
     offerActive: Optional[bool] = Field(
@@ -123,22 +124,22 @@ class ResponseInventoriesUpload(RetailCrmResponse):
 
 
 class OfferFilterData(BaseRetailCrmScheme):
-    ids: Optional[List[int]] = Field(None, description="Массив ID торговых предложений")
-    externalIds: Optional[List[str]] = Field(None, description="Массив externalId")
-    xmlIds: Optional[List[str]] = Field(None, description="Массив xmlId")
+    ids: Optional[list[int]] = Field(None, description="Массив ID торговых предложений")
+    externalIds: Optional[list[str]] = Field(None, description="Массив externalId")
+    xmlIds: Optional[list[str]] = Field(None, description="Массив xmlId")
     name: Optional[str] = Field(
         None,
         description="Название/артикул товара либо артикул/штрихкод торгового предложения",
         max_length=255,
     )
-    sites: Optional[List[str]] = Field(None, description="Массив кодов магазинов")
-    catalogs: Optional[List[int]] = Field(None, description="Массив ID каталогов")
-    groups: Optional[List[int]] = Field(
+    sites: Optional[list[str]] = Field(None, description="Массив кодов магазинов")
+    catalogs: Optional[list[int]] = Field(None, description="Массив ID каталогов")
+    groups: Optional[list[int]] = Field(
         None, description="Массив ID групп товаров или услуг"
     )
     priceType: Optional[str] = Field(None, description="Тип цены")
     active: Optional[bool] = Field(None, description="Активность")
-    properties: Optional[List[str]] = Field(
+    properties: Optional[list[str]] = Field(
         None, description="Свойства торговых предложений"
     )
     sinceId: Optional[int] = Field(
@@ -175,7 +176,7 @@ class PriceUploadInput(BaseRetailCrmScheme):
     )
     id: Optional[int] = Field(None, description="ID торгового предложения")
     site: Optional[str] = Field(None, description="Код магазина")
-    prices: List[PriceUploadPricesInput] = Field(
+    prices: list[PriceUploadPricesInput] = Field(
         description="Цена торгового предложения"
     )
 
@@ -199,9 +200,9 @@ class ResponsePricesUpload(RetailCrmResponse):
 
 
 class ProductGroupFilterData(BaseRetailCrmScheme):
-    ids: Optional[List[int]] = Field(None, description="Массив ID групп товаров")
-    sites: Optional[List[str]] = Field(None, description="Магазины")
-    catalogs: Optional[List[int]] = Field(None, description="Массив ID каталогов")
+    ids: Optional[list[int]] = Field(None, description="Массив ID групп товаров")
+    sites: Optional[list[str]] = Field(None, description="Магазины")
+    catalogs: Optional[list[int]] = Field(None, description="Массив ID каталогов")
     active: Optional[bool] = Field(None, description="Активность")
     parentGroupId: Optional[int] = Field(
         None, description="ID родительской группы товаров"
@@ -246,15 +247,15 @@ class ResponseProductGroupEdit(RetailCrmResponse):
 
 
 class ProductFilterData(BaseRetailCrmScheme):
-    ids: Optional[List[int]] = Field(None, description="Массив ID товаров")
+    ids: Optional[list[int]] = Field(None, description="Массив ID товаров")
     name: Optional[str] = Field(
         None,
         description="Название/артикул товара либо артикул/штрихкод торгового предложения",
         max_length=255,
     )
-    groups: Optional[List[int]] = Field(None, description="Группа товара")
-    sites: Optional[List[str]] = Field(None, description="Магазины")
-    catalogs: Optional[List[int]] = Field(None, description="Массив ID каталогов")
+    groups: Optional[list[int]] = Field(None, description="Группа товара")
+    sites: Optional[list[str]] = Field(None, description="Магазины")
+    catalogs: Optional[list[int]] = Field(None, description="Массив ID каталогов")
     priceType: Optional[str] = Field(None, description="Тип цены")
     manufacturer: Optional[str] = Field(None, description="Производитель")
     externalId: Optional[str] = Field(None, description="Внешний ID")
@@ -266,9 +267,9 @@ class ProductFilterData(BaseRetailCrmScheme):
     stock: Optional[bool] = Field(None, description="Метка Лучшая цена")
     novelty: Optional[bool] = Field(None, description="Метка Новинка")
     recommended: Optional[bool] = Field(None, description="Метка Рекомендуем")
-    properties: Optional[List[str]] = Field(None, description="Свойства товаров")
+    properties: Optional[list[str]] = Field(None, description="Свойства товаров")
     markable: Optional[bool] = Field(None, description="")
-    offerIds: Optional[List[int]] = Field(
+    offerIds: Optional[list[int]] = Field(
         None, description="Массив ID торговых предложений"
     )
     offerExternalId: Optional[str] = Field(
@@ -313,7 +314,7 @@ class ProductEditGroupInput(BaseRetailCrmScheme):
 
 
 class ProductCreateInput(BaseRetailCrmScheme):
-    type: Optional[str] = Field(
+    type: Optional[Union[str, ProductTypes]] = Field(
         None, description="Тип (товар product или услуга service)"
     )
     catalogId: Optional[int] = Field(None, description="ID каталога")
@@ -325,7 +326,7 @@ class ProductCreateInput(BaseRetailCrmScheme):
     stock: Optional[bool] = Field(None, description="Метка Лучшая цена")
     novelty: Optional[bool] = Field(None, description="Метка Новинка")
     recommended: Optional[bool] = Field(None, description="Метка Рекомендуем")
-    groups: Optional[List[ProductEditGroupInput]] = Field(
+    groups: Optional[list[ProductEditGroupInput]] = Field(
         None, description="Товарные группы, которым принадлежит товар"
     )
     externalId: Optional[str] = Field(None, description="Внешний ID товара")
@@ -336,7 +337,7 @@ class ProductCreateInput(BaseRetailCrmScheme):
 
 class ResponseProductBatchCreate(RetailCrmResponse):
     processedProductsCount: Optional[int] = Field(
-        description="Количество успешно обработанных товаров"
+        None, description="Количество успешно обработанных товаров"
     )
     addedProducts: list[int] = Field(
         default_factory=list, description="Список id добавленных товаров"
@@ -354,7 +355,7 @@ class ProductEditInput(BaseRetailCrmScheme):
     stock: Optional[bool] = Field(None, description="Метка Лучшая цена")
     novelty: Optional[bool] = Field(None, description="Метка Новинка")
     recommended: Optional[bool] = Field(None, description="Метка Рекомендуем")
-    groups: Optional[List[ProductEditGroupInput]] = Field(
+    groups: Optional[list[ProductEditGroupInput]] = Field(
         None, description="Товарные группы, которым принадлежит товар"
     )
     externalId: Optional[str] = Field(None, description="Внешний ID товара")
@@ -381,14 +382,14 @@ class ResponseProductBatchEdit(RetailCrmResponse):
 
 
 class ProductPropertiesFilterData(BaseRetailCrmScheme):
-    ids: Optional[List[int]] = Field(None, description="Массив ID товаров или услуг")
+    ids: Optional[list[int]] = Field(None, description="Массив ID товаров или услуг")
     name: Optional[str] = Field(None, description="Название товара или услуги")
     code: Optional[str] = Field(None, description="Символьный код товара или услуги")
-    sites: Optional[List[str]] = Field(None, description="Массив кодов магазинов")
+    sites: Optional[list[str]] = Field(None, description="Массив кодов магазинов")
     visible: Optional[bool] = Field(None, description="Видимость свойства")
     variative: Optional[bool] = Field(None, description="Вариативность свойства")
-    catalogs: Optional[List[int]] = Field(None, description="Массив ID каталогов")
-    groups: Optional[List[int]] = Field(
+    catalogs: Optional[list[int]] = Field(None, description="Массив ID каталогов")
+    groups: Optional[list[int]] = Field(
         None, description="Массив ID групп товаров или услуг"
     )
 
@@ -399,10 +400,10 @@ class ProductPropertyGroup(BaseRetailCrmScheme):
 
 
 class ProductProperty(BaseRetailCrmScheme):
-    sites: Optional[List[str]] = Field(
+    sites: Optional[list[str]] = Field(
         None, description="Символьные коды сайтов к которым привязан каталог"
     )
-    groups: Optional[List[ProductPropertyGroup]] = Field(
+    groups: Optional[list[ProductPropertyGroup]] = Field(
         None, description="Группы, содержащие товары с данным свойством"
     )
     code: str = Field(description="Символьный код свойства")
@@ -421,7 +422,7 @@ class ResponseProductPropertiesFilter(RetailCrmResponse):
 class ProductPropertyValuesFilterData(BaseRetailCrmScheme):
     propertyName: Optional[str] = Field(None, description="Название свойства")
     propertyCode: Optional[str] = Field(None, description="Код свойства")
-    groups: Optional[List[int]] = Field(
+    groups: Optional[list[int]] = Field(
         None, description="Массив ID групп товаров или услуг"
     )
 

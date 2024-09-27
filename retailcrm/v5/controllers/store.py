@@ -24,7 +24,7 @@ from retailcrm.v5.schemas.store import (
     SerializedOffer,
     SerializedProductGroup,
 )
-from retailcrm.v5.utils import pydantic_to_nested_dict
+from retailcrm.v5.utils import pydantic_to_nested_dict, pydantic_list_dumps_to_json
 
 
 class StoreController:
@@ -275,13 +275,18 @@ class StoreController:
         :param products: Товары или услуги
         :return: ResponseProductFilter
         """
-        response = await self._client.get(
-            endpoint="/store/products/batch/create", params={"products": products}
+
+        data = {
+            "products": pydantic_list_dumps_to_json(products, ProductCreateInput)
+        }
+
+        response = await self._client.post(
+            endpoint="/store/products/batch/create", data=data
         )
 
         response_obj = ResponseProductBatchCreate.model_validate_json(response.body)
         if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
+            raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors, response_obj)
         return response_obj
 
     async def products_batch_edit(
