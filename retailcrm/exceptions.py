@@ -1,4 +1,5 @@
 from typing import Optional
+
 from retailcrm.v5.schemas.base import RetailCrmResponse
 
 
@@ -12,7 +13,13 @@ class RetailCrmTimeoutException(RetailCrmException):
 
 
 class RetailCrmApiError(RetailCrmException):
-    def __init__(self, status_code: int, error_msg: str, errors: Optional[dict] = None, response: type[RetailCrmResponse] = None):
+    def __init__(
+        self,
+        status_code: int,
+        error_msg: str,
+        errors: Optional[dict] = None,
+        response: type[RetailCrmResponse] = None,
+    ):
         self.status_code = status_code
         self.error_msg = error_msg
         self.errors = errors or {}

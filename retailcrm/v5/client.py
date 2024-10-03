@@ -32,12 +32,18 @@ class RetailCrmApiClientV5:
     _loyalty_controller: Optional[LoyaltyController]
     _store_controller: Optional[StoreController]
 
-    def __init__(self, crm_url: str, api_key: str, client: BaseHttpClient = None):
+    def __init__(
+        self,
+        crm_url: str,
+        api_key: str,
+        client: BaseHttpClient = None,
+        use_retries: bool = False,
+    ):
         self._crm_url = crm_url
         self._api_key = api_key
 
         if not client:
-            self._client = HttpClient(crm_url, api_key, version="v5")
+            self._client = HttpClient(crm_url, api_key, "v5", use_retries)
         else:
             self._client = client
 

@@ -4,6 +4,7 @@ from typing import Optional
 import httpx
 
 from retailcrm.exceptions import RetailCrmTimeoutException
+from retailcrm.heplers.transports import RetryTransport
 from retailcrm.response import Response
 
 logger = logging.getLogger("retailcrm.http_client")
@@ -22,13 +23,18 @@ class BaseHttpClient:
 class HttpClient(BaseHttpClient):
     _client: httpx.AsyncClient
 
-    def __init__(self, crm_url: str, api_key: str, version="v5"):
+    def __init__(self, crm_url: str, api_key: str, version: str, use_retries=True):
         self._crm_url = crm_url
         self._api_key = api_key
 
         headers = {"X-API-KEY": self._api_key}
+
+        transport = httpx.AsyncHTTPTransport()
+        if use_retries:
+            transport = RetryTransport(transport)
+
         self._client = httpx.AsyncClient(
-            headers=headers, base_url=crm_url + "/api/" + version
+            headers=headers, base_url=crm_url + "/api/" + version, transport=transport
         )
 
     async def get(self, endpoint: str, params: Optional[dict] = None) -> Response:
@@ -41,7 +47,9 @@ class HttpClient(BaseHttpClient):
         else:
             return Response(response.status_code, response.text)
 
-    async def post(self, endpoint: str, params: Optional[dict] = None, data: Optional[dict] = None) -> Response:
+    async def post(
+        self, endpoint: str, params: Optional[dict] = None, data: Optional[dict] = None
+    ) -> Response:
         try:
             logger.debug(
                 f"Request to {endpoint} with params: {params} and body: {data}"
