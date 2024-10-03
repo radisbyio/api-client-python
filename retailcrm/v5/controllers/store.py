@@ -24,7 +24,7 @@ from retailcrm.v5.schemas.store import (
     SerializedOffer,
     SerializedProductGroup,
 )
-from retailcrm.v5.utils import pydantic_to_nested_dict, pydantic_list_dumps_to_json
+from retailcrm.v5.utils import pydantic_list_dumps_to_json, pydantic_to_nested_dict
 
 
 class StoreController:
@@ -276,9 +276,7 @@ class StoreController:
         :return: ResponseProductFilter
         """
 
-        data = {
-            "products": pydantic_list_dumps_to_json(products, ProductCreateInput)
-        }
+        data = {"products": pydantic_list_dumps_to_json(products, ProductCreateInput)}
 
         response = await self._client.post(
             endpoint="/store/products/batch/create", data=data
@@ -286,7 +284,12 @@ class StoreController:
 
         response_obj = ResponseProductBatchCreate.model_validate_json(response.body)
         if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors, response_obj)
+            raise RetailCrmApiError(
+                response.status_code,
+                response_obj.errorMsg,
+                response_obj.errors,
+                response_obj.model_dump(),
+            )
         return response_obj
 
     async def products_batch_edit(
@@ -296,13 +299,11 @@ class StoreController:
         Пакетное добавление товаров и услуг
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-store-products-batch-create
-        :param limit: Количество элементов в ответе (по умолчанию равно 20)
-        :param page: Номер страницы с результатами (по умолчанию равно 1)
         :param products: Товары или услуги
         :return: ResponseProductBatchEdit
         """
-        response = await self._client.get(
-            endpoint="/store/products/batch/edit", params={"products": products}
+        response = await self._client.post(
+            endpoint="/store/products/batch/edit", data={"products": products}
         )
 
         response_obj = ResponseProductBatchEdit.model_validate_json(response.body)

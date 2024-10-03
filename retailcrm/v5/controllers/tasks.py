@@ -46,7 +46,9 @@ class TasksController:
         )
         response_obj = ResponseTaskCreate.model_validate_json(response.body)
         if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
+            raise RetailCrmApiError(
+                response.status_code, response_obj.errorMsg, response_obj.errors
+            )
         return response_obj
 
     async def history(
@@ -86,5 +88,7 @@ class TasksController:
         )
         response_obj = RetailCrmResponse.model_validate_json(response.body)
         if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg, errors=response_obj.errors)
+            raise RetailCrmApiError(
+                response.status_code, response_obj.errorMsg, errors=response_obj.errors
+            )
         return response_obj

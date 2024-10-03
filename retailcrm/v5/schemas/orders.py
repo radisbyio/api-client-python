@@ -3,11 +3,7 @@ from typing import Optional, Union
 
 from pydantic import Field, RootModel, field_serializer
 
-from retailcrm.v5.enums import (
-    PrivilegeType,
-    VatRateTypes,
-    DeliveryStatusTypes,
-)
+from retailcrm.v5.enums import DeliveryStatusTypes, PrivilegeType, VatRateTypes
 from retailcrm.v5.helpers import datetime_serializer
 from retailcrm.v5.schemas import BaseRetailCrmScheme, RetailCrmResponse
 from retailcrm.v5.schemas.shared import (
@@ -169,7 +165,7 @@ class OrderFilterData(BaseRetailCrmScheme):
     shipmentStores: Optional[list[str]] = Field(None, description="Склады отгрузки")
     shipped: Optional[bool] = Field(None, description="Отгружен")
     attachments: Optional[int] = Field(
-        None, description="Прикрепленные объекты (вложения)", choice=[1, 2, 3]
+        None, description="Прикрепленные объекты (вложения)"
     )
     receiptFiscalDocumentAttribute: Optional[str] = Field(
         None, description="Фискальный признак документа"
@@ -180,7 +176,7 @@ class OrderFilterData(BaseRetailCrmScheme):
         None, description="Статус полной фискализации"
     )
     mgChannels: Optional[list[int]] = Field(None, description="Каналы чатов")
-    tasksCounts: Optional[int] = Field(None, description="Задачи", choice=[1, 2, 3])
+    tasksCounts: Optional[int] = Field(None, description="Задачи")
     tags: Optional[list[str]] = Field(None, description="")
     attachedTags: Optional[list[str]] = Field(None, description="")
     createdAtFrom: Optional[date] = Field(

@@ -18,12 +18,12 @@ class RetailCrmApiError(RetailCrmException):
         status_code: int,
         error_msg: str,
         errors: Optional[dict] = None,
-        response: type[RetailCrmResponse] = None,
+        response: dict = None,
     ):
         self.status_code = status_code
         self.error_msg = error_msg
         self.errors = errors or {}
-        self.response = response
+        self.response = response or {}
 
     def __str__(self) -> str:
         if self.errors:
