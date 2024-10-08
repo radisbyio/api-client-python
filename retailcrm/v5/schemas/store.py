@@ -62,7 +62,7 @@ class Product(BaseRetailCrmScheme):
     stock: Optional[bool] = Field(None, description="Метка Лучшая цена")
     novelty: Optional[bool] = Field(None, description="Метка Новинка")
     recommended: Optional[bool] = Field(None, description="Метка Рекомендуем")
-    options: Optional[list[str]] = Field(None, description="Массив опций товара")
+    options: Optional[list[dict]] = Field(None, description="Массив опций товара")
     groups: Optional[list[ProductGroup]] = Field(
         None, description="Товарные группы, которым принадлежит товар"
     )
