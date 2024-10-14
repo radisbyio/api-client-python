@@ -19,6 +19,7 @@ __all__ = [
     "CustomFieldTypes",
     "CombineTechniqueTypes",
     "DeliveryStatusTypes",
+    "DeliveryShipmentStatusTypes",
     "ProductTypes",
 ]
 
@@ -146,6 +147,13 @@ class DeliveryStatusTypes(str, Enum):
     NONE = "none"
     PROCESSING = "processing"
     SUCCESS = "success"
+
+
+class DeliveryShipmentStatusTypes(str, Enum):
+    CREATED = "created"
+    PROCESSING = "processing"
+    SHIPPED = "shipped"
+    CANCELLED = "cancelled"
 
 
 class ProductTypes(str, Enum):

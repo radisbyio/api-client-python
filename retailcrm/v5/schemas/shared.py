@@ -240,20 +240,47 @@ class PackageItemOrderProduct(BaseRetailCrmScheme):
     )
 
 
-# todo: заполнить
 class PackageItem(BaseRetailCrmScheme):
-    orderProduct: PackageItemOrderProduct = Field(None, description="Позиция в заказе")
-    quantity: Optional[float] = Field(0, description="Количество товара в упаковке")
+    offerId: Optional[str] = Field(None, description="Идентификатор оффера в системе")
+    externalId: Optional[str] = Field(
+        None, description="Идентификатор торгового предложения в магазине"
+    )
+    xmlId: Optional[str] = Field(
+        None, description="Идентификатор торгового предложения в складской системе"
+    )
+    name: Optional[str] = Field(None, description="Наименование товара")
+    declaredValue: Optional[float] = Field(
+        None, description="Объявленная стоимость за единицу товара"
+    )
+    cod: Optional[float] = Field(
+        None, description="Наложенный платеж за единицу товара"
+    )
+    vatRate: Optional[VatRateTypes] = Field(
+        None, description='Ставка НДС ("none" - НДС не облагается)'
+    )
+    quantity: Optional[float] = Field(None, description="Количество товара в упаковке")
+    unit: Optional[Unit] = Field(None, description="Единица измерения товара")
+    cost: Optional[float] = Field(
+        None, description="Стоимость товара (с учетом скидок)"
+    )
+    markingCodes: Optional[list[str]] = Field(
+        None, description="Коды маркировки (формат кода маркировки)"
+    )
+    properties: Optional[list] = Field(
+        None, description="Свойства товара"
+    )  # todo: уточнить тип данных
+    weight: Optional[float] = Field(
+        None, description="Вес товара (может быть null для услуг)"
+    )
 
 
-# todo: заполнить
 class Package(BaseRetailCrmScheme):
-    packageId: Optional[str] = Field(None)
-    weight: Optional[float] = Field(None)
-    length: Optional[int] = Field(None)
-    width: Optional[int] = Field(None)
-    height: Optional[int] = Field(None)
-    items: list[PackageItem] = []
+    packageId: Optional[str] = Field(None, description="Идентификатор упаковки")
+    weight: Optional[float] = Field(None, description="Вес г.")
+    width: Optional[int] = Field(None, description="Ширина мм.")
+    length: Optional[int] = Field(None, description="Длина мм.")
+    height: Optional[int] = Field(None, description="Высота мм.")
+    items: list[PackageItem] = Field(default_factory=list, description="Содержимое упаковки")
 
 
 # todo: заполнить

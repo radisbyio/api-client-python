@@ -7,3 +7,4 @@ from retailcrm.v5.controllers.references import ReferencesController
 from retailcrm.v5.controllers.store import StoreController
 from retailcrm.v5.controllers.tasks import TasksController
 from retailcrm.v5.controllers.users import UsersController
+from retailcrm.v5.controllers.delivery import DeliveryController

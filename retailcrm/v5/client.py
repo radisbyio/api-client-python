@@ -11,7 +11,7 @@ from retailcrm.v5.controllers import (
     ReferencesController,
     StoreController,
     TasksController,
-    UsersController,
+    UsersController, DeliveryController,
 )
 
 __all__ = ["RetailCrmApiClientV5"]
@@ -31,6 +31,7 @@ class RetailCrmApiClientV5:
     _tasks_controller: Optional[TasksController]
     _loyalty_controller: Optional[LoyaltyController]
     _store_controller: Optional[StoreController]
+    _delivery_controller: Optional[DeliveryController]
 
     def __init__(
         self,
@@ -118,3 +119,9 @@ class RetailCrmApiClientV5:
         if not self._store_controller:
             self._store_controller = StoreController(self._client)
         return self._store_controller
+
+    @property
+    def delivery(self) -> DeliveryController:
+        if not self._delivery_controller:
+            self._delivery_controller = DeliveryController(self._client)
+        return self._delivery_controller
