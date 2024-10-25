@@ -356,6 +356,7 @@ class ResponseLoadDeliveryData(BaseRetailCrmScheme):
 class CallbackDeliveryGetResponse(BaseRetailCrmScheme):
     success: Optional[bool] = Field(None, description="Результат запроса (успешный/неуспешный)")
     result: Optional[ResponseLoadDeliveryData] = Field(None, description="Данные доставки")
+    errorMsg: Optional[str] = Field(None, description="Сообщение об ошибке")
 
 
 class RequestPrint(BaseRetailCrmScheme):
