@@ -38,7 +38,8 @@ __all__ = [
     "GetDeliveryShipmentResponse",
     "EditDeliveryShipmentsResponse",
     "CalculationResponse",
-    "CreateDeliveryShipmentsResponse"
+    "CreateDeliveryShipmentsResponse",
+    "DeliveryAddress",
 ]
 
 
@@ -342,7 +343,7 @@ class ResponseLoadDeliveryData(BaseRetailCrmScheme):
         None, description="Плательщик за доставку (receiver или sender)"
     )
     status: Optional[StatusInfo] = Field(None, description="Статус доставки")
-    extraData: Optional[list] = Field(
+    extraData: Optional[dict] = Field(
         None, description="Дополнительные данные доставки (deliveryDataField.code => значение)"
     )
     shipmentAddress: Optional[DeliveryAddress] = Field(
