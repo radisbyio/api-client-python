@@ -239,31 +239,6 @@ class StoreController:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
 
-    async def products(
-        self, filter_data: ProductFilterData, limit: int = 20, page: int = 1
-    ) -> ResponseProductFilter:
-        """
-        Получение списка товаров с торговыми предложениями, удовлетворяющих заданному фильтру
-
-        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-store-products
-        :param limit: Количество элементов в ответе (по умолчанию равно 20)
-        :param page: Номер страницы с результатами (по умолчанию равно 1)
-        :param filter_data: Фильтр
-        :return: ResponseProductFilter
-        """
-        response = await self._client.get(
-            endpoint="/store/products",
-            params={
-                "limit": limit,
-                "page": page,
-                **pydantic_to_nested_dict(filter_data, "filter"),
-            },
-        )
-
-        response_obj = ResponseProductFilter.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
 
     async def products_batch_create(
         self, products: list[ProductCreateInput]
