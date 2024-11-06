@@ -436,7 +436,7 @@ class SerializedCreateLoyaltyAccount(BaseRetailCrmScheme):
 class SerializedEditLoyaltyAccount(BaseRetailCrmScheme):
     phoneNumber: Optional[str] = Field(None, description="Номер телефона")
     cardNumber: Optional[str] = Field(None, description="Номер карты")
-    customFields: Optional[List] = Field(
+    customFields: Optional[dict] = Field(
         None, description="Ассоциативный массив пользовательских полей"
     )
     loyaltyLevelId: Optional[int] = Field(

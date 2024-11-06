@@ -31,7 +31,7 @@ class LoyaltyController:
     def __init__(self, client: BaseHttpClient):
         self._client = client
 
-    async def accounts(
+    async def accounts_filter(
         self, filter_data: LoyaltyAccountFilterData, limit: int = 20, page: int = 1
     ) -> ResponseLoyaltyAccounts:
         """Список участий в программе лояльности
@@ -59,7 +59,7 @@ class LoyaltyController:
         return response_obj
 
     async def account_create(
-        self, loyalty_account: SerializedCreateLoyaltyAccount, site: str
+        self, loyalty_account: SerializedCreateLoyaltyAccount, site: str | None = None
     ) -> ResponseCreateLoyaltyAccount:
         """
         **Добавление клиента в программу лояльности**
@@ -69,9 +69,13 @@ class LoyaltyController:
         :param site: Символьный код магазина
         :return: ResponseCreateLoyaltyAccount
         """
+        params = {}
+        if site:
+            params["site"] = site
+
         response = await self._client.post(
             "/loyalty/account/create",
-            params={"site": site},
+            params=params,
             data={
                 "loyaltyAccount": loyalty_account.model_dump_json(
                     exclude_unset=True, by_alias=True
