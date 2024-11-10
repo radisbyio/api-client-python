@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field, field_serializer
 from retailcrm.v5.helpers import datetime_serializer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme, RetailCrmResponse
 from retailcrm.v5.schemas.shared import (
+    Customer,
     SerializedEntityCustomer,
     SerializedOrderDelivery,
 )
@@ -123,6 +124,8 @@ class SmsVerification(BaseModel):
 class LoyaltyAccount(BaseModel):
     active: Optional[bool] = Field(None, description="Признак активности участия")
     id: Optional[int] = Field(None, description="ID участия")
+    loyalty: Optional[Loyalty] = Field(None, description="Программа лояльности")
+    customer: Optional[Customer] = Field(None, description="Клиент")
     phoneNumber: Optional[str] = Field(None, description="Номер телефона")
     cardNumber: Optional[str] = Field(None, description="Номер карты")
     amount: Optional[float] = Field(None, description="Количество активных бонусов")
