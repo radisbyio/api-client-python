@@ -147,7 +147,7 @@ class Customer(BaseRetailCrmScheme):
     vip: Optional[bool] = Field(None, description="Важный клиент")
     bad: Optional[bool] = Field(None, description="Плохой клиент")
     site: Optional[str] = Field(None, description="Магазин, с которого пришел клиент")
-    tags: list[CustomerTagLink] = Field([], description="Теги")
+    tags: list[CustomerTagLink] = Field(default_factory=list, description="Теги")
     firstClientId: Optional[str] = Field(
         None, description="Первая метка клиента Google Analytics"
     )
@@ -160,8 +160,8 @@ class Customer(BaseRetailCrmScheme):
     discountCardNumber: Optional[str] = Field(
         None, description="Номер дисконтной карты"
     )
-    avgMarginSumm: float = Field(
-        "", description="Средняя валовая прибыль по заказам клиента (в базовой валюте)"
+    avgMarginSumm: float | None = Field(
+        None, description="Средняя валовая прибыль по заказам клиента (в базовой валюте)"
     )
     marginSumm: float = Field(0, description="LTV (в базовой валюте)")
     totalSumm: float = Field(0, description="Общая сумма заказов (в базовой валюте)")

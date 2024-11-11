@@ -1,9 +1,9 @@
 from datetime import datetime
 from typing import List, Optional, Union
 
-from pydantic import BaseModel, Field, field_serializer
+from pydantic import BaseModel, Field, field_serializer, field_validator
 
-from retailcrm.v5.helpers import datetime_serializer
+from retailcrm.v5.helpers import datetime_serializer, dict_validator
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme, RetailCrmResponse
 from retailcrm.v5.schemas.shared import (
     Customer,
@@ -146,7 +146,7 @@ class LoyaltyAccount(BaseModel):
         None,
         description="Статус участия. Возможные значения: not_confirmed, activated, deactivated",
     )
-    customFields: Optional[List] = Field(
+    customFields: Optional[dict] = Field(
         None, description="Ассоциативный массив пользовательских полей"
     )
 
@@ -158,6 +158,9 @@ class LoyaltyAccount(BaseModel):
     )
     confirmedPhoneAt_serializer = field_serializer("confirmedPhoneAt")(
         datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
+    customFields_validator = field_validator("customFields", mode="before")(
+        dict_validator()
     )
 
 
@@ -219,12 +222,6 @@ class Offer(BaseRetailCrmScheme):
     xmlId: Optional[str] = Field(
         "", description="ID торгового предложения в складской системе"
     )
-
-
-class Customer(BaseRetailCrmScheme):
-    id: Optional[int] = Field(None, description="ID клиента")
-    externalId: Optional[str] = Field(None, description="Внешний ID клиента")
-    personalDiscount: Optional[float] = Field(None, description="Персональная скидка")
 
 
 class SerializedLoyaltyOrder(BaseRetailCrmScheme):
