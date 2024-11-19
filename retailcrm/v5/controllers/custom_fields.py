@@ -1,6 +1,6 @@
 from retailcrm.exceptions import RetailCrmApiError
 from retailcrm.http_cilent import BaseHttpClient
-from retailcrm.v5.enums import EntityTypes
+from retailcrm.v5.enums import EntityTypes, CustomFieldEntityTypes
 from retailcrm.v5.schemas.custom_fields import (
     CustomDictionariesResponse,
     CustomDictionaryFilter,
@@ -141,7 +141,7 @@ class CustomFieldsController:
         return response_obj
 
     async def create(
-        self, entity: EntityTypes, custom_field: SerializedCustomFieldApiDocModel
+        self, entity: CustomFieldEntityTypes | str, custom_field: SerializedCustomFieldApiDocModel
     ) -> CustomFieldCreateResponse:
         """
         Создание пользовательского поля
@@ -151,7 +151,7 @@ class CustomFieldsController:
         :param custom_field:
         """
         response = await self._client.post(
-            f"/custom-fields/{entity.value}/create",
+            f"/custom-fields/{entity}/create",
             data={
                 "customField": custom_field.model_dump_json(
                     exclude_none=True, by_alias=True
@@ -164,7 +164,7 @@ class CustomFieldsController:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
 
-    async def get(self, entity: EntityTypes, code: str) -> CustomFieldRetrieveResponse:
+    async def get(self, entity: CustomFieldEntityTypes | str, code: str) -> CustomFieldRetrieveResponse:
         """
         Получение информации о пользовательском поле
 
@@ -172,7 +172,7 @@ class CustomFieldsController:
         :param entity: Символьный код
         :param code: Поле для таблицы
         """
-        response = await self._client.get(f"/custom-fields/{entity.value}/{code}")
+        response = await self._client.get(f"/custom-fields/{entity}/{code}")
 
         response_obj = CustomFieldRetrieveResponse.model_validate_json(response.body)
         if response.status_code >= 400:
@@ -181,7 +181,7 @@ class CustomFieldsController:
 
     async def edit(
         self,
-        entity: EntityTypes,
+        entity: CustomFieldEntityTypes | str,
         code: str,
         custom_field: SerializedCustomFieldApiDocModel,
     ) -> CustomFieldRetrieveResponse:
@@ -193,7 +193,7 @@ class CustomFieldsController:
         :param code: Поле для таблицы
         """
         response = await self._client.post(
-            f"/custom-fields/{entity.value}/{code}/edit",
+            f"/custom-fields/{entity}/{code}/edit",
             data={
                 "customField": custom_field.model_dump_json(
                     exclude_none=True, by_alias=True

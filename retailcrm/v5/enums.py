@@ -13,7 +13,7 @@ __all__ = [
     "UserStatuses",
     "TasksStatuses",
     "NotificationTypes",
-    "EntityTypes",
+    "ViewModeTypes",
     "CustomFieldEntityTypes",
     "DisplayAreaTypes",
     "CustomFieldTypes",
@@ -22,6 +22,10 @@ __all__ = [
     "DeliveryShipmentStatusTypes",
     "ProductTypes",
 ]
+
+class RetailCrmEnum(Enum):
+    def __str__(self):
+        return str(self.value)
 
 
 class IdTypes(str, Enum):
@@ -101,13 +105,7 @@ class CombineTechniqueTypes(str, Enum):
     THEIRS = "theirs"
 
 
-class CustomFieldEntityTypes(str, Enum):
-    CUSTOMER = "customer"
-    LOYALTY_ACCOUNT = "loyalty_account"
-    ORDER = "order"
-
-
-class EntityTypes(str, Enum):
+class CustomFieldEntityTypes(str, RetailCrmEnum):
     ORDER = "order"
     CUSTOMER = "customer"
     CUSTOMER_CORPORATE = "customer_corporate"
@@ -137,6 +135,12 @@ class CustomFieldTypes(str, Enum):
     NUMERIC = "numeric"
     STRING = "string"
     TEXT = "text"
+
+
+class ViewModeTypes(str, Enum):
+    EDITABLE = "editable"
+    MISS = "miss"
+    NOT_EDITABLE = "not_editable"
 
 
 class NotificationTypes(str, Enum):
