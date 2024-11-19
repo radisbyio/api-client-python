@@ -109,6 +109,10 @@ class CustomFieldEntityTypes(str, Enum):
 
 class EntityTypes(str, Enum):
     ORDER = "order"
+    CUSTOMER = "customer"
+    CUSTOMER_CORPORATE = "customer_corporate"
+    COMPANY = "company"
+    LOYALTY_ACCOUNT = "loyalty_account"
 
 
 class DisplayAreaTypes(str, Enum):
