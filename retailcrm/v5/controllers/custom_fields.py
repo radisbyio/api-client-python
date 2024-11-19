@@ -1,6 +1,6 @@
 from retailcrm.exceptions import RetailCrmApiError
 from retailcrm.http_cilent import BaseHttpClient
-from retailcrm.v5.enums import EntityTypes, CustomFieldEntityTypes
+from retailcrm.v5.enums import CustomFieldEntityTypes
 from retailcrm.v5.schemas.custom_fields import (
     CustomDictionariesResponse,
     CustomDictionaryFilter,
