@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import Field, field_serializer
 
 from retailcrm.v5.enums import VatRateTypes, DeliveryShipmentStatusTypes
-from retailcrm.v5.helpers import datetime_serializer
+from retailcrm.v5.helpers import datetime_serializer, datetime_iso_serializer
 from retailcrm.v5.schemas import SerializedEntityOrder
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme, RetailCrmResponse
 from retailcrm.v5.schemas.shared import (
@@ -58,6 +58,11 @@ class StatusInfo(BaseRetailCrmScheme):
     code: Optional[str] = Field(None, description="Дата обновления статуса доставки")
     updatedAt: Optional[datetime] = Field(None, description="Дата обновления статуса доставки")
     comment: Optional[str] = Field(None, description="Комментарий к статусу")
+
+    updatedAt_serializer = field_serializer("updatedAt")(
+        datetime_iso_serializer()
+    )
+
 
 
 class RequestStatusUpdateItem(BaseRetailCrmScheme):

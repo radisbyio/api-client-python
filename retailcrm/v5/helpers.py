@@ -1,4 +1,4 @@
-from datetime import datetime, time
+from datetime import datetime, time, timezone
 from typing import Any, Callable, Optional
 
 from pydantic_core.core_schema import ValidationInfo
@@ -43,6 +43,22 @@ def datetime_serializer(format_str: str) -> Callable[[Optional[datetime]], Optio
     def serializer(value: Optional[datetime]) -> Optional[str]:
         if value:
             return datetime.strftime(value, format_str)
+        else:
+            return None
+
+    return serializer
+
+
+def datetime_iso_serializer() -> Callable[[Optional[datetime]], Optional[str]]:
+    """
+    Вспомогательная функция для форматирования даты в формат ISO8601 при сериализации объекта datetime
+    """
+
+    def serializer(value: Optional[datetime]) -> Optional[str]:
+        if value:
+            if value.tzinfo is None:
+                value = value.replace(tzinfo=timezone.utc)
+            return value.isoformat()
         else:
             return None
 
