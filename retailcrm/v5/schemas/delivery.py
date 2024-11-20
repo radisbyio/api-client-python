@@ -59,10 +59,6 @@ class StatusInfo(BaseRetailCrmScheme):
     updatedAt: Optional[datetime] = Field(None, description="Дата обновления статуса доставки")
     comment: Optional[str] = Field(None, description="Комментарий к статусу")
 
-    updatedAt_serializer = field_serializer("updatedAt")(
-        datetime_serializer("%Y-%m-%d %H:%M:%S")
-    )
-
 
 class RequestStatusUpdateItem(BaseRetailCrmScheme):
     deliveryId: str = Field(description="Идентификатор доставки в СД")
