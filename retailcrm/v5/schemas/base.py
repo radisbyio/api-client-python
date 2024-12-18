@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Any
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -22,7 +22,7 @@ class RetailCrmResponse(BaseModel):
     success: bool = Field(False, description="Результат запроса (успешный/неуспешный)")
     pagination: Optional[PaginationResponse] = None
     errorMsg: str = Field("", description="Текст ошибки")
-    errors: dict[str, str] = Field(
+    errors: dict[str, Any] = Field(
         default_factory=dict, description="Массив с детализациями ошибок"
     )
 

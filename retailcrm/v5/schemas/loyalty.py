@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Any
 
 from pydantic import BaseModel, Field, field_serializer, field_validator
 
@@ -315,7 +315,7 @@ class LoyaltyAccountFilterData(BaseRetailCrmScheme):
     maxOrdersSum: Optional[int] = Field(None, description="Сумма покупок (до)")
     minAmount: Optional[int] = Field(None, description="Баланс бонусов (от)")
     maxAmount: Optional[int] = Field(None, description="Баланс бонусов (до)")
-    customFields: Optional[List] = Field(None, description="Пользовательские поля")
+    customFields: Optional[dict[str, Any]] = Field(None, description="Пользовательские поля")
 
 
 class ResponseLoyaltyAccounts(RetailCrmResponse):
