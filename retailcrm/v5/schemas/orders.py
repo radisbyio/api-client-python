@@ -97,6 +97,13 @@ class OrderHistoryFilterV4Type(BaseRetailCrmScheme):
     startDate: Optional[datetime] = Field(None, description="Дата/время изменения (от)")
     endDate: Optional[datetime] = Field(None, description="Дата/время изменения (до)")
 
+    startDate_serializer = field_serializer("startDate")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
+    endDate_serializer = field_serializer("endDate")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
+
 
 class OrderFilterData(BaseRetailCrmScheme):
     ids: Optional[list[int]] = Field(None, description="Массив ID заказов")

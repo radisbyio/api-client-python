@@ -18,7 +18,7 @@ from retailcrm.v5.schemas.customers import (
     SerializedCustomer,
     SerializedCustomerNote,
     SerializedCustomerReference,
-    SerializedSubscription,
+    SerializedSubscription, ResponseCustomersHistory,
 )
 from retailcrm.v5.utils import pydantic_to_nested_dict
 
@@ -217,7 +217,7 @@ class CustomersController:
 
     async def history(
         self, filter_obj: CustomerHistoryFilterV4Type, limit: int = 20, page: int = 1
-    ) -> RetailCrmResponse:
+    ) -> ResponseCustomersHistory:
         """
         Получение истории изменения клиентов
 
@@ -225,7 +225,7 @@ class CustomersController:
         :param filter_obj: Фильтр для истории
         :param limit: Количество элементов на странице
         :param page: Номер страницы
-        :return: RetailCrmResponse
+        :return: ResponseCustomersHistory
         """
         response = await self._client.get(
             "/customers/history",
@@ -236,7 +236,7 @@ class CustomersController:
             },
         )
 
-        response_obj = RetailCrmResponse.model_validate_json(response.body)
+        response_obj = ResponseCustomersHistory.model_validate_json(response.body)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)

@@ -46,7 +46,7 @@ async def test_custom_fields_success(
         )
     )
 
-    get_customers_result = await mock_retailcrm_client_v5.custom_fields.custom_fields(
+    get_customers_result = await mock_retailcrm_client_v5.custom_fields.filter(
         filter_data=CustomFieldFilter(code="menedzher")
     )
 
@@ -101,7 +101,7 @@ async def test_dictionaries_success(
         )
     )
 
-    get_customers_result = await mock_retailcrm_client_v5.custom_fields.dictionaries(
+    get_customers_result = await mock_retailcrm_client_v5.custom_fields.dictionaries_filter(
         filter_data=CustomDictionaryFilter(code="test")
     )
 

@@ -35,7 +35,7 @@ async def test_customers_success(
         )
     )
 
-    get_customers_result = await mock_retailcrm_client_v5.customers.customers(
+    get_customers_result = await mock_retailcrm_client_v5.customers.filter(
         filter_data=CustomerFilterData(online=False, vip=True, sex=SexTypes.MALE)
     )
 
@@ -56,7 +56,7 @@ async def test_customers_error(
     )
 
     with pytest.raises(RetailCrmApiError) as exc_info:
-        _ = await mock_retailcrm_client_v5.customers.customers(
+        _ = await mock_retailcrm_client_v5.customers.filter(
             filter_data=CustomerFilterData.model_validate(filter_data)
         )
 

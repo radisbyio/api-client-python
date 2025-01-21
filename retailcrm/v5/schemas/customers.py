@@ -12,7 +12,7 @@ from retailcrm.v5.schemas.shared import (
     CustomerPhone,
     MGCustomer,
     SerializedEntityCustomer,
-    SerializedSource,
+    SerializedSource, User, ApiKey,
 )
 
 
@@ -290,3 +290,38 @@ class ResponseCustomersCombine(RetailCrmResponse):
 
 class ResponseCustomersFixExternalIds(RetailCrmResponse):
     pass
+
+
+class CustomerHistory(BaseRetailCrmScheme):
+    id: Optional[int] = Field(
+        None, alias="id", description="Внутренний идентификатор записи в истории"
+    )
+    createdAt: Optional[datetime] = Field(
+        None, description="Дата внесения изменения", validation_alias="createdAt"
+    )
+    created: Optional[bool] = Field(None, description="Признак создания сущности")
+    deleted: Optional[bool] = Field(None, description="Признак удаления сущности")
+    source: Optional[str] = Field(None, description="Источник изменения")
+    user: Optional[User] = Field(None, description="Пользователь")
+    field: Optional[str] = Field(None, description="Имя изменившегося поля")
+    oldValue: Optional[str | int | float | dict] = Field(
+        None, description="Старое значение свойства"
+    )
+    newValue: Optional[str | int | float | dict] = Field(
+        None, description="Новое значение свойства"
+    )
+    apiKey: Optional[ApiKey] = Field(
+        None,
+        description="Информация о ключе api, использовавшемся для этого изменения",
+    )
+    customer: Optional[Customer] = Field(None, description="Клиент")
+    address: Optional[CustomerAddressWithIsMain] = Field(None, description="Адрес клиента")
+    combinedTo: Optional[Customer] = Field(None, description="Информация о клиенте, который получился после объединения с текущим клиентом")
+    subscription: Optional[dict] = Field(None, description="Категория подписки")
+
+
+class ResponseCustomersHistory(BaseRetailCrmScheme):
+    generatedAt: Optional[datetime] = Field(
+        None, description="Время формирования ответа"
+    )
+    history: list[CustomerHistory] = Field(default_factory=list)

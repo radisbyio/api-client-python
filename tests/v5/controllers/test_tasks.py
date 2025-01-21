@@ -53,7 +53,7 @@ async def test_task_get_all_success(
         )
     )
 
-    tasks_response = await mock_retailcrm_client_v5.tasks.get_all(TaskFilterData())
+    tasks_response = await mock_retailcrm_client_v5.tasks.filter(TaskFilterData())
 
     assert tasks_response.success is True
 
@@ -127,7 +127,7 @@ async def test_tasks_get_by_id_success(
         f"{mock_retailcrm_client_v5.crm_url}/api/v5/tasks/{mock_id}"
     ).mock(httpx.Response(json={"success": "true", "task": mock_task}, status_code=200))
 
-    get_by_id_response = await mock_retailcrm_client_v5.tasks.get_by_id(mock_id)
+    get_by_id_response = await mock_retailcrm_client_v5.tasks.get(mock_id)
 
     assert get_by_id_response.success is True
 

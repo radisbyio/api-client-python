@@ -546,7 +546,7 @@ class GenericData(BaseRetailCrmScheme):
     shipmentpointId: Optional[str] = Field(
         None, description="Идентификатор терминала отгрузки"
     )
-    extraData: Optional[list[dict[str, str]]] = Field(
+    extraData: Optional[dict[str, Any]] = Field(
         None,
         description="Дополнительные данные доставки (deliveryDataField.code => значение)",
     )
