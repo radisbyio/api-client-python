@@ -320,7 +320,7 @@ class CustomerHistory(BaseRetailCrmScheme):
     subscription: Optional[dict] = Field(None, description="Категория подписки")
 
 
-class ResponseCustomersHistory(BaseRetailCrmScheme):
+class ResponseCustomersHistory(RetailCrmResponse):
     generatedAt: Optional[datetime] = Field(
         None, description="Время формирования ответа"
     )
