@@ -73,7 +73,7 @@ class StoreController:
         """
         data = {
             "offers": [
-                offer.model_dump(exclude_unset=True, by_alias=True) for offer in offers
+                offer.model_dump_json(exclude_unset=True, by_alias=True) for offer in offers
             ]
         }
         if site:
