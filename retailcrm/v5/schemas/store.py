@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional, Union
 
-from pydantic import Field, field_serializer
+from pydantic import Field, field_serializer, RootModel
 
 from retailcrm.v5.enums import ProductTypes
 from retailcrm.v5.helpers import datetime_serializer
@@ -32,6 +32,10 @@ class SerializedOffer(BaseRetailCrmScheme):
         None, description="ID торгового предложения в складской системе"
     )
     stores: Optional[list[SerializedStore]] = Field(None)
+
+
+class SerializedOfferList(RootModel):
+    root: list[SerializedOffer] = Field(default_factory=list)
 
 
 class ProductGroup(BaseRetailCrmScheme):

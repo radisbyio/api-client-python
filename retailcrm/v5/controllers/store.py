@@ -22,7 +22,7 @@ from retailcrm.v5.schemas.store import (
     ResponseProductPropertiesFilter,
     ResponseProductPropertyValuesFilter,
     SerializedOffer,
-    SerializedProductGroup,
+    SerializedProductGroup, SerializedOfferList,
 )
 from retailcrm.v5.utils import pydantic_list_dumps_to_json, pydantic_to_nested_dict
 
@@ -32,10 +32,10 @@ class StoreController:
         self._client = client
 
     async def inventories_filter(
-        self,
-        filter_data: InventoryAlternativeFilterData,
-        limit: int = 20,
-        page: int = 1,
+            self,
+            filter_data: InventoryAlternativeFilterData,
+            limit: int = 20,
+            page: int = 1,
     ) -> ResponseInventoriesFilter:
         """
         Получение остатков и закупочных цен
@@ -61,7 +61,7 @@ class StoreController:
         return response_obj
 
     async def inventories_upload(
-        self, offers: list[SerializedOffer], site: str = None
+            self, offers: list[SerializedOffer], site: str = None
     ) -> ResponseInventoriesUpload:
         """
         Обновление остатков и закупочных цен
@@ -72,9 +72,7 @@ class StoreController:
         :return: RetailCrmResponse
         """
         data = {
-            "offers": [
-                offer.model_dump_json(exclude_unset=True, by_alias=True) for offer in offers
-            ]
+            "offers": SerializedOfferList(offers).model_dump_json(exclude_unset=True, by_alias=True)
         }
         if site:
             data["site"] = site
@@ -89,7 +87,7 @@ class StoreController:
         return response_obj
 
     async def offers_filter(
-        self, filter_data: OfferFilterData, limit: int = 20, page: int = 1
+            self, filter_data: OfferFilterData, limit: int = 20, page: int = 1
     ) -> ResponseOfferFilter:
         """
         Получение списка торговых предложений, удовлетворяющих заданному фильтру
@@ -115,7 +113,7 @@ class StoreController:
         return response_obj
 
     async def prices_upload(
-        self, prices: list[PriceUploadInput]
+            self, prices: list[PriceUploadInput]
     ) -> ResponsePricesUpload:
         """
         Обновление цен торговых предложений
@@ -140,7 +138,7 @@ class StoreController:
         return response_obj
 
     async def product_groups_filter(
-        self, filter_data: ProductGroupFilterData, limit: int = 20, page: int = 1
+            self, filter_data: ProductGroupFilterData, limit: int = 20, page: int = 1
     ) -> ResponseProductGroupFilter:
         """
         Получение списка групп товаров, удовлетворяющих заданному фильтру
@@ -166,7 +164,7 @@ class StoreController:
         return response_obj
 
     async def product_group_create(
-        self, product_group: SerializedProductGroup
+            self, product_group: SerializedProductGroup
     ) -> ResponseProductGroupCreate:
         """
         Добавление товарной группы
@@ -186,11 +184,11 @@ class StoreController:
         return response_obj
 
     async def product_group_edit(
-        self,
-        external_id: str,
-        product_group: SerializedProductGroup,
-        site: str,
-        by: str = "externalId",
+            self,
+            external_id: str,
+            product_group: SerializedProductGroup,
+            site: str,
+            by: str = "externalId",
     ) -> ResponseProductGroupEdit:
         """
         Редактирование товарной группы
@@ -214,7 +212,7 @@ class StoreController:
         return response_obj
 
     async def products_filter(
-        self, filter_data: ProductFilterData, limit: int = 20, page: int = 1
+            self, filter_data: ProductFilterData, limit: int = 20, page: int = 1
     ) -> ResponseProductFilter:
         """
         Получение списка товаров с торговыми предложениями, удовлетворяющих заданному фильтру
@@ -239,9 +237,8 @@ class StoreController:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
 
-
     async def products_batch_create(
-        self, products: list[ProductCreateInput]
+            self, products: list[ProductCreateInput]
     ) -> ResponseProductBatchCreate:
         """
         Пакетное добавление товаров и услуг
@@ -268,7 +265,7 @@ class StoreController:
         return response_obj
 
     async def products_batch_edit(
-        self, products: list[ProductCreateInput]
+            self, products: list[ProductCreateInput]
     ) -> ResponseProductBatchEdit:
         """
         Пакетное добавление товаров и услуг
@@ -287,7 +284,7 @@ class StoreController:
         return response_obj
 
     async def product_properties_filter(
-        self, filter_data: ProductPropertiesFilterData, limit: int = 20, page: int = 1
+            self, filter_data: ProductPropertiesFilterData, limit: int = 20, page: int = 1
     ) -> ResponseProductPropertiesFilter:
         """
         Получение списка свойств товаров, удовлетворяющих заданному фильтру
@@ -315,10 +312,10 @@ class StoreController:
         return response_obj
 
     async def product_property_values_filter(
-        self,
-        filter_data: ProductPropertyValuesFilterData,
-        limit: int = 20,
-        page: int = 1,
+            self,
+            filter_data: ProductPropertyValuesFilterData,
+            limit: int = 20,
+            page: int = 1,
     ) -> ResponseProductPropertyValuesFilter:
         """
         method_hint.GET /api/v5/store/products/properties/values
