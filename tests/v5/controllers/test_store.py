@@ -379,7 +379,7 @@ async def test_store_products_batch_edit_success(
     )
 
     create_result = await mock_retailcrm_client_v5.store.products_batch_edit(
-        [{"id": 1, "name": "Some product Edited", "active": False, "site": "test-org"}]
+        [ProductCreateInput.model_validate({"id": 1, "name": "Some product Edited", "active": False, "site": "test-org"})]
     )
 
     assert create_result.success is True
