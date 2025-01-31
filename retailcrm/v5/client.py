@@ -15,6 +15,8 @@ from retailcrm.v5.controllers import (
 
 __all__ = ["RetailCrmApiClientV5"]
 
+from retailcrm.v5.controllers.statistic import StatisticController
+
 
 @dataclass(slots=True)
 class RetailCrmApiClientV5:
@@ -84,3 +86,7 @@ class RetailCrmApiClientV5:
     @property
     def web_analytics(self) -> WebAnalyticsController:
         return WebAnalyticsController(self._client)
+
+    @property
+    def statistic(self) -> StatisticController:
+        return StatisticController(self._client)
