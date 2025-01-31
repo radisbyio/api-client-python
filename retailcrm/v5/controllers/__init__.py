@@ -8,3 +8,4 @@ from retailcrm.v5.controllers.store import StoreController
 from retailcrm.v5.controllers.tasks import TasksController
 from retailcrm.v5.controllers.users import UsersController
 from retailcrm.v5.controllers.delivery import DeliveryController
+from retailcrm.v5.controllers.web_analytics import WebAnalyticsController
