@@ -1,8 +1,8 @@
 from retailcrm import RetailCrmApiError
 from retailcrm.http_cilent import BaseHttpClient
-from retailcrm.v5.schemas import VisitUploadList, SourcesUploadList
-from retailcrm.v5.schemas.web_analytics import ClientId, ClientIdsUploadList, ClientIdsUploadResponse, Source, \
+from retailcrm.v5.schemas.web_analytics import ClientId, ClientIdsUploadResponse, Source, \
     SourcesUploadResponse, Visit, VisitsUploadResponse
+from retailcrm.v5.utils import pydantic_list_dumps_to_json
 
 
 class WebAnalyticsController:
@@ -24,7 +24,7 @@ class WebAnalyticsController:
 
         response = await self._client.post(
             endpoint="/web-analytics/client-ids/upload",
-            data={"clientIds": ClientIdsUploadList(root=client_ids).model_dump_json(exclude_none=True, by_alias=True),
+            data={"clientIds": pydantic_list_dumps_to_json(client_ids, ClientId),
                   "site": site},
         )
         response_obj = ClientIdsUploadResponse.model_validate_json(response.body)
@@ -45,7 +45,7 @@ class WebAnalyticsController:
 
         response = await self._client.post(
             endpoint="/web-analytics/sources/upload",
-            data={"sources": SourcesUploadList(root=sources).model_dump_json(exclude_none=True, by_alias=True),
+            data={"sources": pydantic_list_dumps_to_json(sources, Source),
                   "site": site},
         )
 
@@ -68,7 +68,7 @@ class WebAnalyticsController:
         """
         response = await self._client.post(
             endpoint="/web-analytics/visits/upload",
-            data={"visits": VisitUploadList(root=visits).model_dump_json(exclude_none=True, by_alias=True),
+            data={"visits": pydantic_list_dumps_to_json(visits, Visit),
                   "site": site},
         )
 

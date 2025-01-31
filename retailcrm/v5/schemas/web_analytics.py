@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import Field, field_serializer, RootModel
+from pydantic import Field, field_serializer
 
 from retailcrm.v5.helpers import datetime_serializer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme, RetailCrmResponse
@@ -17,10 +17,6 @@ class ClientId(BaseRetailCrmScheme):
     createdAt_serializer = field_serializer("createdAt")(
         datetime_serializer("%Y-%m-%d %H:%M:%S")
     )
-
-
-class ClientIdsUploadList(RootModel):
-    root: list[ClientId] = Field(default_factory=list)
 
 
 class ClientIdsUploadResponse(RetailCrmResponse):
@@ -41,10 +37,6 @@ class Source(BaseRetailCrmScheme):
     )
     order: SerializedEntityOrder | None = Field(None, description="Заказ")
     customer: SerializedEntityCustomer | None = Field(None, description="Клиент")
-
-
-class SourcesUploadList(RootModel):
-    root: list[Source] = Field(default_factory=list)
 
 
 class SourcesUploadResponse(RetailCrmResponse):
@@ -85,10 +77,6 @@ class Visit(BaseRetailCrmScheme):
     createdAt_serializer = field_serializer("createdAt")(
         datetime_serializer("%Y-%m-%d %H:%M:%S")
     )
-
-
-class VisitUploadList(RootModel):
-    root: list[Visit] = Field(default_factory=list, description="Массив визитов для загрузки")
 
 
 class VisitsUploadResponse(RetailCrmResponse):

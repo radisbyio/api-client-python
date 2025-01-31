@@ -274,8 +274,9 @@ class StoreController:
         :param products: Товары или услуги
         :return: ResponseProductBatchEdit
         """
+        data = {"products": pydantic_list_dumps_to_json(products, ProductCreateInput)}
         response = await self._client.post(
-            endpoint="/store/products/batch/edit", data={"products": products}
+            endpoint="/store/products/batch/edit", data=data
         )
 
         response_obj = ResponseProductBatchEdit.model_validate_json(response.body)
