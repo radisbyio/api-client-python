@@ -6,7 +6,7 @@ from pydantic import Field, field_serializer
 from retailcrm.v5.enums import TasksStatuses
 from retailcrm.v5.helpers import datetime_serializer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme, RetailCrmResponse
-from retailcrm.v5.schemas.shared import ApiKey, SerializedEntityCustomer, Task, User
+from retailcrm.v5.schemas.shared import ApiKey, SerializedEntityCustomer, Task, User, SerializedEntityOrder
 
 
 class TagsFilter(BaseRetailCrmScheme):
@@ -37,12 +37,6 @@ class TaskFilterData(BaseRetailCrmScheme):
     completedAtTo: Optional[date] = Field(
         None, description="Фактическая дата выполнения (до)"
     )
-
-
-class SerializedEntityOrder(BaseRetailCrmScheme):
-    id: Optional[int] = Field(None, description="Внутренний ID заказа")
-    externalId: Optional[str] = Field(None, description="Внешний ID заказа")
-    number: Optional[str] = Field(None, description="Номер заказа")
 
 
 class SerializedTask(BaseRetailCrmScheme):

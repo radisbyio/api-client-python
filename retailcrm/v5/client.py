@@ -16,6 +16,8 @@ from retailcrm.v5.controllers import (
 
 __all__ = ["RetailCrmApiClientV5"]
 
+from retailcrm.v5.controllers.web_analytics import WebAnalyticsController
+
 
 @dataclass(slots=True)
 class RetailCrmApiClientV5:
@@ -32,6 +34,7 @@ class RetailCrmApiClientV5:
     _loyalty_controller: Optional[LoyaltyController]
     _store_controller: Optional[StoreController]
     _delivery_controller: Optional[DeliveryController]
+    _web_analytics: Optional[WebAnalyticsController]
 
     def __init__(
         self,
@@ -57,6 +60,7 @@ class RetailCrmApiClientV5:
         self._tasks_controller = None
         self._loyalty_controller = None
         self._store_controller = None
+        self._web_analytics = None
 
     @property
     def crm_url(self):
@@ -125,3 +129,9 @@ class RetailCrmApiClientV5:
         if not self._delivery_controller:
             self._delivery_controller = DeliveryController(self._client)
         return self._delivery_controller
+
+    @property
+    def web_analytics(self) -> WebAnalyticsController:
+        if not self._web_analytics:
+            self._web_analytics = WebAnalyticsController(self._client)
+        return self._web_analytics

@@ -1,7 +1,5 @@
 from typing import Optional
 
-from retailcrm.v5.schemas.base import RetailCrmResponse
-
 
 class RetailCrmException(Exception):
     pass
@@ -10,6 +8,11 @@ class RetailCrmException(Exception):
 class RetailCrmTimeoutException(RetailCrmException):
     def __str__(self):
         return "Timeout exception"
+
+
+class RetailCrmUnauthorizedError(RetailCrmException):
+    def __str__(self):
+        return "Invalid api key"
 
 
 class RetailCrmApiError(RetailCrmException):
@@ -31,6 +34,3 @@ class RetailCrmApiError(RetailCrmException):
         return f"{self.error_msg}"
 
 
-class RetailCrmUnauthorizedError(RetailCrmException):
-    def __str__(self):
-        return "Invalid api key"

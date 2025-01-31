@@ -1,5 +1,5 @@
 from datetime import date, datetime, time
-from typing import Any, Generic, Optional, TypeVar
+from typing import Any, Optional, TypeVar
 
 from pydantic import Field, field_serializer, field_validator
 
@@ -48,6 +48,7 @@ __all__ = [
     "User",
     "SerializedEntityCustomer",
     "SerializedOrderDelivery",
+    "SerializedEntityOrder"
 ]
 
 DeliveryType = TypeVar("DeliveryType")
@@ -378,9 +379,15 @@ class CompanyContragent(BaseRetailCrmScheme):
 # todo: заполнить
 class SerializedEntityCustomer(BaseRetailCrmScheme):
     site: Optional[str] = Field(None)
-    id: Optional[int] = Field(None)
-    externalId: Optional[str] = Field(None)
+    id: Optional[int] = Field(None, description="Внутренний ID клиента")
+    externalId: Optional[str] = Field(None, description="Внешний ID клиента")
     type: Optional[str] = Field(None)
+
+
+class SerializedEntityOrder(BaseRetailCrmScheme):
+    id: Optional[int] = Field(None, description="Внутренний ID заказа")
+    externalId: Optional[str] = Field(None, description="Внешний ID заказа")
+    number: Optional[str] = Field(None, description="Номер заказа")
 
 
 # todo: заполнить

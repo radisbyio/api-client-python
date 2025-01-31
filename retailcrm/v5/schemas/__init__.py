@@ -8,3 +8,4 @@ from .shared import *
 from .store import *
 from .tasks import *
 from .delivery import *
+from .web_analytics import *
