@@ -28,7 +28,7 @@ class CustomersController:
         self._client = client
 
     async def filter(
-        self, filter_data: CustomerFilterData, limit: int = 20, page: int = 1
+        self, filter_data: CustomerFilterData | None = None, limit: int = 20, page: int = 1
     ) -> ResponseCustomersFilter:
         """
         Получение списка клиентов, удовлетворяющих заданному фильтру
@@ -216,7 +216,7 @@ class CustomersController:
         return response_obj
 
     async def history(
-        self, filter_obj: CustomerHistoryFilterV4Type, limit: int = 20, page: int = 1
+        self, filter_obj: CustomerHistoryFilterV4Type | None = None, limit: int = 20, page: int = 1
     ) -> ResponseCustomersHistory:
         """
         Получение истории изменения клиентов
@@ -285,7 +285,7 @@ class CustomersController:
         return response_obj
 
     async def notes_filter(
-        self, filter_data: CustomerNoteFilter, limit: int = 20, page: int = 1
+        self, filter_data: CustomerNoteFilter | None = None, limit: int = 20, page: int = 1
     ) -> ResponseCustomerNotesFilter:
         """
         Получение заметок

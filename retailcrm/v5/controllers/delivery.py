@@ -68,7 +68,7 @@ class DeliveryController:
         return response_obj
 
     async def shipments_filter(
-            self, filter_data: DeliveryShipmentFilterData, limit: int = 20, page: int = 1
+            self, filter_data: DeliveryShipmentFilterData | None = None, limit: int = 20, page: int = 1
     ) -> FilterDeliveryShipmentsResponse:
         """
         Получение списка отгрузок в службы доставки
@@ -150,7 +150,7 @@ class DeliveryController:
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-orders-payments-id-edit
         :param shipment_id: Идентификатор отгрузки
-        :param delivery_shipment_json: Заявка на отгрузку в службу доставки
+        :param delivery_shipment: Заявка на отгрузку в службу доставки
         :param site: string
         :return: Response
         """

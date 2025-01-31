@@ -22,7 +22,7 @@ class CustomFieldsController:
         self._client = client
 
     async def filter(
-        self, filter_data: CustomFieldFilter, limit: int = 20, page: int = 1
+        self, filter_data: CustomFieldFilter | None = None, limit: int = 20, page: int = 1
     ) -> CustomFieldsResponse:
         """
         **Получение списка пользовательских полей, удовлетворяющих заданному фильтру**
@@ -48,7 +48,7 @@ class CustomFieldsController:
         return response_obj
 
     async def dictionaries_filter(
-        self, filter_data: CustomDictionaryFilter, limit: int = 20, page: int = 1
+        self, filter_data: CustomDictionaryFilter | None = None, limit: int = 20, page: int = 1
     ) -> CustomDictionariesResponse:
         """
         **Получение списка справочников, удовлетворяющих заданному фильтру**

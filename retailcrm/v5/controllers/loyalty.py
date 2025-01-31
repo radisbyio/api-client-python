@@ -32,7 +32,7 @@ class LoyaltyController:
         self._client = client
 
     async def accounts_filter(
-        self, filter_data: LoyaltyAccountFilterData, limit: int = 20, page: int = 1
+        self, filter_data: LoyaltyAccountFilterData | None = None, limit: int = 20, page: int = 1
     ) -> ResponseLoyaltyAccounts:
         """Список участий в программе лояльности
 
@@ -337,7 +337,7 @@ class LoyaltyController:
         return response_obj
 
     async def loyalties_filter(
-        self, filter_data: LoyaltyApiFilterData, limit: int = 20, page: int = 1
+        self, filter_data: LoyaltyApiFilterData | None = None, limit: int = 20, page: int = 1
     ) -> ResponseLoyaltiesFilter:
         """
         **Список программ лояльности**
