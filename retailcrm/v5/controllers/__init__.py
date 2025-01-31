@@ -9,3 +9,5 @@ from retailcrm.v5.controllers.tasks import TasksController
 from retailcrm.v5.controllers.users import UsersController
 from retailcrm.v5.controllers.delivery import DeliveryController
 from retailcrm.v5.controllers.web_analytics import WebAnalyticsController
+from retailcrm.v5.controllers.verification import VerificationController
+from retailcrm.v5.controllers.statistic import StatisticController

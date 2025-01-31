@@ -10,12 +10,10 @@ from retailcrm.v5.controllers import (
     ReferencesController,
     StoreController,
     TasksController,
-    UsersController, DeliveryController, WebAnalyticsController
+    UsersController, DeliveryController, WebAnalyticsController, StatisticController, VerificationController
 )
 
 __all__ = ["RetailCrmApiClientV5"]
-
-from retailcrm.v5.controllers.statistic import StatisticController
 
 
 @dataclass(slots=True)
@@ -82,6 +80,10 @@ class RetailCrmApiClientV5:
     @property
     def delivery(self) -> DeliveryController:
         return DeliveryController(self._client)
+
+    @property
+    def verification(self) -> VerificationController:
+        return VerificationController(self._client)
 
     @property
     def web_analytics(self) -> WebAnalyticsController:
