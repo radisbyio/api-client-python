@@ -1,4 +1,5 @@
 from .custom_fields import *
+from .corporate_customers import *
 from .customers import *
 from .loyalty import *
 from .orders import *

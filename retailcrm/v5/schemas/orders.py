@@ -19,7 +19,7 @@ from retailcrm.v5.schemas.shared import (
     PriceType,
     SerializedOrderDelivery,
     Source,
-    User,
+    User, FixExternalRow,
 )
 
 
@@ -386,11 +386,7 @@ class ResponseOrderHistory(RetailCrmResponse):
     history: list[OrderHistory] = []
 
 
-class FixExternalRow(BaseRetailCrmScheme):
-    id: Optional[int] = Field(None, description="Внутренний ID")
-    external_id: Optional[str] = Field(
-        None, description="Внешний ID", validation_alias="externalId"
-    )
+
 
 
 class EntityWithExternalId(BaseRetailCrmScheme):

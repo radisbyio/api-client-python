@@ -23,17 +23,18 @@ __all__ = [
     "ProductTypes",
 ]
 
+
 class RetailCrmEnum(Enum):
     def __str__(self):
         return str(self.value)
 
 
-class IdTypes(str, Enum):
+class IdTypes(str, RetailCrmEnum):
     ID = "id"
     EXTERNAL_ID = "externalId"
 
 
-class VatRateTypes(str, Enum):
+class VatRateTypes(str, RetailCrmEnum):
     NONE = "none"
     VAT0 = "vat0"
     VAT10 = "vat10"

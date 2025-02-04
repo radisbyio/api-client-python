@@ -48,7 +48,9 @@ __all__ = [
     "User",
     "SerializedEntityCustomer",
     "SerializedOrderDelivery",
-    "SerializedEntityOrder"
+    "SerializedEntityOrder",
+    "SerializedCustomerAddress",
+    "FixExternalRow"
 ]
 
 DeliveryType = TypeVar("DeliveryType")
@@ -77,6 +79,34 @@ class CustomerTagLink(BaseRetailCrmScheme):
     colorCode: str = Field("")
     attached: bool = Field(False)
 
+
+class SerializedCustomerAddress(BaseRetailCrmScheme):
+    index: Optional[str] = Field(None, description="Индекс")
+    countryIso: Optional[str] = Field(
+        None, description="ISO код страны (ISO 3166-1 alpha-2)"
+    )
+    region: Optional[str] = Field(None, description="Регион")
+    regionId: Optional[int] = Field(
+        None, description="Идентификатор региона в Geohelper"
+    )
+    city: Optional[str] = Field(None, description="Город")
+    cityId: Optional[int] = Field(None, description="Идентификатор города в Geohelper")
+    cityType: Optional[str] = Field(None, description="Тип населенного пункта")
+    street: Optional[str] = Field(None, description="Улица")
+    streetId: Optional[int] = Field(None, description="Идентификатор улицы в Geohelper")
+    streetType: Optional[str] = Field(None, description="Тип улицы")
+    building: Optional[str] = Field(None, description="Дом")
+    flat: Optional[str] = Field(None, description="Номер квартиры/офиса")
+    floor: Optional[int] = Field(None, description="Этаж")
+    block: Optional[int] = Field(None, description="Подъезд")
+    house: Optional[str] = Field(None, description="Строение")
+    housing: Optional[str] = Field(None, description="Корпус")
+    metro: Optional[str] = Field(None, description="Метро")
+    notes: Optional[str] = Field(None, description="Примечания к адресу")
+    text: Optional[str] = Field(None, description="Адрес в текстовом виде")
+    isMain: Optional[bool] = Field(None, description="Адрес является основным для клиента")
+    externalId: Optional[str] = Field(None, description="Внешний ID")
+    name: Optional[str] = Field(None, description="Наменование адреса")
 
 class CustomerAddress(BaseRetailCrmScheme):
     id: Optional[int] = Field(None, description="ID адреса")
@@ -759,3 +789,10 @@ class User(BaseRetailCrmScheme):
 
 class MGDialog(BaseRetailCrmScheme):
     pass  # TODO: reailize if need
+
+
+class FixExternalRow(BaseRetailCrmScheme):
+    id: Optional[int] = Field(None, description="Внутренний ID")
+    external_id: Optional[str] = Field(
+        None, description="Внешний ID", validation_alias="externalId"
+    )

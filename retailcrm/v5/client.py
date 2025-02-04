@@ -10,7 +10,7 @@ from retailcrm.v5.controllers import (
     ReferencesController,
     StoreController,
     TasksController,
-    UsersController, DeliveryController, WebAnalyticsController, StatisticController, VerificationController
+    UsersController, DeliveryController, WebAnalyticsController, StatisticController, VerificationController, CorporateCustomersController
 )
 
 __all__ = ["RetailCrmApiClientV5"]
@@ -48,6 +48,10 @@ class RetailCrmApiClientV5:
     @property
     def orders(self) -> OrdersController:
         return OrdersController(self._client)
+
+    @property
+    def corporate_customers(self) -> CorporateCustomersController:
+        return CorporateCustomersController(self._client)
 
     @property
     def customers(self) -> CustomersController:

@@ -6,6 +6,7 @@ from pydantic import BaseModel, RootModel
 def pydantic_to_nested_dict(model: BaseModel | None, prefix: str = "") -> dict[str, str]:
     """
     Преобразует поля модели Pydantic в словарь с вложенными ключами вида "fieldA[fieldB]=valueB".
+    Если на входе объект model имеет значение None, будет возвращён пустой словарь
 
     :param model: pydantic модель
     :param prefix: строка префикса для fieldA

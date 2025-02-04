@@ -11,3 +11,4 @@ from retailcrm.v5.controllers.delivery import DeliveryController
 from retailcrm.v5.controllers.web_analytics import WebAnalyticsController
 from retailcrm.v5.controllers.verification import VerificationController
 from retailcrm.v5.controllers.statistic import StatisticController
+from retailcrm.v5.controllers.corporate_customers import CorporateCustomersController

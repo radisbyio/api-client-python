@@ -20,15 +20,12 @@ from retailcrm.v5.utils import pydantic_to_nested_dict
 __all__ = ["TasksController"]
 
 
-@dataclass(slots=True)
 class TasksController:
-    _api: RetailCrmTasksApi
-
     def __init__(self, client: BaseHttpClient):
         self._api = RetailCrmTasksApi(client)
 
     async def filter(
-        self, filter_obj: TaskFilterData, limit: int = 20, page: int = 1
+        self, filter_obj: TaskFilterData | None = None, limit: int = 20, page: int = 1
     ) -> ResponseTasks:
         response = await self._api.get_all(
             pydantic_to_nested_dict(filter_obj, "filter"), limit, page
@@ -52,7 +49,7 @@ class TasksController:
         return response_obj
 
     async def history(
-        self, filter_obj: TaskHistoryFilterType, limit: int = 20, page: int = 1
+        self, filter_obj: TaskHistoryFilterType | None = None, limit: int = 20, page: int = 1
     ) -> ResponseTaskHistory:
         response = await self._api.history(
             filter_dict=pydantic_to_nested_dict(filter_obj, "filter"),
