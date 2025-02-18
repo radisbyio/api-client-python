@@ -138,7 +138,7 @@ class CustomerAddress(BaseRetailCrmScheme):
 
 
 class CustomerPhone(BaseRetailCrmScheme):
-    number: str = Field("", description="Номер телефона")
+    number: str | None = Field(None, description="Номер телефона")
 
 
 class MGChannel(BaseRetailCrmScheme):
