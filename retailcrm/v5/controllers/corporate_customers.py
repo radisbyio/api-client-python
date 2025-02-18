@@ -70,7 +70,7 @@ class CorporateCustomersController:
 
         return response_obj
 
-    async def create(self, customer: SerializedCustomerCorporate) -> ResponseCustomerCorporateCreate:
+    async def create(self, customer: SerializedCustomerCorporate, site: str) -> ResponseCustomerCorporateCreate:
         """
         Создание корпоративного клиента.
 
@@ -79,6 +79,7 @@ class CorporateCustomersController:
 
         response = await self._client.post(
             "/customers-corporate/create",
+            params={"site": site},
             data={"customerCorporate": customer.model_dump_json(exclude_unset=True, by_alias=True)},
         )
         response_obj = ResponseCustomerCorporateCreate.model_validate_json(response.body)
