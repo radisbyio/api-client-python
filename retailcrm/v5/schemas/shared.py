@@ -243,6 +243,7 @@ class Customer(BaseRetailCrmScheme):
     # TODO: Временно до создания CorporateCustomer
     nickName: str | None = Field(None, description="Наименование")
     mainCompany: EntityWithExternalIdNameOutput | None = Field(None, description="Основная компания")
+    phone: str | None = Field(None, description="Номер телефона")
 
     createdAt_serializer = field_serializer("createdAt")(
         datetime_serializer("%Y-%m-%d %H:%M:%S")
