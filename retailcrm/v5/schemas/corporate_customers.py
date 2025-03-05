@@ -6,7 +6,8 @@ from pydantic import Field, field_serializer, field_validator
 from retailcrm.v5.helpers import datetime_serializer, dict_validator
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme, RetailCrmResponse
 from retailcrm.v5.schemas.customers import CustomerAddress, CustomerContragent
-from retailcrm.v5.schemas.shared import ApiKey, User, CustomerTagLink, Customer, SerializedEntityCustomer
+from retailcrm.v5.schemas.shared import ApiKey, User, CustomerTagLink, Customer, SerializedEntityCustomer, \
+    EntityWithExternalIdNameOutput, EntityWithExternalIdInput
 
 
 class Subscription(BaseRetailCrmScheme):
@@ -81,17 +82,6 @@ class CustomerCorporateApiFilterData(BaseRetailCrmScheme):
 
     customFields_validator = field_validator("customFields", mode="before")(dict_validator())
     companyCustomFields_validator = field_validator("companyCustomFields", mode="before")(dict_validator())
-
-
-class EntityWithExternalIdNameOutput(BaseRetailCrmScheme):
-    id: Optional[int] = Field(None, description="ID")
-    externalId: Optional[str] = Field(None, description="Внешний ID")
-    name: Optional[str] = Field(None, description="Название")
-
-
-class EntityWithExternalIdInput(BaseRetailCrmScheme):
-    id: Optional[int] = Field(None, description="ID")
-    externalId: Optional[str] = Field(None, description="Внешний ID")
 
 
 class SerializedRelationAbstractCustomer(BaseRetailCrmScheme):
@@ -209,9 +199,6 @@ class SerializedCart(BaseRetailCrmScheme):
     droppedAt_serializer = field_serializer("droppedAt")(datetime_serializer("%Y-%m-%d %H:%M:%S"))
 
     clearedAt_serializer = field_serializer("clearedAt")(datetime_serializer("%Y-%m-%d %H:%M:%S"))
-
-
-
 
 
 class CustomerContactCompany(BaseRetailCrmScheme):

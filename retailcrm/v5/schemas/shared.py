@@ -56,6 +56,16 @@ __all__ = [
 DeliveryType = TypeVar("DeliveryType")
 
 
+class EntityWithExternalIdNameOutput(BaseRetailCrmScheme):
+    id: Optional[int] = Field(None, description="ID")
+    externalId: Optional[str] = Field(None, description="Внешний ID")
+    name: Optional[str] = Field(None, description="Название")
+
+
+class EntityWithExternalIdInput(BaseRetailCrmScheme):
+    id: Optional[int] = Field(None, description="ID")
+    externalId: Optional[str] = Field(None, description="Внешний ID")
+
 class Item(BaseRetailCrmScheme):
     name: str = Field("", description="Наименование")
     price: float = Field(0, description="Цена")
@@ -229,6 +239,10 @@ class Customer(BaseRetailCrmScheme):
         description="ИНН клиента, передается в случае фискализации на стороне модуля для юр. лиц и ИП",
         alias="INN",
     )
+
+    # TODO: Временно до создания CorporateCustomer
+    nickName: str | None = Field(None, description="Наименование")
+    mainCompany: EntityWithExternalIdNameOutput | None = Field(None, description="Основная компания")
 
     createdAt_serializer = field_serializer("createdAt")(
         datetime_serializer("%Y-%m-%d %H:%M:%S")
@@ -729,10 +743,10 @@ class Courier(BaseRetailCrmScheme):
 
 
 class Contact(BaseRetailCrmScheme):
-    id: int
-    externalId: str = ""
-    browserId: str = ""
-    site: str = ""
+    id: int | None = None
+    externalId: str | None = None
+    browserId: str | None = None
+    site: str | None = None
 
 
 class Source(BaseRetailCrmScheme):

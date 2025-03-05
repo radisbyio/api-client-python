@@ -90,3 +90,41 @@ def mock_customer() -> dict:
         "phones": [],
         "contragentType": "individual",
     }
+
+
+@pytest.fixture()
+def mock_corporate_customer() -> dict:
+    return {
+        'type': 'customer_corporate',
+        'id': 9084,
+        'externalId': 'cc_9',
+        'nickName': 'Test',
+        'mainAddress': {
+            'id': 3995,
+            'name': 'Test'
+        },
+        'createdAt': '2020-02-14 13:49:21',
+        'vip': 'false',
+        'bad': 'false',
+        'site': 'opencart',
+        'tags': [],
+        'marginSumm': 0,
+        'totalSumm': 0,
+        'averageSumm': 0,
+        'ordersCount': 0,
+        'costSumm': 0,
+        'customFields': [],
+        'personalDiscount': 0,
+        'ainCustomerContact': {
+            'id': 33,
+            'customer': {
+                'id': 9083,
+                'externalId': '9'
+            },
+            'companies': []
+        },
+        'mainCompany': {
+            'id': 31,
+            'name': 'Test'
+        }
+    }
