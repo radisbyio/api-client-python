@@ -1,8 +1,7 @@
 from datetime import date, datetime, time
 from typing import Optional, Union
 
-from pydantic import Field, RootModel, field_serializer
-from pydantic_settings import SettingsConfigDict
+from pydantic import Field, RootModel, field_serializer, ConfigDict
 
 from retailcrm.v5.enums import DeliveryStatusTypes, PrivilegeType, VatRateTypes
 from retailcrm.v5.helpers import datetime_serializer
@@ -437,7 +436,7 @@ class ResponseOrders(RetailCrmResponse):
 
 # todo: заполнить
 class CreateOrder(BaseRetailCrmScheme):
-    model_config = SettingsConfigDict(extra="allow")
+    model_config = ConfigDict(extra="allow")
     id: int
     externalId: Optional[str] = None
 
