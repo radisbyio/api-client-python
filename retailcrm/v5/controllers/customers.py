@@ -20,7 +20,7 @@ from retailcrm.v5.schemas.customers import (
     SerializedCustomerReference,
     SerializedSubscription, ResponseCustomersHistory,
 )
-from retailcrm.v5.utils import pydantic_to_nested_dict
+from retailcrm.v5.utils import pydantic_to_nested_dict, pydantic_list_dumps_to_json
 
 
 class CustomersController:
@@ -169,11 +169,8 @@ class CustomersController:
         response = await self._client.post(
             "/customers/combine",
             data={
-                "customers": [
-                    customer.model_dump(exclude_unset=True, by_alias=True)
-                    for customer in customers
-                ],
-                "resultCustomer": result_customer.model_dump(
+                "customers": pydantic_list_dumps_to_json(customers, SerializedCustomerReference),
+                "resultCustomer": result_customer.model_dump_json(
                     exclude_unset=True, by_alias=True
                 ),
             },
