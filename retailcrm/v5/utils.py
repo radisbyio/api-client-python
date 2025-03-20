@@ -1,6 +1,8 @@
-from typing import Any, Type
+from typing import Any, Type, TypeVar
 
 from pydantic import BaseModel, RootModel
+
+from retailcrm.v5.schemas import BaseRetailCrmScheme
 
 
 def pydantic_to_nested_dict(model: BaseModel | None, prefix: str = "") -> dict[str, str]:
@@ -38,13 +40,20 @@ def pydantic_to_nested_dict(model: BaseModel | None, prefix: str = "") -> dict[s
     return result
 
 
-def pydantic_list_dumps_to_json(obj_list: list[BaseModel], obj_type: Type) -> str:
+T = TypeVar("T", bound=BaseRetailCrmScheme)
+
+def pydantic_list_dumps_to_json(obj_list: list[T], obj_type: Type | None = None) -> str:
     """
     Преобразует массив объектов Pydantic в JSON строку
 
     :param obj_list: список объектов Pydantic
-    :param obj_type: базовый тип списка
+    :param obj_type: базовый тип списка (DEPRECATED)
     :return: str
+
+    TODO: Вырезать использование obj_type
     """
-    obj_root_model = RootModel[list[obj_type]]
+    if not obj_list:
+        return "[]"
+
+    obj_root_model = RootModel[list[T]]
     return obj_root_model(obj_list).model_dump_json(exclude_unset=True, by_alias=True)
