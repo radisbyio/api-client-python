@@ -549,6 +549,8 @@ class Payment(BaseRetailCrmScheme):
     paidAt: Optional[datetime] = Field(None, description="Дата оплаты")
     comment: Optional[str] = Field(None, description="Комментарий")
 
+    order: SerializedEntityOrder | None = Field(None, description="Заказ")
+
     paidAt_serializer = field_serializer("paidAt")(
         datetime_serializer("%Y-%m-%d %H:%M:%S")
     )
