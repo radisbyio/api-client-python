@@ -19,7 +19,7 @@ from retailcrm.v5.schemas.shared import (
     PriceType,
     SerializedOrderDelivery,
     Source,
-    User, FixExternalRow,
+    User, FixExternalRow, SerializedEntityOrder,
 )
 
 
@@ -37,6 +37,8 @@ class SerializedPayment(BaseRetailCrmScheme):
     comment: Optional[str] = Field(None, description="Комментарий")
     type: Optional[str] = Field(None, description="Тип оплаты")
     status: Optional[str] = Field(None, description="Статус оплаты")
+
+    order: SerializedEntityOrder | None = Field(None, description="Заказ")
 
     paidAt_serializer = field_serializer("paidAt")(
         datetime_serializer("%Y-%m-%d %H:%M:%S")
