@@ -3,6 +3,7 @@ from typing import List, Optional, Union, Any
 
 from pydantic import BaseModel, Field, field_serializer, field_validator
 
+from retailcrm.v5.enums.loyalty import BonusOperationType, BonusOperationEventType
 from retailcrm.v5.helpers import datetime_serializer, dict_validator
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme, RetailCrmResponse
 from retailcrm.v5.schemas.shared import (
@@ -337,7 +338,7 @@ class OperationBonus(BaseModel):
 
 class OperationEvent(BaseModel):
     id: Optional[int] = Field(None, description="ID события")
-    type: Optional[str] = Field(
+    type: Optional[BonusOperationEventType] = Field(
         None, description="Тип события. Возможные значения: birthday, welcome"
     )
 
@@ -351,7 +352,7 @@ class OperationLoyalty(BaseModel):
 
 
 class Operation(BaseModel):
-    type: Optional[str] = Field(None, description="Тип действия")
+    type: Optional[BonusOperationType] = Field(None, description="Тип действия")
     createdAt: Optional[datetime] = Field(None, description="Дата действия")
     amount: Optional[float] = Field(None, description="Количество бонусов")
     order: Optional[OperationOrder] = Field(None, description="Связанный заказ")
