@@ -3,6 +3,7 @@ from decimal import Decimal
 from typing import Any, Optional, TypeVar
 
 from pydantic import Field, field_serializer, field_validator
+from retailcrm.v5.schemas.orders import OrderContragent
 
 from retailcrm.v5.enums import (
     DiscountTypes,
@@ -384,25 +385,6 @@ class AbstractDiscount(BaseRetailCrmScheme):
 
 class PriceType(BaseRetailCrmScheme):
     code: str = Field(description="Код типа цены")
-
-
-# todo: заполнить
-class OrderContragent(BaseRetailCrmScheme):
-    contragentType: Optional[str] = Field(None)
-    legalName: Optional[str] = Field(None)
-    legalAddress: Optional[str] = Field(None)
-    INN: Optional[str] = Field(None)
-    OKPO: Optional[str] = Field(None)
-    KPP: Optional[str] = Field(None)
-    OGRN: Optional[str] = Field(None)
-    OGRNIP: Optional[str] = Field(None)
-    certificateNumber: Optional[str] = Field(None)
-    certificateDate: Optional[datetime] = Field(None)
-    BIK: Optional[str] = Field(None)
-    bank: Optional[str] = Field(None)
-    bankAddress: Optional[str] = Field(None)
-    corrAccount: Optional[str] = Field(None)
-    bankAccount: Optional[str] = Field(None)
 
 
 # todo: заполнить

@@ -249,6 +249,25 @@ class OrderFilterData(BaseRetailCrmScheme):
     )
 
 
+# todo: заполнить
+class OrderContragent(BaseRetailCrmScheme):
+    contragentType: Optional[str] = Field(None)
+    legalName: Optional[str] = Field(None)
+    legalAddress: Optional[str] = Field(None)
+    INN: Optional[str] = Field(None)
+    OKPO: Optional[str] = Field(None)
+    KPP: Optional[str] = Field(None)
+    OGRN: Optional[str] = Field(None)
+    OGRNIP: Optional[str] = Field(None)
+    certificateNumber: Optional[str] = Field(None)
+    certificateDate: Optional[datetime] = Field(None)
+    BIK: Optional[str] = Field(None)
+    bank: Optional[str] = Field(None)
+    bankAddress: Optional[str] = Field(None)
+    corrAccount: Optional[str] = Field(None)
+    bankAccount: Optional[str] = Field(None)
+
+
 class SerializedOrder(BaseRetailCrmScheme):
     number: Optional[str] = Field(None, description="Номер заказа")
     externalId: Optional[str] = Field(None, description="Внешний ID заказа")
@@ -282,6 +301,7 @@ class SerializedOrder(BaseRetailCrmScheme):
     expired: Optional[bool] = Field(None, description="Просрочен")
     customerComment: Optional[str] = Field(None, description="Комментарий клиента")
     managerComment: Optional[str] = Field(None, description="Комментарий оператора")
+    contragent: Optional[OrderContragent] = Field(None, description="Реквизиты")
     statusComment: Optional[str] = Field(
         None, description="Комментарий к последнему изменению статуса"
     )
@@ -428,6 +448,7 @@ class ResponseDeleteOrderPayment(RetailCrmResponse):
     pass
 
 
+# TODO: Вырезать
 class ResponseGetOrder(RetailCrmResponse):
     order: Optional[Order] = None
 
@@ -450,3 +471,7 @@ class ResponseCreateOrder(RetailCrmResponse):
 
 class SerializedOrderReference(RetailCrmResponse):
     id: Optional[int] = Field(None, description="Внутренний ID заказа")
+
+
+class OrderRetrieveResponse(RetailCrmResponse):
+    order: Order | None = None
