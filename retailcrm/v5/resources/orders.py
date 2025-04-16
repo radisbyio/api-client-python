@@ -1,3 +1,5 @@
+from fastapi import params
+
 from retailcrm.exceptions import RetailCrmApiError
 from retailcrm.http_cilent import BaseHttpClient
 from retailcrm.v5.api.orders import RetailCrmOrdersApi
@@ -11,7 +13,7 @@ from retailcrm.v5.schemas import (
     ResponseGetOrder,
     ResponseOrderHistory,
     ResponseOrders,
-    ResponseOrdersUpload,
+    ResponseOrdersUpload, OrderRetrieveResponse,
 )
 from retailcrm.v5.schemas.orders import (
     OrderFilterData,
@@ -26,7 +28,62 @@ from retailcrm.v5.utils import pydantic_to_nested_dict
 
 class OrdersController:
     def __init__(self, client: BaseHttpClient):
-        self._api = RetailCrmOrdersApi(client)
+        self._api = RetailCrmOrdersApi(client) # TODO: Remove
+        self._client = client
+
+    async def get(self, order_id: int | str, site: str | None = None, by: IdTypes | str = IdTypes.EXTERNAL_ID) -> OrderRetrieveResponse:
+        """
+        Получение информации о заказе.
+        Для доступа к методу необходимо разрешение order_read.
+
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-orders-externalId
+        :param order_id: Внутренний или внешний ИД заказа
+        :param site: Код магазина
+        :param by: Указывается, что передается в параметре id: внутренний (by=id) или внешний (by=externalId) ID платежа. По умолчанию externalId.
+        :return: Response
+        """
+        params = {}
+        if site is not None:
+            params["site"] = site
+        if by is not None:
+            params["by"] = by
+
+        response = await self._client.get(
+            endpoint=f"orders/{order_id}", params=params,
+        )
+
+        response_obj = OrderRetrieveResponse.model_validate_json(response.body)
+        if response.status_code >= 400:
+            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
+        return response_obj
+
+    async def edit(
+        self,
+        order_id: int | str,
+        order: SerializedOrder,
+        site: str | None = None,
+        by: IdTypes | str = IdTypes.EXTERNAL_ID
+    ) -> ResponseEditOrder:
+        params = {}
+        if site is not None:
+            params["site"] = site
+        if by is not None:
+            params["by"] = by
+        data = {
+            "order": order.model_dump_json(exclude_none=True, by_alias=True),
+        }
+
+        response =  await self._client.post(
+            endpoint=f"/orders/{order_id}/edit",
+            params=params,
+            data=data,
+        )
+        response_obj = ResponseEditOrder.model_validate_json(response.body)
+        if response.status_code >= 400:
+            raise RetailCrmApiError(
+                response.status_code, response_obj.errorMsg, response_obj.errors
+            )
+        return response_obj
 
     async def create_order(
         self, order: SerializedOrder, site: str

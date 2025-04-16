@@ -378,7 +378,7 @@ class CorporateCustomersController:
 
        return response_obj
 
-    # ... other methods for notes, upload, history, etc.  (Follow the pattern from other controllers)
+    # ... other methods for notes, upload, history, etc.  (Follow the pattern from other resources)
 
     async def upload(self, customers: list[SerializedCustomerCorporate], site: str) -> RetailCrmResponse:
         """

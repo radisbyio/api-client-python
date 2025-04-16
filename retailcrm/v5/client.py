@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from retailcrm.http_cilent import BaseHttpClient, HttpClient
-from retailcrm.v5.controllers import (
+from retailcrm.v5.resources import (
     CustomersController,
     CustomFieldsController,
     LoyaltyController,

@@ -2,7 +2,7 @@ from retailcrm.exceptions import RetailCrmApiError
 from retailcrm.http_cilent import BaseHttpClient
 from retailcrm.v5.enums import CustomFieldEntityTypes
 from retailcrm.v5.schemas.custom_fields import (
-    CustomDictionariesResponse,
+    CustomDictionariesRetrieveResponse,
     CustomDictionaryFilter,
     CustomFieldCreateResponse,
     CustomFieldDictionaryCreateResponse,
@@ -10,7 +10,7 @@ from retailcrm.v5.schemas.custom_fields import (
     CustomFieldDictionaryRetrieveResponse,
     CustomFieldFilter,
     CustomFieldRetrieveResponse,
-    CustomFieldsResponse,
+    CustomFieldsRetrieveResponse,
     SerializedCustomDictionary,
     SerializedCustomFieldApiDocModel,
 )
@@ -23,7 +23,7 @@ class CustomFieldsController:
 
     async def filter(
         self, filter_data: CustomFieldFilter | None = None, limit: int = 20, page: int = 1
-    ) -> CustomFieldsResponse:
+    ) -> CustomFieldsRetrieveResponse:
         """
         **Получение списка пользовательских полей, удовлетворяющих заданному фильтру**
 
@@ -42,14 +42,14 @@ class CustomFieldsController:
             },
         )
 
-        response_obj = CustomFieldsResponse.model_validate_json(response.body)
+        response_obj = CustomFieldsRetrieveResponse.model_validate_json(response.body)
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
 
     async def dictionaries_filter(
         self, filter_data: CustomDictionaryFilter | None = None, limit: int = 20, page: int = 1
-    ) -> CustomDictionariesResponse:
+    ) -> CustomDictionariesRetrieveResponse:
         """
         **Получение списка справочников, удовлетворяющих заданному фильтру**
 
@@ -68,7 +68,7 @@ class CustomFieldsController:
             },
         )
 
-        response_obj = CustomDictionariesResponse.model_validate_json(response.body)
+        response_obj = CustomDictionariesRetrieveResponse.model_validate_json(response.body)
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj

@@ -33,7 +33,7 @@ class StoreController:
 
     async def inventories_filter(
             self,
-            filter_data: InventoryAlternativeFilterData,
+            filter_data: InventoryAlternativeFilterData | None = None,
             limit: int = 20,
             page: int = 1,
     ) -> ResponseInventoriesFilter:
@@ -87,7 +87,7 @@ class StoreController:
         return response_obj
 
     async def offers_filter(
-            self, filter_data: OfferFilterData, limit: int = 20, page: int = 1
+            self, filter_data: OfferFilterData | None = None, limit: int = 20, page: int = 1
     ) -> ResponseOfferFilter:
         """
         Получение списка торговых предложений, удовлетворяющих заданному фильтру
@@ -138,7 +138,7 @@ class StoreController:
         return response_obj
 
     async def product_groups_filter(
-            self, filter_data: ProductGroupFilterData, limit: int = 20, page: int = 1
+            self, filter_data: ProductGroupFilterData | None = None, limit: int = 20, page: int = 1
     ) -> ResponseProductGroupFilter:
         """
         Получение списка групп товаров, удовлетворяющих заданному фильтру
@@ -212,7 +212,7 @@ class StoreController:
         return response_obj
 
     async def products_filter(
-            self, filter_data: ProductFilterData, limit: int = 20, page: int = 1
+            self, filter_data: ProductFilterData | None = None, limit: int = 20, page: int = 1
     ) -> ResponseProductFilter:
         """
         Получение списка товаров с торговыми предложениями, удовлетворяющих заданному фильтру
@@ -285,7 +285,7 @@ class StoreController:
         return response_obj
 
     async def product_properties_filter(
-            self, filter_data: ProductPropertiesFilterData, limit: int = 20, page: int = 1
+            self, filter_data: ProductPropertiesFilterData | None = None, limit: int = 20, page: int = 1
     ) -> ResponseProductPropertiesFilter:
         """
         Получение списка свойств товаров, удовлетворяющих заданному фильтру
@@ -314,7 +314,7 @@ class StoreController:
 
     async def product_property_values_filter(
             self,
-            filter_data: ProductPropertyValuesFilterData,
+            filter_data: ProductPropertyValuesFilterData | None = None,
             limit: int = 20,
             page: int = 1,
     ) -> ResponseProductPropertyValuesFilter:
