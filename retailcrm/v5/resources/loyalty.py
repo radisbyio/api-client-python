@@ -178,9 +178,9 @@ class LoyaltyController:
         self,
         account_id: int,
         amount: float,
-        activation_date: datetime,
-        expire_date: datetime,
-        comment: str,
+        activation_date: datetime | None = None,
+        expire_date: datetime | None = None,
+        comment: str | None = None,
     ) -> ResponseCreditLoyaltyAccountBonus:
         """
         **Начисление бонусов участию в программе лояльности**
@@ -193,14 +193,18 @@ class LoyaltyController:
         :param comment: Комментарий
         :return: CreditLoyaltyAccountBonusResponse
         """
+        data = {
+            "amount": amount,
+        }
+        if activation_date:
+            data["activation_date"] = activation_date.isoformat()
+        if expire_date:
+            data["expire_date"] = expire_date.isoformat()
+        if comment:
+            data["comment"] = comment
         response = await self._client.post(
             f"/loyalty/account/{account_id}/bonus/credit",
-            data={
-                "amount": amount,
-                "activationDate": activation_date.strftime("%Y-%m-%d"),
-                "expireDate": expire_date.strftime("%Y-%m-%d"),
-                "comment": comment,
-            },
+            data=data
         )
 
         response_obj = ResponseCreditLoyaltyAccountBonus.model_validate_json(
