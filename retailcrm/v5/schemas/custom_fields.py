@@ -68,7 +68,7 @@ class CustomFieldApiDocModel(BaseRetailCrmScheme):
     dictionary: Optional[str] = Field(None, description="Связанный словарь")
 
 
-class CustomFieldsResponse(RetailCrmResponse):
+class CustomFieldsRetrieveResponse(RetailCrmResponse):
     customFields: list[CustomFieldApiDocModel] = Field(default_factory=list)
 
 
@@ -91,7 +91,7 @@ class CustomDictionary(BaseRetailCrmScheme):
     )
 
 
-class CustomDictionariesResponse(RetailCrmResponse):
+class CustomDictionariesRetrieveResponse(RetailCrmResponse):
     customDictionaries: list[CustomDictionary] = Field(
         default_factory=list, description="Справочник"
     )
