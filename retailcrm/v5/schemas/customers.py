@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import BaseModel, Field, field_serializer, field_validator
 
@@ -23,16 +23,16 @@ class CustomerFilterCustomerSubscriptionData(BaseModel):
 
 
 class CustomerFilterData(BaseRetailCrmScheme):
-    ids: Optional[List[int]] = Field(None, description="Массив ID клиентов")
-    externalIds: Optional[List[str]] = Field(
+    ids: Optional[list[int]] = Field(None, description="Массив ID клиентов")
+    externalIds: Optional[list[str]] = Field(
         None, description="Массив externalID клиентов"
     )
     name: Optional[str] = Field(None, description="Клиент")
     city: Optional[str] = Field(None, description="Город")
     region: Optional[str] = Field(None, description="Регион")
-    sites: Optional[List[str]] = Field(None, description="Магазины")
-    managers: Optional[List[int]] = Field(None, description="Менеджеры")
-    managerGroups: Optional[List[str]] = Field(None, description="Группы менеджеров")
+    sites: Optional[list[str]] = Field(None, description="Магазины")
+    managers: Optional[list[int]] = Field(None, description="Менеджеры")
+    managerGroups: Optional[list[str]] = Field(None, description="Группы менеджеров")
     notes: Optional[str] = Field(None, description="Заметки")
     vip: Optional[bool] = Field(None, description="Важный клиент")
     bad: Optional[bool] = Field(None, description="Плохой клиент")
@@ -45,7 +45,7 @@ class CustomerFilterData(BaseRetailCrmScheme):
     tasksCounts: Optional[int] = Field(None, description="Задачи")
     email: Optional[str] = Field(None, description="E-mail")
     contragentName: Optional[str] = Field(None, description="Полное наименование")
-    contragentTypes: Optional[List[ContragentTypes]] = Field(
+    contragentTypes: Optional[list[ContragentTypes]] = Field(
         None, description="Типы контрагента"
     )  # Несостыковка в документации
     contragentInn: Optional[str] = Field(None, description="ИНН")
@@ -77,7 +77,7 @@ class CustomerFilterData(BaseRetailCrmScheme):
     isContact: Optional[bool] = Field(
         None, description="Клиент является контактным лицом"
     )
-    subscriptions: Optional[List[CustomerFilterCustomerSubscriptionData]] = Field(
+    subscriptions: Optional[list[CustomerFilterCustomerSubscriptionData]] = Field(
         None, description="Фильтр по подпискам пользователя"
     )
     online: Optional[bool] = Field(None, description="Клиент на сайте")
@@ -86,22 +86,22 @@ class CustomerFilterData(BaseRetailCrmScheme):
     browserId: Optional[str] = Field(
         None, description="Идентификатор устройства в Collector"
     )
-    mgChannels: Optional[List[int]] = Field(None, description="Каналы чатов")
+    mgChannels: Optional[list[int]] = Field(None, description="Каналы чатов")
     sourceName: Optional[str] = Field(None, description="Источник")
     mediumName: Optional[str] = Field(None, description="Канал")
     campaignName: Optional[str] = Field(None, description="Кампания")
     keywordName: Optional[str] = Field(None, description="Ключевое слово")
     adContentName: Optional[str] = Field(None, description="Содержание кампании")
-    tags: Optional[List[str]] = Field(None, description="Теги")
-    attachedTags: Optional[List[str]] = Field(
+    tags: Optional[list[str]] = Field(None, description="Теги")
+    attachedTags: Optional[list[str]] = Field(
         None, description="Список прикреплённых тегов (или)"
     )
-    countries: Optional[List[str]] = Field(None, description="Страны")
+    countries: Optional[list[str]] = Field(None, description="Страны")
     abandonedCart: Optional[bool] = Field(None, description="")
     emailMarketingUnsubscribed: Optional[bool] = Field(
         None, description="`deprecated` Отписан от email рассылок"
     )
-    mgCustomerId: Optional[str] = Field(
+    mgCustomerId: Optional[int] = Field(
         None, description="Идентификатор клиента MessageGateway"
     )
     firstWebVisitFrom: Optional[date] = Field(None, description="Первое посещение (от)")
@@ -170,7 +170,7 @@ class SerializedCustomer(BaseRetailCrmScheme):
     emailMarketingUnsubscribedAt: Optional[datetime] = Field(
         None, description="`deprecated` Дата отписки от email рассылок"
     )
-    phones: Optional[List[CustomerPhone]] = Field(None, description="Телефоны")
+    phones: Optional[list[CustomerPhone]] = Field(None, description="Телефоны")
     birthday: Optional[date] = Field(None, description="День рождения")
     photoUrl: Optional[str] = Field(None, description="URL фотографии")
     managerId: Optional[int] = Field(None, description="Менеджер клиента")
@@ -182,7 +182,9 @@ class SerializedCustomer(BaseRetailCrmScheme):
     subscribed: Optional[bool] = Field(
         None, description="Статус подписки на маркетинговые рассылки писем"
     )
-    tags: Optional[List[str]] = Field(None, description="Теги")
+    addTags: Optional[list[str]] = Field(None, description="Добавление тегов")
+    removeTags: Optional[list[str]] = Field(None, description="Удаление тегов")
+    tags: Optional[list[str]] = Field(None, description="Теги")
     attachedTag: Optional[str] = Field(None, description="Прикреплённый тег")
     browserId: Optional[str] = Field(
         None, description="Идентификатор устройства в Collector"
@@ -255,12 +257,12 @@ class CustomerNote(BaseModel):
 
 
 class CustomerNoteFilter(BaseRetailCrmScheme):
-    ids: Optional[List[int]] = Field(None, description="ID заметок")
-    customerIds: Optional[List[int]] = Field(None, description="Внутренние ID клиентов")
-    customerExternalIds: Optional[List[str]] = Field(
+    ids: Optional[list[int]] = Field(None, description="ID заметок")
+    customerIds: Optional[list[int]] = Field(None, description="Внутренние ID клиентов")
+    customerExternalIds: Optional[list[str]] = Field(
         None, description="Внешние ID клиентов"
     )
-    managerIds: Optional[List[int]] = Field(None, description="ID менеджеров")
+    managerIds: Optional[list[int]] = Field(None, description="ID менеджеров")
     text: Optional[str] = Field(None, description="Текст заметки")
     createdAtFrom: Optional[str] = Field(None, description="Дата/время создания (от)")
     createdAtTo: Optional[str] = Field(None, description="Дата/время создания (до)")
