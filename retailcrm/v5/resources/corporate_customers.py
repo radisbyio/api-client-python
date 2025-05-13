@@ -10,7 +10,8 @@ from retailcrm.v5.schemas.corporate_customers import (
     GetByIdCustomerCorporateResponse,
     ResponseCustomerCorporateEdit,
     SerializedCompany,
-    SerializedCustomerContact, CustomerHistoryFilterV4Type,
+    SerializedCustomerContact, CustomerHistoryFilterV4Type, ResponseCustomerCorporateCompanyGet,
+    ResponseCustomerCorporateCompanyCreate, ResponseCustomerCorporateCompanyEdit,
 )
 from retailcrm.v5.schemas.customers import (
 ResponseCustomersHistory, ResponseCustomerNotesCreate, ResponseCustomerNotesFilter, ResponseCustomerNotesDelete, SerializedCustomerNote, CustomerNoteFilter,SerializedCustomerReference,
@@ -226,7 +227,7 @@ class CorporateCustomersController:
        return response_obj
 
 
-    async def companies_get(self, customer_id: int | str, site: str = None, by: IdTypes | str = IdTypes.EXTERNAL_ID, limit: int = 20, page: int = 1) -> RetailCrmResponse:
+    async def companies_get(self, customer_id: int | str, site: str = None, by: IdTypes | str = IdTypes.EXTERNAL_ID, limit: int = 20, page: int = 1) -> ResponseCustomerCorporateCompanyGet:
        """
        Список компаний корпоративного клиента.
        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-customers-corporate-id-companies
@@ -243,14 +244,14 @@ class CorporateCustomersController:
        response = await self._client.get(
            f"/customers-corporate/{customer_id}/companies", params=params
        )
-       response_obj = RetailCrmResponse.model_validate_json(response.body)
+       response_obj = ResponseCustomerCorporateCompanyGet.model_validate_json(response.body)
 
        if response.status_code >= 400:
            raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
 
        return response_obj
 
-    async def company_create(self, customer_id: int | str, company: SerializedCompany, site: str = None, by: IdTypes | str = IdTypes.EXTERNAL_ID) -> RetailCrmResponse:
+    async def company_create(self, customer_id: int | str, company: SerializedCompany, site: str = None, by: IdTypes | str = IdTypes.EXTERNAL_ID) -> ResponseCustomerCorporateCompanyCreate:
        """
        Создание компании.
        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-customers-corporate-id-companies-create
@@ -264,7 +265,7 @@ class CorporateCustomersController:
        response = await self._client.post(
            f"/customers-corporate/{customer_id}/companies/create", params=params, data={"company": company.model_dump_json(exclude_unset=True, by_alias=True)}
        )
-       response_obj = RetailCrmResponse.model_validate_json(response.body)
+       response_obj = ResponseCustomerCorporateCompanyCreate.model_validate_json(response.body)
 
 
        if response.status_code >= 400:
@@ -273,7 +274,7 @@ class CorporateCustomersController:
        return response_obj
 
 
-    async def company_edit(self, customer_id: int | str, company_id: int | str, company: SerializedCompany, site: str = None, by: IdTypes | str = IdTypes.EXTERNAL_ID, entity_by: IdTypes | str = IdTypes.EXTERNAL_ID) -> RetailCrmResponse:
+    async def company_edit(self, customer_id: int | str, company_id: int | str, company: SerializedCompany, site: str = None, by: IdTypes | str = IdTypes.EXTERNAL_ID, entity_by: IdTypes | str = IdTypes.EXTERNAL_ID) -> ResponseCustomerCorporateCompanyEdit:
        """
        Редактирование компании.
        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-customers-corporate-id-companies-entityExternalId-edit
@@ -288,7 +289,7 @@ class CorporateCustomersController:
        response = await self._client.post(
            f"/customers-corporate/{customer_id}/companies/{company_id}/edit", params=params, data={"company": company.model_dump_json(exclude_unset=True, by_alias=True)}
        )
-       response_obj = RetailCrmResponse.model_validate_json(response.body)
+       response_obj = ResponseCustomerCorporateCompanyEdit.model_validate_json(response.body)
 
        if response.status_code >= 400:
            raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)

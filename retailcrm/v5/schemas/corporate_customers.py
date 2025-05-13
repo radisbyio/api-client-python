@@ -7,7 +7,7 @@ from retailcrm.v5.helpers import datetime_serializer, dict_validator
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme, RetailCrmResponse
 from retailcrm.v5.schemas.customers import CustomerAddress, CustomerContragent
 from retailcrm.v5.schemas.shared import ApiKey, User, CustomerTagLink, Customer, SerializedEntityCustomer, \
-    EntityWithExternalIdNameOutput, EntityWithExternalIdInput
+    EntityWithExternalIdNameOutput, EntityWithExternalIdInput, Company
 
 
 class Subscription(BaseRetailCrmScheme):
@@ -369,3 +369,13 @@ class GetByIdCustomerCorporateResponse(RetailCrmResponse):
 
 class ResponseCustomerCorporateEdit(RetailCrmResponse):
     id: Optional[int] = Field(None, description="ID корпоративного клиента")
+
+class ResponseCustomerCorporateCompanyGet(RetailCrmResponse):
+    companies: list[Company] = Field(default_factory=list, description="Компания")
+
+class ResponseCustomerCorporateCompanyCreate(RetailCrmResponse):
+    id: int | None = None
+
+
+class ResponseCustomerCorporateCompanyEdit(RetailCrmResponse):
+    id: int | None = None
