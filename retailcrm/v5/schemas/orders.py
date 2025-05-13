@@ -20,7 +20,7 @@ from retailcrm.v5.schemas.shared import (
     SerializedOrderDelivery,
     Source,
     User, FixExternalRow, SerializedEntityOrder,
-    OrderContragent,
+    OrderContragent, EntityWithExternalIdInput,
 )
 
 
@@ -303,7 +303,7 @@ class SerializedOrder(BaseRetailCrmScheme):
     orderMethod: Optional[str] = Field(None, description="Способ оформления")
     customer: Optional[Customer] = Field(None, description="Клиент")
     contact: Optional[Contact] = Field(None, description="Контактное лицо")
-    company: Optional[dict[str, Union[int, str]]] = Field(None, description="Компания")
+    company: Optional[EntityWithExternalIdInput] = Field(None, description="Компания")
     managerId: Optional[int] = Field(
         None, description="Менеджер, прикрепленный к заказу"
     )
