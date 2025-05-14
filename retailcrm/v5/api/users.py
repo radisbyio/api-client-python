@@ -49,8 +49,7 @@ class RetailCrmUsersApi:
         :return: Response
         """
         return await self._client.get(
-            endpoint=f"/users/{id}",
-            params={"id": user_id},
+            endpoint=f"/users/{user_id}",
         )
 
     async def user_set_status(self, user_id: int, status: str) -> Response:
@@ -63,6 +62,6 @@ class RetailCrmUsersApi:
         :return: Response
         """
         return await self._client.post(
-            endpoint=f"/users/{id}/status",
+            endpoint=f"/users/{user_id}/status",
             params={"status": status},
         )
