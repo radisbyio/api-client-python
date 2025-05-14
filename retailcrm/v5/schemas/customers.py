@@ -10,7 +10,6 @@ from retailcrm.v5.schemas.shared import (
     Customer,
     CustomerAddress,
     CustomerPhone,
-    MGCustomer,
     SerializedEntityCustomer,
     SerializedSource, User, ApiKey,
 )
@@ -176,7 +175,7 @@ class SerializedCustomer(BaseRetailCrmScheme):
     managerId: Optional[int] = Field(None, description="Менеджер клиента")
     sex: Optional[str] = Field(None, description="Пол")
     source: Optional[SerializedSource] = Field(None, description="Источник клиента")
-    mgCustomerId: Optional[MGCustomer] = Field(
+    mgCustomerId: Optional[int] = Field(
         None, description="Идентификатор клиента MessageGateway"
     )
     subscribed: Optional[bool] = Field(
