@@ -19,8 +19,12 @@ from retailcrm.v5.schemas.shared import (
     PriceType,
     SerializedOrderDelivery,
     Source,
-    User, FixExternalRow, SerializedEntityOrder,
-    OrderContragent, EntityWithExternalIdInput,
+    User,
+    FixExternalRow,
+    SerializedEntityOrder,
+    OrderContragent,
+    EntityWithExternalIdInput,
+    SerializedLoyaltyOrder
 )
 
 
@@ -57,6 +61,7 @@ class SerializedOrderProductOffer(BaseRetailCrmScheme):
 
 
 class SerializedOrderProduct(BaseRetailCrmScheme):
+    externalId: Optional[str] = Field(None)
     markingCodes: list[str] = Field(default_factory=list, description="Коды маркировки")
     initialPrice: Optional[float] = Field(
         None, description="Цена товара/SKU (в валюте объекта)"
@@ -344,12 +349,6 @@ class SerializedOrderList(RootModel):
     root: list[SerializedOrder] = Field(default_factory=list)
 
 
-class SerializedEntityOrder(BaseRetailCrmScheme):
-    id: int = Field(0, description="Внутренний ID заказа")
-    external_id: str = Field("", alias="externalId", description="Внешний ID заказа")
-    number: str = Field("", description="Номер заказа")
-
-
 class OrderHistory(BaseRetailCrmScheme):
     id: Optional[int] = Field(
         None, alias="id", description="Внутренний идентификатор записи в истории"
@@ -457,3 +456,30 @@ class SerializedOrderReference(RetailCrmResponse):
 
 class OrderRetrieveResponse(RetailCrmResponse):
     order: Order | None = None
+
+
+class SmsVerification(BaseRetailCrmScheme):
+    createdAt: datetime | None = Field(None, description="Дата создания (Y-m-d H:i:s)")
+    expiredAt: datetime | None = Field(None, description="Дата окончания срока жизни (Y-m-d H:i:s)")
+    verifiedAt: datetime | None = Field(None, description="Дата успешной верификации (Y-m-d H:i:s)")
+    checkId: str | None = Field(None, description="Идентификатор проверки кода")
+    actionType: str | None = Field(None, description="Тип действия")
+
+    createdAt_serializer = field_serializer("createdAt")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
+    expiredAt_serializer = field_serializer("expiredAt")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
+    verifiedAt_serializer = field_serializer("verifiedAt")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
+
+
+class LoyaltyApplyResponse(RetailCrmResponse):
+    order: SerializedLoyaltyOrder | None = Field(None)
+    verification: SmsVerification | None = Field(None, description="SMS-верификация")
+
+
+class LoyaltyCancelBonusOperationsResponse(RetailCrmResponse):
+    order: Order | None = Field(None, description="Заказ")

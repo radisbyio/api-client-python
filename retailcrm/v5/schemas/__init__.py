@@ -1,3 +1,4 @@
+from .base import *
 from .custom_fields import *
 from .corporate_customers import *
 from .customers import *

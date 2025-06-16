@@ -57,3 +57,14 @@ def pydantic_list_dumps_to_json(obj_list: list[T], obj_type: Type | None = None)
 
     obj_root_model = RootModel[list[T]]
     return obj_root_model(obj_list).model_dump_json(exclude_unset=True, by_alias=True)
+
+
+def validate_crm_url(crm_url: str) -> None:
+    """
+    Проверяет адрес RetailCRM на валидность
+    """
+    if not crm_url.startswith("http") or not crm_url.startswith("https"):
+        raise ValueError("crm_url must start with http or https")
+
+    if crm_url.endswith("/"):
+        raise ValueError("crm_url must not end with /")

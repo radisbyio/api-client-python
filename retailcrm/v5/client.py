@@ -12,8 +12,11 @@ from retailcrm.v5.resources import (
     TasksController,
     UsersController, DeliveryController, WebAnalyticsController, StatisticController, VerificationController, CorporateCustomersController
 )
+from retailcrm.v5.utils import validate_crm_url
 
 __all__ = ["RetailCrmApiClientV5"]
+
+
 
 
 @dataclass(slots=True)
@@ -29,6 +32,8 @@ class RetailCrmApiClientV5:
             client: BaseHttpClient = None,
             use_retries: bool = False,
     ):
+        validate_crm_url(crm_url)
+
         self._crm_url = crm_url
         self._api_key = api_key
         self._client = client or HttpClient(crm_url, api_key, "v5", use_retries)

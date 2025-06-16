@@ -1,3 +1,4 @@
+import decimal
 from datetime import date, datetime, time
 from decimal import Decimal
 from typing import Any, Optional, TypeVar
@@ -463,35 +464,35 @@ class OrderProduct(BaseRetailCrmScheme):
     ordering: Optional[int] = Field(None, description="Порядок")
     properties: dict = Field(default_factory=dict, description="Дополнительные свойства позиции в заказе")
 
-    bonusesChargeTotal: Optional[float] = Field(
-        0, description="Количество списанных бонусов"
+    bonusesChargeTotal: Optional[Decimal] = Field(
+        None, description="Количество списанных бонусов"
     )
     bonusesCreditTotal: Optional[float] = Field(
-        0, description="Количество начисленных бонусов"
+        None, description="Количество начисленных бонусов"
     )
     markingCodes: list[str] = Field(default_factory=list, description="Коды маркировки")
     priceType: Optional[PriceType] = Field(None, description="Тип цены")
-    initialPrice: Optional[float] = Field(
-        0, description="Цена товара/SKU (в валюте объекта)"
+    initialPrice: Optional[Decimal] = Field(
+        None, description="Цена товара/SKU (в валюте объекта)"
     )
-    discountTotal: Optional[float] = Field(
-        0,
+    discountTotal: Optional[Decimal] = Field(
+        None,
         description="Итоговая денежная скидка на единицу товара c учетом всех скидок на товар и заказ (в валюте объекта)",
     )
     prices: list[OrderProductPriceItem] = Field(
-        [], description="Набор итоговых цен реализации с указанием количества"
+        default_factory=list, description="Набор итоговых цен реализации с указанием количества"
     )
     vatRate: Optional[str] = Field(None, description="Ставка НДС")
     createdAt: Optional[datetime] = Field(
         None, description="Дата создания позиции в системе"
     )
-    quantity: Optional[float] = Field(0, description="Количество")
+    quantity: Optional[Decimal] = Field(None, description="Количество")
     status: Optional[str] = Field(None, description="Статус позиции в заказе")
     comment: str = Field("", description="Комментарий к позиции в заказе")
     isCanceled: bool = Field(
         False, description="Данная позиция в заказе является отменной"
     )
-    purchasePrice: float = Field(0, description="Закупочная цена (в базовой валюте)")
+    purchasePrice: Decimal | None = Field(None, description="Закупочная цена (в базовой валюте)")
 
     properties_validator = field_validator("properties", mode="before")(
         dict_validator()
@@ -657,15 +658,15 @@ class Order(BaseRetailCrmScheme):
     statusUpdatedAt: Optional[datetime] = Field(
         None, description="Дата последнего изменения статуса"
     )
-    totalSumm: float = Field(
-        0, description="Общая сумма с учетом скидки (в валюте объекта)"
+    totalSumm: Decimal = Field(
+        None, description="Общая сумма с учетом скидки (в валюте объекта)"
     )
-    prepaySum: float = Field(0, description="Оплаченная сумма (в валюте объекта)")
-    purchaseSumm: float = Field(
-        0, description="Общая стоимость закупки (в базовой валюте)"
+    prepaySum: Decimal = Field(None, description="Оплаченная сумма (в валюте объекта)")
+    purchaseSumm: Decimal = Field(
+        None, description="Общая стоимость закупки (в базовой валюте)"
     )
-    personalDiscountPercent: Optional[float] = Field(
-        0, description="Персональная скидка на заказ"
+    personalDiscountPercent: Optional[Decimal] = Field(
+        None, description="Персональная скидка на заказ"
     )
     loyaltyLevel: Optional[LoyaltyLevel] = Field(
         None, description="Уровень участия в программе лояльности"
@@ -699,7 +700,7 @@ class Order(BaseRetailCrmScheme):
     fullPaidAt: Optional[datetime] = Field(None, description="Дата полной оплаты")
     payments: dict[str, Payment] = Field(default_factory=dict, description="Платежи")
     fromApi: bool = Field(False, description="Заказ поступил через API")
-    weight: Optional[float] = Field(None, description="Вес")
+    weight: Optional[Decimal] = Field(None, description="Вес")
     length: Optional[int] = Field(None, description="Длина")
     width: Optional[int] = Field(None, description="Ширина")
     height: Optional[int] = Field(None, description="Высота")
@@ -817,3 +818,111 @@ class FixExternalRow(BaseRetailCrmScheme):
     external_id: Optional[str] = Field(
         None, description="Внешний ID", validation_alias="externalId"
     )
+
+
+class Loyalty(BaseRetailCrmScheme):
+    levels: list[LoyaltyLevel] = Field(
+        default_factory=list, description="Уровни программы лояльности"
+    )
+    active: Optional[bool] = Field(None, description="Активна")
+    blocked: Optional[bool] = Field(None, description="Заблокирована")
+    currency: Optional[str] = Field(None, description="Валюта")
+    id: Optional[int] = Field(None, description="ID программы лояльности")
+    name: Optional[str] = Field(None, description="Название программы лояльности")
+    confirmSmsCharge: Optional[bool] = Field(
+        None, description="Подтверждать списание по СМС"
+    )
+    confirmSmsRegistration: Optional[bool] = Field(
+        None, description="Подтверждать участие по СМС"
+    )
+    createdAt: Optional[datetime] = Field(None, description="Дата создания")
+    activatedAt: Optional[datetime] = Field(None, description="Дата запуска")
+    deactivatedAt: Optional[datetime] = Field(None, description="Дата остановки")
+    blockedAt: Optional[datetime] = Field(None, description="Дата блокировки")
+
+    createdAt_serializer = field_serializer("createdAt")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
+    activatedAt_serializer = field_serializer("activatedAt")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
+    deactivatedAt_serializer = field_serializer("deactivatedAt")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
+    blockedAt_serializer = field_serializer("blockedAt")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
+
+
+class LoyaltyAccount(BaseRetailCrmScheme):
+    active: Optional[bool] = Field(None, description="Признак активности участия")
+    id: Optional[int] = Field(None, description="ID участия")
+    loyalty: Optional[Loyalty] = Field(None, description="Программа лояльности")
+    customer: Optional[Customer] = Field(None, description="Клиент")
+    phoneNumber: Optional[str] = Field(None, description="Номер телефона")
+    cardNumber: Optional[str] = Field(None, description="Номер карты")
+    amount: Optional[float] = Field(None, description="Количество активных бонусов")
+    ordersSum: Optional[float] = Field(
+        None, description="Сумма покупок (в валюте объекта)"
+    )
+    nextLevelSum: Optional[float] = Field(
+        None, description="Необходимая сумма покупок для перехода на след уровень"
+    )
+    level: Optional[LoyaltyLevel] = Field(None, description="Уровень участия")
+    createdAt: Optional[datetime] = Field(None, description="Дата создания")
+    activatedAt: Optional[datetime] = Field(None, description="Дата активации участия")
+    confirmedPhoneAt: Optional[datetime] = Field(
+        None, description="Дата верификации номера телефона"
+    )
+    lastCheckId: Optional[str] = Field(None, description="ID последней СМС-верификации")
+    status: Optional[str] = Field(
+        None,
+        description="Статус участия. Возможные значения: not_confirmed, activated, deactivated",
+    )
+    customFields: Optional[dict] = Field(
+        None, description="Ассоциативный массив пользовательских полей"
+    )
+
+    createdAt_serializer = field_serializer("createdAt")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
+    activatedAt_serializer = field_serializer("activatedAt")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
+    confirmedPhoneAt_serializer = field_serializer("confirmedPhoneAt")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
+    customFields_validator = field_validator("customFields", mode="before")(
+        dict_validator()
+    )
+
+
+class SerializedLoyaltyOrder(BaseRetailCrmScheme):
+    bonusesCreditTotal: decimal.Decimal | None = Field(None, description="Количество начисленных бонусов")
+    bonusesChargeTotal: decimal.Decimal | None = Field(None, description="Количество списанных бонусов")
+    currency: str | None = Field(None, description="Валюта")
+    privilegeType: PrivilegeType | None = Field(
+        None,
+        description="Тип привилегии. Возможные значения: none, personal_discount, loyalty_level, loyalty_event",
+    )
+    totalSumm: decimal.Decimal | None = Field(
+        None, description="Общая сумма с учетом скидки (в валюте объекта)"
+    )
+    personalDiscountPercent: decimal.Decimal | None = Field(
+        None, description="Персональная скидка на заказ"
+    )
+    loyaltyAccount: LoyaltyAccount = Field(
+        None, description="Участие в программе лояльности"
+    )
+    loyaltyLevel: LoyaltyLevel| None = Field(
+        None, description="Уровень участия в программе лояльности"
+    )
+    loyaltyEventDiscount: LoyaltyEventDiscount| None = Field(
+        None, description="Скидка по событию программы лояльности"
+    )
+    customer: Customer | None = Field(None, description="Клиент")
+    delivery: SerializedOrderDelivery | None = Field(
+        None, description="Данные о доставке"
+    )
+    site: str | None = Field(None, description="Магазин")
+    items: list[OrderProduct] = Field(default_factory=list, description="Позиция в заказе")
