@@ -1,4 +1,4 @@
-from fastapi import params
+import decimal
 
 from retailcrm.exceptions import RetailCrmApiError
 from retailcrm.http_cilent import BaseHttpClient
@@ -17,7 +17,6 @@ from retailcrm.v5.schemas import (
     OrderRetrieveResponse,
     SerializedEntityOrder, LoyaltyApplyResponse, LoyaltyCancelBonusOperationsResponse,
 )
-from retailcrm.v5.schemas.loyalty import SerializedLoyaltyOrder
 from retailcrm.v5.schemas.orders import (
     OrderFilterData,
     OrderHistoryFilterV4Type,

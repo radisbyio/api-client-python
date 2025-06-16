@@ -63,7 +63,7 @@ def validate_crm_url(crm_url: str) -> None:
     """
     Проверяет адрес RetailCRM на валидность
     """
-    if not crm_url.startswith("http") or not crm_url.startswith("https"):
+    if not crm_url.startswith(("http", "https")):
         raise ValueError("crm_url must start with http or https")
 
     if crm_url.endswith("/"):

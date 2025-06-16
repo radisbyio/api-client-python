@@ -389,9 +389,6 @@ class ResponseOrderHistory(RetailCrmResponse):
     history: list[OrderHistory] = []
 
 
-
-
-
 class EntityWithExternalId(BaseRetailCrmScheme):
     external_id: Optional[str] = Field(
         None, description="Внешний ID (при наличии)", validation_alias="externalId"
