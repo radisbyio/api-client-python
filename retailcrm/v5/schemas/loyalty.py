@@ -343,7 +343,7 @@ class ResponseCreateLoyaltyAccount(RetailCrmResponse):
     loyaltyAccount: Optional[LoyaltyAccount] = Field(
         None, description="Участие в программе лояльности"
     )
-    warnings: Optional[List] = Field(None, description="")
+    warnings: dict[str, str] = Field(default_factory=dict)
 
 
 class ResponseActivateLoyaltyAccount(RetailCrmResponse):
@@ -358,7 +358,7 @@ class ResponseChargeLoyaltyAccountBonus(RetailCrmResponse):
 
 
 class ResponseCreditLoyaltyAccountBonus(RetailCrmResponse):
-    loyaltyBonus: Optional[dict] = Field(None, description="")
+    loyaltyBonus: Optional[dict] = Field(None)
 
 
 class ResponseLoyaltyAccountBonusOperations(RetailCrmResponse):
