@@ -4,10 +4,9 @@ from typing import List, Optional, Union, Any
 from pydantic import BaseModel, Field, field_serializer, field_validator
 
 from retailcrm.v5.enums.loyalty import BonusOperationType, BonusOperationEventType
-from retailcrm.v5.helpers import datetime_serializer, dict_validator
+from retailcrm.v5.helpers import datetime_serializer, list_to_dict_validator
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme, RetailCrmResponse
 from retailcrm.v5.schemas.shared import (
-    Customer,
     SerializedEntityCustomer,
     SerializedLoyaltyOrder,
     LoyaltyAccount,
@@ -344,6 +343,8 @@ class ResponseCreateLoyaltyAccount(RetailCrmResponse):
         None, description="Участие в программе лояльности"
     )
     warnings: dict[str, str] = Field(default_factory=dict)
+
+    warnings_validator = field_validator("warnings", mode="before")(list_to_dict_validator())
 
 
 class ResponseActivateLoyaltyAccount(RetailCrmResponse):

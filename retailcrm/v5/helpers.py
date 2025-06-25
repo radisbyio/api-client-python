@@ -18,6 +18,20 @@ def errors_dict_validator() -> Callable[[Any, ValidationInfo], Optional[dict]]:
     return validator
 
 
+def list_to_dict_validator() -> Callable[[Any, ValidationInfo], Optional[dict]]:
+    """
+    Вспомогательная функция, которая позволяет преобразовать массив errors в словарь для более общей обработки.
+    """
+
+    def validator(v, info: ValidationInfo) -> Optional[dict]:
+        if isinstance(v, list):
+            return {}
+        else:
+            return v
+
+    return validator
+
+
 def dict_validator() -> Callable[[Any, ValidationInfo], dict]:
     """
     Вспомогательная функция, которая позволяет преобразовать пустой list в dict.
