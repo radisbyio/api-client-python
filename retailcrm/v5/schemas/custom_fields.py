@@ -144,7 +144,7 @@ class SerializedCustomDictionary(BaseRetailCrmScheme):
 
 
 class CustomFieldDictionaryCreateResponse(RetailCrmResponse):
-    code: str = Field(description="Символьный код")
+    code: str | None = Field(None, description="Символьный код")
 
 
 class CustomFieldDictionaryRetrieveResponse(RetailCrmResponse):
