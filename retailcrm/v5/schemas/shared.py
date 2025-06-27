@@ -336,7 +336,7 @@ class Package(BaseRetailCrmScheme):
 
 
 class DeclaredValueItem(BaseRetailCrmScheme):
-    orderProduct: list[PackageItemOrderProduct] | None = Field(default_factory=list, description="Позиция в заказе")
+    orderProduct: PackageItemOrderProduct | None = Field(None, description="Позиция в заказе")
     value: decimal.Decimal | None = Field(None, description="Объявленная стоимость товара")
 
 
@@ -568,8 +568,6 @@ class OrderDeliveryAddress(BaseRetailCrmScheme):
     text: Optional[str] = Field(None, description="Адрес в текстовом виде")
 
 
-# TODO: make itemDeclaredValues
-# TODO: make packages
 class GenericData(BaseRetailCrmScheme):
     externalId: Optional[str] = Field(
         None, description="Идентификатор в службе доставки"
