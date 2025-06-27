@@ -48,7 +48,7 @@ class LoyaltyLevel(BaseModel):
         description="Тип уровня. Возможные значения: bonus_converting, bonus_percent, discount",
     )
     id: Optional[int] = Field(None, description="ID уровня")
-    name: str = Field(..., description="Название уровня")
+    name: str | None = Field(None, description="Название уровня")
     sum: Optional[Union[float, int]] = Field(
         None, description="Сумма, необходимая для перехода на данный уровень"
     )

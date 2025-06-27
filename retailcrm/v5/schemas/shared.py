@@ -288,7 +288,7 @@ class PackageItemOrderProduct(BaseRetailCrmScheme):
         None, description="[deprecated] Внешний ID позиции в заказе"
     )
     externalIds: list[CodeValueModel] = Field(
-        [], description="Внешние идентификаторы позиции в заказе"
+        default_factory=list, description="Внешние идентификаторы позиции в заказе"
     )
 
 
@@ -335,10 +335,9 @@ class Package(BaseRetailCrmScheme):
     items: list[PackageItem] = Field(default_factory=list, description="Содержимое упаковки")
 
 
-# todo: заполнить
 class DeclaredValueItem(BaseRetailCrmScheme):
-    orderProduct: Optional[PackageItemOrderProduct] = Field(None)
-    value: Optional[float] = Field(None)
+    orderProduct: list[PackageItemOrderProduct] | None = Field(default_factory=list, description="Позиция в заказе")
+    value: decimal.Decimal | None = Field(None, description="Объявленная стоимость товара")
 
 
 class TimeInterval(BaseRetailCrmScheme):
@@ -591,8 +590,8 @@ class GenericData(BaseRetailCrmScheme):
         None,
         description="Дополнительные данные доставки (deliveryDataField.code => значение)",
     )
-    itemDeclaredValues: Optional[list[dict[str, int | float]]] = None
-    packages: list[dict[str, str | float | int | list[dict[str, int | str]]]] = Field(
+    itemDeclaredValues: Optional[list[DeclaredValueItem]] = Field(default_factory=list)
+    packages: list[Package] = Field(
         default_factory=list, description="Упаковки"
     )
 
