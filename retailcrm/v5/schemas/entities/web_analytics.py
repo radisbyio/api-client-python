@@ -3,12 +3,12 @@ from datetime import datetime
 from pydantic import Field, field_serializer
 
 from retailcrm.v5.helpers import datetime_serializer
-from retailcrm.v5.schemas.base import BaseRetailCrmScheme, RetailCrmResponse
+from retailcrm.v5.schemas.base import BaseRetailCrmScheme
 from retailcrm.v5.schemas.shared import SerializedEntityOrder, SerializedEntityCustomer, SerializedSource
 
 
 class ClientId(BaseRetailCrmScheme):
-    value: str = Field(..., description="Значение добавляемого clientId")
+    value: str | None = Field(None, description="Значение добавляемого clientId")
     createdAt: datetime | None = Field(None, description="Дата добавления clientId")
     site: str | None = Field(None, description="Символьный код магазина")
     order: SerializedEntityOrder | None = Field(None, description="Заказ")
@@ -17,10 +17,6 @@ class ClientId(BaseRetailCrmScheme):
     createdAt_serializer = field_serializer("createdAt")(
         datetime_serializer("%Y-%m-%d %H:%M:%S")
     )
-
-
-class ClientIdsUploadResponse(RetailCrmResponse):
-    failedClientIds: list[ClientId] = Field(default_factory=list, description="")
 
 
 class Source(BaseRetailCrmScheme):
@@ -39,12 +35,8 @@ class Source(BaseRetailCrmScheme):
     customer: SerializedEntityCustomer | None = Field(None, description="Клиент")
 
 
-class SourcesUploadResponse(RetailCrmResponse):
-    failedSources: list[Source] = Field(default_factory=list, description="Массив источников для загрузки")
-
-
 class Page(BaseRetailCrmScheme):
-    url: str = Field(..., description="URL страницы")
+    url: str = Field(None, description="URL страницы")
     title: str | None = Field(None, description="Заголовок страницы")
     countViews: int | None = Field(
         None, description="Количество просмотров страницы"
@@ -56,7 +48,7 @@ class Page(BaseRetailCrmScheme):
 
 class Visit(BaseRetailCrmScheme):
     createdAt: datetime = Field(
-        ..., description="Дата-время начала визита", validation_alias="createdAt"
+        None, description="Дата-время начала визита", validation_alias="createdAt"
     )
     visitLength: int | str = Field(None, description="Длительность визита в секундах")
     exitPage: str | None = Field(None, description="Страница выхода")
@@ -77,7 +69,3 @@ class Visit(BaseRetailCrmScheme):
     createdAt_serializer = field_serializer("createdAt")(
         datetime_serializer("%Y-%m-%d %H:%M:%S")
     )
-
-
-class VisitsUploadResponse(RetailCrmResponse):
-    failedVisits: list[Visit] = Field(default_factory=list, description="Массив визитов для загрузки")

@@ -30,5 +30,3 @@ class SmsVerificationConfirm(BaseRetailCrmScheme):
     checkId: str = Field(..., description="Идентификатор проверки кода")
 
 
-class VerificationConfirmResponse(RetailCrmResponse):
-    verification: SmsVerification | None = None

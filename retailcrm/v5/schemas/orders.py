@@ -387,7 +387,7 @@ class ResponseOrderHistory(RetailCrmResponse):
     generated_at: Optional[datetime] = Field(
         None, description="Время формирования ответа", validation_alias="generatedAt"
     )
-    history: list[OrderHistory] = []
+    history: list[OrderHistory] = Field(default_factory=list)
 
 
 
