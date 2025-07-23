@@ -1,14 +1,11 @@
-from retailcrm import RetailCrmApiError
-from retailcrm.http_cilent import BaseHttpClient
-from retailcrm.v5.schemas.web_analytics import ClientId, ClientIdsUploadResponse, Source, \
-    SourcesUploadResponse, Visit, VisitsUploadResponse
-from retailcrm.v5.utils import pydantic_list_dumps_to_json
+from retailcrm.v5.resources.base import ApiResource
+from retailcrm.v5.schemas.entities.web_analytics import ClientId, Source, Visit
+from retailcrm.v5.schemas.requests.web_analytics import ClientIdsUploadRequest, SourceUploadRequest, VisitsUploadRequest
+from retailcrm.v5.schemas.responses.web_analytics import ClientIdsUploadResponse, SourcesUploadResponse, \
+    VisitsUploadResponse
 
 
-class WebAnalyticsController:
-    def __init__(self, client: BaseHttpClient):
-        self._client = client
-
+class WebAnalyticsApiResource(ApiResource):
     async def client_ids_upload(
             self, client_ids: list[ClientId], site: str
     ) -> ClientIdsUploadResponse:
@@ -22,16 +19,16 @@ class WebAnalyticsController:
         :return: ClientIdsUploadResponse
         """
 
+        request = ClientIdsUploadRequest(
+            clientIds=client_ids,
+            site=site,
+        )
+
         response = await self._client.post(
             endpoint="/web-analytics/client-ids/upload",
-            data={"clientIds": pydantic_list_dumps_to_json(client_ids, ClientId),
-                  "site": site},
+            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
         )
-        response_obj = ClientIdsUploadResponse.model_validate_json(response.body)
-
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
-        return response_obj
+        return self._process_response(response, ClientIdsUploadResponse)
 
     async def sources_upload(self, sources: list[Source], site: str) -> SourcesUploadResponse:
         """
@@ -43,18 +40,17 @@ class WebAnalyticsController:
         :return: SourcesUploadResponse
         """
 
-        response = await self._client.post(
-            endpoint="/web-analytics/sources/upload",
-            data={"sources": pydantic_list_dumps_to_json(sources, Source),
-                  "site": site},
+        request = SourceUploadRequest(
+            sources=sources,
+            site=site,
         )
 
-        response_obj = SourcesUploadResponse.model_validate_json(response.body)
+        response = await self._client.post(
+            endpoint="/web-analytics/sources/upload",
+            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+        )
 
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
-
-        return response_obj
+        return self._process_response(response, SourcesUploadResponse)
 
     async def visits_upload(self, visits: list[Visit], site: str) -> VisitsUploadResponse:
         """
@@ -66,14 +62,15 @@ class WebAnalyticsController:
         :param site: Символьный код магазина.
         :return: VisitsUploadResponse
         """
-        response = await self._client.post(
-            endpoint="/web-analytics/visits/upload",
-            data={"visits": pydantic_list_dumps_to_json(visits, Visit),
-                  "site": site},
+
+        request = VisitsUploadRequest(
+            visits=visits,
+            site=site,
         )
 
-        response_obj = VisitsUploadResponse.model_validate_json(response.body)
+        response = await self._client.post(
+            endpoint="/web-analytics/visits/upload",
+            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+        )
 
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
-        return response_obj
+        return self._process_response(response, VisitsUploadResponse)
