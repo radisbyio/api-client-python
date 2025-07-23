@@ -4,12 +4,13 @@ from typing import List, Optional, Union, Any
 from pydantic import BaseModel, Field, field_serializer, field_validator
 
 from retailcrm.v5.enums.loyalty import BonusOperationType, BonusOperationEventType
-from retailcrm.v5.helpers import datetime_serializer, dict_validator
+from retailcrm.v5.helpers import datetime_serializer, list_to_dict_validator
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme, RetailCrmResponse
 from retailcrm.v5.schemas.shared import (
-    Customer,
     SerializedEntityCustomer,
-    SerializedOrderDelivery,
+    SerializedLoyaltyOrder,
+    LoyaltyAccount,
+    Loyalty,
 )
 
 __all__ = [
@@ -47,7 +48,7 @@ class LoyaltyLevel(BaseModel):
         description="Тип уровня. Возможные значения: bonus_converting, bonus_percent, discount",
     )
     id: Optional[int] = Field(None, description="ID уровня")
-    name: str = Field(..., description="Название уровня")
+    name: str | None = Field(None, description="Название уровня")
     sum: Optional[Union[float, int]] = Field(
         None, description="Сумма, необходимая для перехода на данный уровень"
     )
@@ -57,40 +58,6 @@ class LoyaltyLevel(BaseModel):
     privilegeSizePromo: Optional[float] = Field(
         None,
         description="Размер скидки, процент или курс начисления бонусов для акционных товаров",
-    )
-
-
-class Loyalty(BaseModel):
-    levels: Optional[List[LoyaltyLevel]] = Field(
-        None, description="Уровни программы лояльности"
-    )
-    active: Optional[bool] = Field(None, description="Активна")
-    blocked: Optional[bool] = Field(None, description="Заблокирована")
-    currency: Optional[str] = Field(None, description="Валюта")
-    id: Optional[int] = Field(None, description="ID программы лояльности")
-    name: Optional[str] = Field(None, description="Название программы лояльности")
-    confirmSmsCharge: Optional[bool] = Field(
-        None, description="Подтверждать списание по СМС"
-    )
-    confirmSmsRegistration: Optional[bool] = Field(
-        None, description="Подтверждать участие по СМС"
-    )
-    createdAt: Optional[datetime] = Field(None, description="Дата создания")
-    activatedAt: Optional[datetime] = Field(None, description="Дата запуска")
-    deactivatedAt: Optional[datetime] = Field(None, description="Дата остановки")
-    blockedAt: Optional[datetime] = Field(None, description="Дата блокировки")
-
-    createdAt_serializer = field_serializer("createdAt")(
-        datetime_serializer("%Y-%m-%d %H:%M:%S")
-    )
-    activatedAt_serializer = field_serializer("activatedAt")(
-        datetime_serializer("%Y-%m-%d %H:%M:%S")
-    )
-    deactivatedAt_serializer = field_serializer("deactivatedAt")(
-        datetime_serializer("%Y-%m-%d %H:%M:%S")
-    )
-    blockedAt_serializer = field_serializer("blockedAt")(
-        datetime_serializer("%Y-%m-%d %H:%M:%S")
     )
 
 
@@ -122,51 +89,8 @@ class SmsVerification(BaseModel):
     )
 
 
-class LoyaltyAccount(BaseModel):
-    active: Optional[bool] = Field(None, description="Признак активности участия")
-    id: Optional[int] = Field(None, description="ID участия")
-    loyalty: Optional[Loyalty] = Field(None, description="Программа лояльности")
-    customer: Optional[Customer] = Field(None, description="Клиент")
-    phoneNumber: Optional[str] = Field(None, description="Номер телефона")
-    cardNumber: Optional[str] = Field(None, description="Номер карты")
-    amount: Optional[float] = Field(None, description="Количество активных бонусов")
-    ordersSum: Optional[float] = Field(
-        None, description="Сумма покупок (в валюте объекта)"
-    )
-    nextLevelSum: Optional[float] = Field(
-        None, description="Необходимая сумма покупок для перехода на след уровень"
-    )
-    level: Optional[LoyaltyLevel] = Field(None, description="Уровень участия")
-    createdAt: Optional[datetime] = Field(None, description="Дата создания")
-    activatedAt: Optional[datetime] = Field(None, description="Дата активации участия")
-    confirmedPhoneAt: Optional[datetime] = Field(
-        None, description="Дата верификации номера телефона"
-    )
-    lastCheckId: Optional[str] = Field(None, description="ID последней СМС-верификации")
-    status: Optional[str] = Field(
-        None,
-        description="Статус участия. Возможные значения: not_confirmed, activated, deactivated",
-    )
-    customFields: Optional[dict] = Field(
-        None, description="Ассоциативный массив пользовательских полей"
-    )
-
-    createdAt_serializer = field_serializer("createdAt")(
-        datetime_serializer("%Y-%m-%d %H:%M:%S")
-    )
-    activatedAt_serializer = field_serializer("activatedAt")(
-        datetime_serializer("%Y-%m-%d %H:%M:%S")
-    )
-    confirmedPhoneAt_serializer = field_serializer("confirmedPhoneAt")(
-        datetime_serializer("%Y-%m-%d %H:%M:%S")
-    )
-    customFields_validator = field_validator("customFields", mode="before")(
-        dict_validator()
-    )
-
-
 class LoyaltyEventDiscount(BaseModel):
-    id: int = Field(..., description="ID")
+    id: int = Field(None, description="ID")
 
 
 class OrderProductPriceItem(BaseRetailCrmScheme):
@@ -223,37 +147,6 @@ class Offer(BaseRetailCrmScheme):
     xmlId: Optional[str] = Field(
         "", description="ID торгового предложения в складской системе"
     )
-
-
-class SerializedLoyaltyOrder(BaseRetailCrmScheme):
-    bonusesCreditTotal: float = Field(0, description="Количество начисленных бонусов")
-    bonusesChargeTotal: float = Field(0, description="Количество списанных бонусов")
-    currency: Optional[str] = Field(None, description="Валюта")
-    privilegeType: Optional[str] = Field(
-        None,
-        description="Тип привилегии. Возможные значения: none, personal_discount, loyalty_level, loyalty_event",
-    )
-    totalSumm: float = Field(
-        0, description="Общая сумма с учетом скидки (в валюте объекта)"
-    )
-    personalDiscountPercent: Optional[float] = Field(
-        0, description="Персональная скидка на заказ"
-    )
-    loyaltyAccount: Optional[LoyaltyAccount] = Field(
-        None, description="Участие в программе лояльности"
-    )
-    loyaltyLevel: Optional[LoyaltyLevel] = Field(
-        None, description="Уровень участия в программе лояльности"
-    )
-    loyaltyEventDiscount: Optional[LoyaltyEventDiscount] = Field(
-        None, description="Скидка по событию программы лояльности"
-    )
-    customer: Optional[Customer] = Field(None, description="Клиент")
-    delivery: Optional[SerializedOrderDelivery] = Field(
-        None, description="Данные о доставке"
-    )
-    site: Optional[str] = Field(None, description="Магазин")
-    items: List[OrderProduct] = Field([], description="Позиция в заказе")
 
 
 class LoyaltyCalculation(BaseModel):
@@ -416,13 +309,13 @@ class LoyaltyApiFilterData(BaseRetailCrmScheme):
 
 
 class ResponseLoyaltiesFilter(RetailCrmResponse):
-    loyalties: List[Loyalty] = Field(
+    loyalties: list[Loyalty] = Field(
         default_factory=list, description="Программа лояльности"
     )
 
 
 class ResponseLoyaltyRetrieve(RetailCrmResponse):
-    loyalty: Optional[Loyalty] = Field(None, description="Программа лояльности")
+    loyalty: Loyalty | None = Field(None, description="Программа лояльности")
 
 
 class SerializedCreateLoyaltyAccount(BaseRetailCrmScheme):
@@ -449,7 +342,9 @@ class ResponseCreateLoyaltyAccount(RetailCrmResponse):
     loyaltyAccount: Optional[LoyaltyAccount] = Field(
         None, description="Участие в программе лояльности"
     )
-    warnings: Optional[List] = Field(None, description="")
+    warnings: dict[str, str] = Field(default_factory=dict)
+
+    warnings_validator = field_validator("warnings", mode="before")(list_to_dict_validator())
 
 
 class ResponseActivateLoyaltyAccount(RetailCrmResponse):
@@ -464,7 +359,7 @@ class ResponseChargeLoyaltyAccountBonus(RetailCrmResponse):
 
 
 class ResponseCreditLoyaltyAccountBonus(RetailCrmResponse):
-    loyaltyBonus: Optional[dict] = Field(None, description="")
+    loyaltyBonus: Optional[dict] = Field(None)
 
 
 class ResponseLoyaltyAccountBonusOperations(RetailCrmResponse):

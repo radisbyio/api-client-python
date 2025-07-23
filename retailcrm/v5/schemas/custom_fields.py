@@ -128,11 +128,11 @@ class SerializedCustomFieldApiDocModel(BaseRetailCrmScheme):
 
 
 class CustomFieldCreateResponse(RetailCrmResponse):
-    code: str = Field(description="Символьный код")
+    code: str | None = Field(None, description="Символьный код")
 
 
 class CustomFieldRetrieveResponse(RetailCrmResponse):
-    customField: Optional[CustomFieldApiDocModel] = Field(description="Символьный код")
+    customField: Optional[CustomFieldApiDocModel] = Field(None, description="Символьный код")
 
 
 class SerializedCustomDictionary(BaseRetailCrmScheme):
@@ -144,7 +144,7 @@ class SerializedCustomDictionary(BaseRetailCrmScheme):
 
 
 class CustomFieldDictionaryCreateResponse(RetailCrmResponse):
-    code: str = Field(description="Символьный код")
+    code: str | None = Field(None, description="Символьный код")
 
 
 class CustomFieldDictionaryRetrieveResponse(RetailCrmResponse):

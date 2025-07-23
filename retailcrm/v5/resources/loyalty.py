@@ -219,7 +219,7 @@ class LoyaltyController:
     async def account_bonus_operations(
         self,
         account_id: int,
-        filter_data: LoyaltyAccountBonusOperationsApiFilterType,
+        filter_data: LoyaltyAccountBonusOperationsApiFilterType | None = None,
         limit: int = 20,
         page: int = 1,
     ) -> ResponseLoyaltyAccountBonusOperations:

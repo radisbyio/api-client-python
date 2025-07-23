@@ -1,4 +1,4 @@
-from fastapi import params
+import decimal
 
 from retailcrm.exceptions import RetailCrmApiError
 from retailcrm.http_cilent import BaseHttpClient
@@ -13,7 +13,9 @@ from retailcrm.v5.schemas import (
     ResponseGetOrder,
     ResponseOrderHistory,
     ResponseOrders,
-    ResponseOrdersUpload, OrderRetrieveResponse,
+    ResponseOrdersUpload,
+    OrderRetrieveResponse,
+    SerializedEntityOrder, LoyaltyApplyResponse, LoyaltyCancelBonusOperationsResponse,
 )
 from retailcrm.v5.schemas.orders import (
     OrderFilterData,
@@ -83,6 +85,49 @@ class OrdersController:
             raise RetailCrmApiError(
                 response.status_code, response_obj.errorMsg, response_obj.errors
             )
+        return response_obj
+
+    async def loyalty_apply(
+        self,
+        order_entity: SerializedEntityOrder,
+        site: str,
+        bonuses: decimal.Decimal,
+    ) -> LoyaltyApplyResponse:
+        """
+        Применение бонусов по программе лояльности
+
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-orders-loyalty-apply
+        """
+        json_data = {
+            "site": site,
+            "bonus": bonuses,
+            "order": order_entity.model_dump_json(exclude_none=True, by_alias=True),
+        }
+        response = await self._client.post(
+            endpoint="/orders/loyalty/apply",
+            data=json_data
+        )
+        response_obj = LoyaltyApplyResponse.model_validate_json(response.body)
+        if response.status_code >= 400:
+            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
+        return response_obj
+
+    async def loyalty_cancel_bonus_operations(
+        self,
+        order_entity: SerializedEntityOrder,
+        site: str,
+    ) -> LoyaltyCancelBonusOperationsResponse:
+        json_data = {
+            "site": site,
+            "order": order_entity.model_dump_json(exclude_none=True, by_alias=True),
+        }
+        response = await self._client.post(
+            endpoint="/orders/loyalty/cancel-bonus-operations",
+            data=json_data
+        )
+        response_obj = LoyaltyCancelBonusOperationsResponse.model_validate_json(response.body)
+        if response.status_code >= 400:
+            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
 
     async def create_order(

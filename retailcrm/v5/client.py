@@ -13,11 +13,10 @@ from retailcrm.v5.resources import (
     TasksController,
     UsersController, DeliveryController, WebAnalyticsApiResource, StatisticApiResource, VerificationController, CorporateCustomersController
 )
+from retailcrm.v5.utils import validate_crm_url
 from retailcrm.v5.resources.base import ApiResource
 
 __all__ = ["RetailCrmApiClientV5"]
-
-
 
 
 T = TypeVar("T", bound=ApiResource)
@@ -29,10 +28,6 @@ class RetailCrmApiClientV5:
         "_api_key",
         "_client",
         "_resource_cache",
-
-        # "payments", "orders", "corporate_customers", "customers",
-        # "references", "custom_fields", "users", "tasks", "loyalty",
-        # "store", "delivery", "verification", "web_analytics", "statistic"
     )
 
     def __init__(
@@ -42,6 +37,8 @@ class RetailCrmApiClientV5:
         client: BaseHttpClient = None,
         use_retries: bool = False,
     ):
+        validate_crm_url(crm_url)
+
         self._crm_url = crm_url
         self._api_key = api_key
         self._client = client or HttpClient(crm_url, api_key, "v5", use_retries)

@@ -1,6 +1,6 @@
 import asyncio
 import logging
-from typing import Iterable, Union
+from typing import Iterable
 
 import httpx
 
@@ -12,7 +12,7 @@ class RetryTransport(httpx.AsyncBaseTransport, httpx.BaseTransport):
 
     def __init__(
         self,
-        wrapped_transport: Union[httpx.BaseTransport, httpx.AsyncBaseTransport],
+        wrapped_transport: httpx.BaseTransport | httpx.AsyncBaseTransport,
         max_attempts: int = 5,
         backoff_factor: float = 0.1,
         jitter_ratio: float = 0.2,
@@ -32,7 +32,7 @@ class RetryTransport(httpx.AsyncBaseTransport, httpx.BaseTransport):
             else self.RETRYABLE_STATUS_CODES
         )
 
-    async def handle_async_request(self, request: httpx.Request) -> httpx.Response:
+    async def handle_async_request(self, request: httpx.Request) -> httpx.Response | None:
         for attempt in range(self.max_attempts + 1):
             try:
                 response = await self.wrapped_transport.handle_async_request(request)
