@@ -10,4 +10,4 @@ from .shared import *
 from .store import *
 from .tasks import *
 from .delivery import *
-from .web_analytics import *
+from retailcrm.v5.schemas.entities.web_analytics import *

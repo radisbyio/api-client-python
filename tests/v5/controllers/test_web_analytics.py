@@ -5,9 +5,13 @@ import pytest
 import respx
 
 from retailcrm import RetailCrmApiClientV5, RetailCrmApiError
-from retailcrm.v5.schemas.web_analytics import (
-    ClientId, ClientIdsUploadResponse, Source,
-    SourcesUploadResponse, Visit, VisitsUploadResponse
+from retailcrm.v5.schemas.entities.web_analytics import (
+    ClientId, Source, Visit,
+)
+from retailcrm.v5.schemas.responses.web_analytics import (
+    ClientIdsUploadResponse,
+    VisitsUploadResponse,
+    SourcesUploadResponse
 )
 
 

@@ -2,8 +2,6 @@ from typing import Any, Type, TypeVar
 
 from pydantic import BaseModel, RootModel
 
-from retailcrm.v5.schemas import BaseRetailCrmScheme
-
 
 def pydantic_to_nested_dict(model: BaseModel | None, prefix: str = "") -> dict[str, str]:
     """
@@ -40,7 +38,7 @@ def pydantic_to_nested_dict(model: BaseModel | None, prefix: str = "") -> dict[s
     return result
 
 
-T = TypeVar("T", bound=BaseRetailCrmScheme)
+T = TypeVar("T", bound=BaseModel)
 
 def pydantic_list_dumps_to_json(obj_list: list[T], obj_type: Type | None = None) -> str:
     """

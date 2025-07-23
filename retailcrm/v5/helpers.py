@@ -1,7 +1,10 @@
 from datetime import datetime, time, timezone
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Optional, TypeVar
 
-from pydantic_core.core_schema import ValidationInfo
+from pydantic import BaseModel
+from pydantic_core.core_schema import ValidationInfo, SerializationInfo
+
+from retailcrm.v5.utils import pydantic_list_dumps_to_json
 
 
 def errors_dict_validator() -> Callable[[Any, ValidationInfo], Optional[dict]]:
@@ -120,5 +123,18 @@ def bool_flag_serializer() -> Callable[[Optional[bool]], Optional[int]]:
             return None
         else:
             return int(value)
+
+    return serializer
+
+
+T = TypeVar("T", bound=BaseModel)
+
+def list_to_json_serializer() -> Callable[[list[T], SerializationInfo], str]:
+    """
+    Вспомогательная функция, которая позволяет преобразовать массив объектов в JSON строку
+    """
+
+    def serializer(value: list[T], info: SerializationInfo) -> str:
+        return pydantic_list_dumps_to_json(value)
 
     return serializer

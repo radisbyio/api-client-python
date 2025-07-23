@@ -15,7 +15,7 @@ class BaseHttpClient:
         raise NotImplementedError
 
     async def post(
-        self, endpoint: str, params: Optional[dict] = None, data: Optional[dict] = None
+        self, endpoint: str, params: Optional[dict] = None, data: Optional[dict] = None, json_str: Optional[str] = None
     ) -> Response:
         raise NotImplementedError
 
@@ -48,15 +48,21 @@ class HttpClient(BaseHttpClient):
             return Response(response.status_code, response.text)
 
     async def post(
-        self, endpoint: str, params: Optional[dict] = None, data: Optional[dict] = None
+        self, endpoint: str, params: Optional[dict] = None, data: Optional[dict] = None, json_str: str | None = None
     ) -> Response:
         try:
             logger.debug(
                 f"Request to {endpoint} with params: {params} and body: {data}"
             )
-            response = await self._client.post(
-                endpoint, params=params, data=data, timeout=15.0
-            )
+            # TODO: Remove
+            if data:
+                response = await self._client.post(
+                    endpoint, params=params, data=data, timeout=15.0
+                )
+            else:
+                response = await self._client.post(
+                    endpoint, params=params, json=json_str, timeout=15.0, headers={"Content-Type": "application/json"}
+                )
             logger.debug(f"Received {response.status_code} with {response.text}")
         except httpx.TimeoutException:
             raise RetailCrmTimeoutException()
