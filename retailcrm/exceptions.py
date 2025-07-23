@@ -1,5 +1,7 @@
 from typing import Optional
 
+from retailcrm.v5.schemas.base import ErrorResponse
+
 
 class RetailCrmException(Exception):
     pass
@@ -19,18 +21,16 @@ class RetailCrmApiError(RetailCrmException):
     def __init__(
         self,
         status_code: int,
-        error_msg: str,
+        error_msg: str | None = None,
         errors: Optional[dict] = None,
-        response: dict = None,
+        response: ErrorResponse = None,
     ):
         self.status_code = status_code
         self.error_msg = error_msg
         self.errors = errors or {}
-        self.response = response or {}
+        self.response = response
 
     def __str__(self) -> str:
         if self.errors:
             return f"{self.error_msg} - {self.errors or str()}"
         return f"{self.error_msg}"
-
-
