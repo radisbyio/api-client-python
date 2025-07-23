@@ -9,10 +9,13 @@ T = TypeVar("T", bound=SuccessResponse)
 
 
 class ApiResource:
+    __slots__ = ("_client",)
+
     def __init__(self, client: BaseHttpClient):
         self._client = client
 
-    def _process_response(self, response: Response, schema: type[T]) -> T:
+    @staticmethod
+    def _process_response(response: Response, schema: type[T]) -> T:
         response_obj = schema.model_validate_json(response.body)
         if response.status_code >= 400:
             error_response = ErrorResponse.model_validate_json(response.body)

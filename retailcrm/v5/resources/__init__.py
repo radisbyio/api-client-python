@@ -8,7 +8,7 @@ from retailcrm.v5.resources.store import StoreController
 from retailcrm.v5.resources.tasks import TasksController
 from retailcrm.v5.resources.users import UsersController
 from retailcrm.v5.resources.delivery import DeliveryController
-from retailcrm.v5.resources.web_analytics import WebAnalyticsController
+from retailcrm.v5.resources.web_analytics import WebAnalyticsApiResource
 from retailcrm.v5.resources.verification import VerificationController
-from retailcrm.v5.resources.statistic import StatisticController
+from retailcrm.v5.resources.statistic import StatisticApiResource
 from retailcrm.v5.resources.corporate_customers import CorporateCustomersController
