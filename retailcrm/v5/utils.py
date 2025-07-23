@@ -2,8 +2,6 @@ from typing import Any, Type, TypeVar
 
 from pydantic import BaseModel, RootModel
 
-from retailcrm.v5.schemas import BaseRetailCrmScheme
-
 
 def pydantic_to_nested_dict(model: BaseModel | None, prefix: str = "") -> dict[str, str]:
     """
@@ -40,7 +38,7 @@ def pydantic_to_nested_dict(model: BaseModel | None, prefix: str = "") -> dict[s
     return result
 
 
-T = TypeVar("T", bound=BaseRetailCrmScheme)
+T = TypeVar("T", bound=BaseModel)
 
 def pydantic_list_dumps_to_json(obj_list: list[T], obj_type: Type | None = None) -> str:
     """
@@ -57,3 +55,14 @@ def pydantic_list_dumps_to_json(obj_list: list[T], obj_type: Type | None = None)
 
     obj_root_model = RootModel[list[T]]
     return obj_root_model(obj_list).model_dump_json(exclude_unset=True, by_alias=True)
+
+
+def validate_crm_url(crm_url: str) -> None:
+    """
+    Проверяет адрес RetailCRM на валидность
+    """
+    if not crm_url.startswith(("http", "https")):
+        raise ValueError("crm_url must start with http or https")
+
+    if crm_url.endswith("/"):
+        raise ValueError("crm_url must not end with /")
