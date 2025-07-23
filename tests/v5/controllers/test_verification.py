@@ -5,9 +5,7 @@ import pytest
 import respx
 
 from retailcrm import RetailCrmApiClientV5, RetailCrmApiError
-from retailcrm.v5.schemas.verification import (
-    SmsVerification, SmsVerificationConfirm, VerificationConfirmResponse
-)
+from retailcrm.v5.schemas import entities, responses
 
 
 @pytest.mark.asyncio
@@ -15,7 +13,7 @@ async def test_sms_confirm_success(
         respx_mock: respx.router.MockRouter,
         mock_retailcrm_client_v5: RetailCrmApiClientV5,
 ):
-    verification_data = SmsVerificationConfirm(code="123456", checkId="sms_check_id_1")
+    verification_data = entities.verification.SmsVerificationConfirm(code="123456", checkId="sms_check_id_1")
     now = datetime.now()
     mock_response = {
         "success": True,
@@ -33,9 +31,9 @@ async def test_sms_confirm_success(
 
     response = await mock_retailcrm_client_v5.verification.sms_confirm(verification_data)
 
-    assert isinstance(response, VerificationConfirmResponse)
+    assert isinstance(response, responses.verification.VerificationConfirmResponse)
     assert response.success is True
-    assert isinstance(response.verification, SmsVerification)
+    assert isinstance(response.verification, entities.verification.SmsVerification)
     assert response.verification.checkId == "sms_check_id_1"
 
 
@@ -44,7 +42,7 @@ async def test_sms_confirm_failure_invalid_code(
         respx_mock: respx.router.MockRouter,
         mock_retailcrm_client_v5: RetailCrmApiClientV5,
 ):
-    verification_data = SmsVerificationConfirm(code="invalid_code", checkId="sms_check_id_2")
+    verification_data = entities.verification.SmsVerificationConfirm(code="invalid_code", checkId="sms_check_id_2")
     mock_response = {
         "success": False,
         "errorMsg": "Invalid code.",
@@ -81,9 +79,9 @@ async def test_sms_status_success(
 
     response = await mock_retailcrm_client_v5.verification.sms_status(check_id)
 
-    assert isinstance(response, VerificationConfirmResponse)
+    assert isinstance(response, responses.verification.VerificationConfirmResponse)
     assert response.success is True
-    assert isinstance(response.verification, SmsVerification)
+    assert isinstance(response.verification, entities.verification.SmsVerification)
     assert response.verification.checkId == check_id
     assert response.verification.verifiedAt is not None
 
