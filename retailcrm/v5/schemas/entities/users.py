@@ -9,12 +9,12 @@ from retailcrm.v5.schemas.base import BaseRetailCrmScheme, RetailCrmResponse
 
 
 class Group(BaseModel):
-    id: int = Field(description="ID группы")
-    name: str = Field(description="Наименование")
+    id: int | None = Field(None, description="ID группы")
+    name: str | None = Field(None, description="Наименование")
     signatureTemplate: Optional[str] = Field(None, description="Шаблон для подписи")
-    code: str = Field(description="Код")
-    isManager: bool = Field(description="Обрабатывают заказы")
-    isDeliveryMen: bool = Field(description="Группа отвечает за доставку")
+    code: str | None = Field(None, description="Код")
+    isManager: bool | None = Field(None, description="Обрабатывают заказы")
+    isDeliveryMen: bool | None = Field(None, description="Группа отвечает за доставку")
     deliveryTypes: Optional[list[str]] = Field(
         None, description="Типы доставок, за которые отвечает группа"
     )
@@ -76,26 +76,26 @@ class ApiUserFilter(BaseRetailCrmScheme):
 
 
 class SerializedGroups(BaseRetailCrmScheme):
-    id: int = Field(description="ID группы")
-    name: str = Field(description="Название группы")
-    code: str = Field(description="Код группы")
+    id: int | None = Field(None, description="ID группы")
+    name: str | None = Field(None, description="Название группы")
+    code: str | None = Field(None, description="Код группы")
 
 
 class SerializedUser(BaseRetailCrmScheme):
-    id: int = Field(description="ID пользователя")
-    createdAt: datetime = Field(description="Дата создания пользователя")
-    active: bool = Field(description="Активность")
-    email: Optional[str] = Field(description="Электронный адрес")
-    firstName: str = Field("", description="Имя пользователя")
-    lastName: str = Field("", description="Фамилия пользователя")
-    patronymic: str = Field("", description="Отчество пользователя")
+    id: int| None = Field(None, description="ID пользователя")
+    createdAt: datetime | None= Field(None, description="Дата создания пользователя")
+    active: bool| None = Field(None, description="Активность")
+    email: Optional[str] = Field(None, description="Электронный адрес")
+    firstName: str| None = Field(None , description="Имя пользователя")
+    lastName: str| None = Field(None, description="Фамилия пользователя")
+    patronymic: str| None= Field(None, description="Отчество пользователя")
     position: Optional[str] = Field(None, description="Должность")
     photoUrl: Optional[str] = Field(None, description="URL фотографии")
     phone: Optional[str] = Field(None, description="Телефон")
     status: Optional[str] = Field(None, description="Статус пользователя в системе")
-    online: bool = Field(description="Пользователь онлайн")
-    isAdmin: bool = Field(description="Является администратором")
-    isManager: bool = Field(description="Является менеджером")
+    online: bool | None = Field(None, description="Пользователь онлайн")
+    isAdmin: bool | None = Field(None, description="Является администратором")
+    isManager: bool | None = Field(None, description="Является менеджером")
     groups: Optional[list[SerializedGroups]] = Field(
         default_factory=list, description="Группы пользователя"
     )
@@ -105,15 +105,3 @@ class SerializedUser(BaseRetailCrmScheme):
     )
     senderName: Optional[str] = Field(None, description="Имя отправителя")
     language: Optional[str] = Field(None, description="Язык интерфейса")
-
-
-class UserListResponse(RetailCrmResponse):
-    users: Optional[list[SerializedUser]] = Field(
-        None, description="Информация о пользователях"
-    )
-
-
-class UserResponse(RetailCrmResponse):
-    user: Optional[SerializedUser] = Field(
-        None, description="Информация о пользователе"
-    )

@@ -1,6 +1,6 @@
 from typing import Optional, Any
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_serializer
 
 from retailcrm.v5.helpers import errors_dict_validator
 
@@ -8,7 +8,10 @@ __all__ = ["BaseRetailCrmScheme", "RetailCrmResponse", "Pagination", "SuccessRes
 
 
 class BaseRetailCrmScheme(BaseModel):
-    model_config = ConfigDict(use_enum_values=True)
+    model_config = ConfigDict(
+        use_enum_values=True,
+        serialize_by_alias=True,
+    )
 
 
 class BaseRetailCrmResponse(BaseModel):
@@ -37,7 +40,7 @@ class ErrorResponse(BaseRetailCrmResponse):
     errors_validator = field_validator("errors", mode="before")(errors_dict_validator())
 
 
-class BasePaginatedResponse(SuccessResponse):
+class SuccessPaginatedResponse(SuccessResponse):
     pagination: Pagination
 
 
