@@ -3,6 +3,8 @@
 Python >3.11
 
 ## Состояние разработки API:
+- [x] Транспорты
+- [x] Пользователи
 - [x] Верификация
 - [x] Веб-аналитика
 - [x] Статистика
@@ -25,8 +27,7 @@ Python >3.11
 - [ ] Сегменты
 - [ ] Настройки
 - [ ] Телефония
-- [ ] Транспорты
-- [ ] Пользователи
+
 
 ## Как использовать
 
@@ -46,6 +47,41 @@ try:
     response = await api_cient.orders.get(order_filter)
 except RetailCrmApiError as exc:
     print({exc.error_msg})
+```
+
+## Интерфейсы для интеграций
+
+```python
+from retailcrm.v5.actions.transports import MGTransportActions
+from retailcrm.v5.schemas.requests.transports import MGTransportOnlineRequest, MGTransportVisitsRequest
+from retailcrm.v5.schemas.responses.transports import MGTransportOnlineResponse, MGTransportVisitsResponse
+from retailcrm.v5.schemas.entities.transports import ChatLastVisit
+from datetime import datetime
+from dataclasses import dataclass
+
+
+@dataclass(slots=True)
+class TransportConfig:
+    client_id: str
+
+class MockTransportActionsService(MGTransportActions):
+    def __init__(self, transport_config: TransportConfig):
+        self._transport_config = transport_config
+    
+    async def online(self, request: MGTransportOnlineRequest) -> MGTransportOnlineResponse:
+        print(f"MockTransportIntegration: Simulating online status for {self._transport_config.client_id}")
+        return MGTransportOnlineResponse(lastOnline=datetime.now())
+
+    async def visits(self, request: MGTransportVisitsRequest) -> MGTransportVisitsResponse:
+        print(f"MockTransportIntegration: Simulating visits for {self._transport_config.client_id}")
+        return MGTransportVisitsResponse(
+            lastVisit=ChatLastVisit(
+                source="test_source",
+                createdAt=datetime.now(),
+                duration=100,
+            ),
+            countVisits=44,
+        )
 ```
 
 
