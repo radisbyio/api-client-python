@@ -1,8 +1,6 @@
-from datetime import datetime
+from pydantic import BaseModel, Field
 
-from pydantic import BaseModel, Field, field_serializer
-
-from retailcrm.v5.helpers import datetime_serializer
+__all__ = ["MGTransportVisitsRequest", "MGTransportOnlineRequest"]
 
 
 class MGTransportOnlineRequest(BaseModel):

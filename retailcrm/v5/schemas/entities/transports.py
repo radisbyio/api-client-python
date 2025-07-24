@@ -5,6 +5,8 @@ from pydantic import BaseModel, Field, field_serializer
 from retailcrm.v5.helpers import datetime_serializer
 
 
+__all__ = ["ChatVisitedPage", "ChatLastVisit", "ChatUtm", "ChatDevice"]
+
 class ChatVisitedPage(BaseModel):
     dateTime: datetime | None = Field(None, description="Дата и время посещения страницы")
     url: str | None = Field(None, description="URL страницы")

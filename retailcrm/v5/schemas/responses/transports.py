@@ -5,6 +5,8 @@ from pydantic import BaseModel, Field, field_serializer
 from retailcrm.v5.helpers import datetime_serializer
 from retailcrm.v5.schemas.entities.transports import ChatLastVisit, ChatDevice, ChatUtm
 
+__all__ = ["MGTransportOnlineResponse", "MGTransportVisitsResponse"]
+
 
 class MGTransportOnlineResponse(BaseModel):
     lastOnline: datetime | None = Field(None, description="Дата последнего онлайн-статуса пользователя")
