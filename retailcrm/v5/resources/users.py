@@ -1,58 +1,90 @@
-from dataclasses import dataclass
-
-from retailcrm import RetailCrmApiError
-from retailcrm.http_cilent import BaseHttpClient
-from retailcrm.v5.api.users import RetailCrmUsersApi
 from retailcrm.v5.enums import UserStatuses
-from retailcrm.v5.schemas.base import RetailCrmResponse
-from retailcrm.v5.schemas.users import (
-    ApiUserFilter,
+from retailcrm.v5.resources.base import ApiResource
+from retailcrm.v5.schemas import SuccessResponse
+from retailcrm.v5.schemas.entities.users import ApiUserFilter
+from retailcrm.v5.schemas.requests.users import (
+    FilterUserGroupsRequest, FilterUsersRequest, SetUserStatusRequest,
+)
+from retailcrm.v5.schemas.responses.users import (
     UserGroupsResponse,
     UserListResponse,
     UserResponse,
 )
-from retailcrm.v5.utils import pydantic_to_nested_dict
 
 
-@dataclass(slots=True)
-class UsersController:
-    _api: RetailCrmUsersApi
+class UsersApiResource(ApiResource):
+    async def filter_groups(self, limit: int = 20, page: int = 1) -> UserGroupsResponse:
+        """
+        **Получение списка групп пользователей**
 
-    def __init__(self, client: BaseHttpClient):
-        self._api = RetailCrmUsersApi(client)
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-user-groups
+        :param limit: Количество элементов в ответе (по умолчанию равно 20)
+        :param page: Номер страницы с результатами (по умолчанию равно 1)
+        :return: UserGroupsResponse
+        """
 
-    async def user_groups(self, limit: int = 20, page: int = 1) -> UserGroupsResponse:
-        response = await self._api.user_groups(limit, page)
-        response_obj = UserGroupsResponse.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        request = FilterUserGroupsRequest(limit=limit, page=page)
 
-    async def users(
+        response = await self._client.get(
+            endpoint="/user-groups",
+            params=request.model_dump(exclude_none=True, by_alias=True),
+        )
+        return self._process_response(response, UserGroupsResponse)
+
+    async def filter(
         self, filter_obj: ApiUserFilter, limit: int = 20, page: int = 1
     ) -> UserListResponse:
-        response = await self._api.users(
-            filter_dict=pydantic_to_nested_dict(filter_obj, "filter"),
+        """
+        **Получение списка пользователей, удовлетворяющих заданному фильтру**
+
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-users
+        :param filter_obj: Фильтр
+        :param limit: Количество элементов в ответе (по умолчанию равно 20)
+        :param page: Номер страницы с результатами (по умолчанию равно 1)
+        :return: UserListResponse
+        """
+
+        request = FilterUsersRequest(
             limit=limit,
             page=page,
+            filter_obj=filter_obj,
         )
-        response_obj = UserListResponse.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+
+        response = await self._client.get(
+            endpoint="/users",
+            params=request.model_dump(exclude_none=True, by_alias=True),
+        )
+        return self._process_response(response, UserListResponse)
 
     async def user(self, user_id: int) -> UserResponse:
-        response = await self._api.user(user_id)
-        response_obj = UserResponse.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        """
+        **Получение информации о пользователе**
+
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-users-id
+        :param user_id: ID пользователя
+        :return: UserResponse
+        """
+
+        response = await self._client.get(
+            endpoint=f"/users/{user_id}",
+        )
+        return self._process_response(response, UserResponse)
 
     async def user_set_status(
         self, user_id: int, status: UserStatuses
-    ) -> RetailCrmResponse:
-        response = await self._api.user_set_status(user_id, status.value)
-        response_obj = RetailCrmResponse.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+    ) -> SuccessResponse:
+        """
+        **Смена статуса пользователя**
+
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-users-id-status
+        :param user_id: ID пользователя
+        :param status: Статус пользователя в системе.
+        :return: SuccessResponse
+        """
+
+        request = SetUserStatusRequest(status=status)
+        response = await self._client.post(
+            endpoint=f"/users/{user_id}/status",
+            params=request.model_dump(exclude_none=True, by_alias=True),
+        )
+        return self._process_response(response, SuccessResponse)
