@@ -112,7 +112,7 @@ async def test_sources_upload_failure(
         mock_retailcrm_client_v5: RetailCrmApiClientV5,
 ):
     sources_data = [
-        {"source": "google", "medium": "organic"}  # Missing clientId and site
+        {"source": "google", "medium": "organic"}
     ]
     sources = [Source.model_validate(data) for data in sources_data]
     mock_response = {
@@ -169,7 +169,7 @@ async def test_visits_upload_failure(
         respx_mock: respx.router.MockRouter,
         mock_retailcrm_client_v5: RetailCrmApiClientV5,
 ):
-    visits = [Visit(createdAt=datetime.now())]  # Missing pages, clientId and site
+    visits = [Visit(createdAt=datetime.now())]
     mock_response = {"success": False, "errorMsg": "Missing required data in visit"}
 
     respx_mock.post(
