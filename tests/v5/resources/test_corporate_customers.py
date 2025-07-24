@@ -93,7 +93,7 @@ async def test_corporate_customers_create_success(
         f"{mock_retailcrm_client_v5.crm_url}/api/v5/customers-corporate/create"
     ).mock(httpx.Response(json=mock_response, status_code=201))
 
-    response = await mock_retailcrm_client_v5.corporate_customers.create(customer_corporate_request)
+    response = await mock_retailcrm_client_v5.corporate_customers.create(customer_corporate_request, "test")
 
     assert response.success is True
     assert response.id == 12345
@@ -119,7 +119,8 @@ async def test_corporate_customers_create_error(
 
     with pytest.raises(RetailCrmApiError) as exc:
         _ = await mock_retailcrm_client_v5.corporate_customers.create(
-            customer=SerializedCustomerCorporate.model_validate(customer)
+            customer=SerializedCustomerCorporate.model_validate(customer),
+            site="test",
         )
 
     assert exc.value.status_code == 400
