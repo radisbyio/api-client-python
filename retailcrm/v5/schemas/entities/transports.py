@@ -5,18 +5,10 @@ from pydantic import BaseModel, Field, field_serializer
 from retailcrm.v5.helpers import datetime_serializer
 
 
-class MGTransportOnlineResponse(BaseModel):
-    lastOnline: datetime
-
-    lastOnline_serializer = field_serializer("lastOnline")(
-        datetime_serializer("%Y-%m-%d %H:%M:%S")
-    )
-
-
 class ChatVisitedPage(BaseModel):
-    dateTime: datetime = Field(..., description="Дата и время посещения страницы")
-    url: str = Field(..., description="URL страницы")
-    title: str | None = Field(None, description="Заголовок страницы")
+    dateTime: datetime | None = Field(None, description="Дата и время посещения страницы")
+    url: str | None = Field(None, description="URL страницы")
+    title: str | None | None = Field(None, description="Заголовок страницы")
 
     dateTime_serializer = field_serializer("dateTime")(
         datetime_serializer("%Y-%m-%d %H:%M:%S")
@@ -36,3 +28,15 @@ class ChatLastVisit(BaseModel):
     endedAt_serializer = field_serializer("endedAt")(
         datetime_serializer("%Y-%m-%d %H:%M:%S")
     )
+
+
+class ChatUtm(BaseModel):
+    source: str | None = Field(None, description="Значение метки utm_source")
+    medium: str | None = Field(None, description="Значение метки utm_medium")
+    campaign: str | None = Field(None, description="Значение метки utm_campaign")
+
+
+class ChatDevice(BaseModel):
+    lang: str | None = Field(None, description="Язык на устройстве пользователя (в формате en_US)")
+    browser: str | None = Field(None, description="Информация об устройстве пользователя")
+    os: str | None = Field(None, description="Тип ОС пользователя")

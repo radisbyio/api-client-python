@@ -1,6 +1,6 @@
 import abc
 
-from retailcrm.v5.schemas.transports import MGTransportOnlineResponse, ChatLastVisit
+from retailcrm.v5.schemas.entities.transports import MGTransportOnlineResponse, ChatLastVisit
 
 
 class IMgTransportActions(abc.ABC):
