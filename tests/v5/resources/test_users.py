@@ -5,7 +5,7 @@ import pytest
 import respx
 
 from retailcrm import RetailCrmApiClientV5, RetailCrmApiError
-from retailcrm.v5.enums import UserStatuses
+from retailcrm.v5.enums.user_statuses import UserStatuses
 from retailcrm.v5.schemas import responses, entities
 
 

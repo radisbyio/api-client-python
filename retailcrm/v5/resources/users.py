@@ -1,4 +1,4 @@
-from retailcrm.v5.enums import UserStatuses
+from retailcrm.v5.enums.user_statuses import UserStatuses
 from retailcrm.v5.resources.base import ApiResource
 from retailcrm.v5.schemas import SuccessResponse
 from retailcrm.v5.schemas.entities.users import ApiUserFilter
