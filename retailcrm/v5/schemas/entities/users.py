@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field, field_serializer
 
-from retailcrm.v5.enums import UserStatuses
+from retailcrm.v5.enums.user_statuses import UserStatuses
 from retailcrm.v5.helpers import bool_flag_serializer, datetime_serializer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme, RetailCrmResponse
 

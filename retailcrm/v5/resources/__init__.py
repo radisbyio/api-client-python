@@ -6,7 +6,7 @@ from retailcrm.v5.resources.payments import PaymentController
 from retailcrm.v5.resources.references import ReferencesController
 from retailcrm.v5.resources.store import StoreController
 from retailcrm.v5.resources.tasks import TasksController
-from retailcrm.v5.resources.users import UsersController
+from retailcrm.v5.resources.users import UsersApiResource
 from retailcrm.v5.resources.delivery import DeliveryController
 from retailcrm.v5.resources.web_analytics import WebAnalyticsApiResource
 from retailcrm.v5.resources.verification import VerificationController

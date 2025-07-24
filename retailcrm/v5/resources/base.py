@@ -16,7 +16,6 @@ class ApiResource:
 
     @staticmethod
     def _process_response(response: Response, schema: type[T]) -> T:
-        response_obj = schema.model_validate_json(response.body)
         if response.status_code >= 400:
             error_response = ErrorResponse.model_validate_json(response.body)
             raise RetailCrmApiError(
@@ -25,4 +24,6 @@ class ApiResource:
                 errors=error_response.errors,
                 response=error_response,
             )
+
+        response_obj = schema.model_validate_json(response.body)
         return response_obj
