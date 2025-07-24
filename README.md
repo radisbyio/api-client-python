@@ -1,6 +1,6 @@
 # RetailCRM API Client
 
-Python >3.11
+Python >=3.11
 
 ## Состояние разработки API:
 - [x] Транспорты
