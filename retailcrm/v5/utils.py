@@ -31,7 +31,6 @@ def pydantic_to_nested_dict(model: BaseModel | None, prefix: str = "") -> dict[s
         else:
             result[prefix_] = data
 
-
     _pydantic_to_nested_dict(
         model.model_dump(exclude_unset=True, by_alias=True), prefix
     )

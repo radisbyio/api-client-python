@@ -2,9 +2,10 @@ from datetime import datetime, time, timezone
 from typing import Any, Callable, Optional, TypeVar
 
 from pydantic import BaseModel
+from pydantic_core import to_json
 from pydantic_core.core_schema import ValidationInfo, SerializationInfo
 
-from retailcrm.v5.utils import pydantic_list_dumps_to_json
+from retailcrm.v5.utils import pydantic_list_dumps_to_json, pydantic_to_nested_dict
 
 
 def errors_dict_validator() -> Callable[[Any, ValidationInfo], Optional[dict]]:
@@ -136,5 +137,12 @@ def list_to_json_serializer() -> Callable[[list[T], SerializationInfo], str]:
 
     def serializer(value: list[T], info: SerializationInfo) -> str:
         return pydantic_list_dumps_to_json(value)
+
+    return serializer
+
+
+def filter_obj_serializer(prefix: str = "") -> Callable[[T | None, SerializationInfo], str]:
+    def serializer(value: T | None, info: SerializationInfo) -> str:
+        return to_json(pydantic_to_nested_dict(value, prefix)).decode("utf-8")
 
     return serializer
