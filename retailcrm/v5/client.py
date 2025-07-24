@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from typing import TypeVar
 
 from retailcrm.http_cilent import BaseHttpClient, HttpClient
@@ -11,7 +10,7 @@ from retailcrm.v5.resources import (
     ReferencesController,
     StoreController,
     TasksController,
-    UsersController, DeliveryController, WebAnalyticsApiResource, StatisticApiResource, VerificationController, CorporateCustomersController
+    UsersApiResource, DeliveryController, WebAnalyticsApiResource, StatisticApiResource, VerificationController, CorporateCustomersController
 )
 from retailcrm.v5.utils import validate_crm_url
 from retailcrm.v5.resources.base import ApiResource
@@ -82,10 +81,6 @@ class RetailCrmApiClientV5:
         return self._get_resource("custom_fields", CustomFieldsController)
 
     @property
-    def users(self) -> UsersController:
-        return self._get_resource("users", UsersController)
-
-    @property
     def tasks(self) -> TasksController:
         return self._get_resource("tasks", TasksController)
 
@@ -100,6 +95,10 @@ class RetailCrmApiClientV5:
     @property
     def delivery(self) -> DeliveryController:
         return self._get_resource("delivery", DeliveryController)
+
+    @property
+    def users(self) -> UsersApiResource:
+        return self._get_resource("users", UsersApiResource)
 
     @property
     def verification(self) -> VerificationController:
