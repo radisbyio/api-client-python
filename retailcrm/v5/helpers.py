@@ -141,8 +141,8 @@ def list_to_json_serializer() -> Callable[[list[T], SerializationInfo], str]:
     return serializer
 
 
-def filter_obj_serializer(prefix: str = "") -> Callable[[T | None, SerializationInfo], str]:
-    def serializer(value: T | None, info: SerializationInfo) -> str:
-        return to_json(pydantic_to_nested_dict(value, prefix)).decode("utf-8")
+def filter_obj_serializer(prefix: str = "") -> Callable[[T | None, SerializationInfo], dict[str, Any]]:
+    def serializer(value: T | None, info: SerializationInfo) -> dict[str, Any]:
+        return pydantic_to_nested_dict(value, prefix)
 
     return serializer
