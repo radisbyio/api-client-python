@@ -5,9 +5,7 @@ import pytest
 import respx
 
 from retailcrm import RetailCrmApiClientV5
-from retailcrm.v5.schemas import (
-    ApiUpdateInvoiceRequest, TaskFilterData, SerializedTask, TaskHistoryFilterType,
-)
+from retailcrm.v5.schemas.entities.tasks import TaskFilter, SerializedTask, TaskHistoryFilter
 
 
 @pytest.mark.asyncio
@@ -53,7 +51,7 @@ async def test_task_get_all_success(
         )
     )
 
-    tasks_response = await mock_retailcrm_client_v5.tasks.filter(TaskFilterData())
+    tasks_response = await mock_retailcrm_client_v5.tasks.filter(TaskFilter())
 
     assert tasks_response.success is True
 
@@ -102,7 +100,7 @@ async def test_tasks_history_success(
     ).mock(httpx.Response(json={"success": "true"}, status_code=201))
 
     update_response = await mock_retailcrm_client_v5.tasks.history(
-        TaskHistoryFilterType()
+        TaskHistoryFilter()
     )
 
     assert update_response.success is True
@@ -137,18 +135,14 @@ async def test_tasks_history_success(
         respx_mock: respx.router.MockRouter,
         mock_retailcrm_client_v5: RetailCrmApiClientV5,
 ):
-    update_invoice_request = ApiUpdateInvoiceRequest(
-        invoiceUuid="577",
-        paymentId="5304",
-        paidAt=datetime(2024, 2, 2, 10, 21, 21),
-    )
+    # TODO: write test
 
     respx_mock.get(
         f"{mock_retailcrm_client_v5.crm_url}/api/v5/payment/update-invoice"
     ).mock(httpx.Response(json={"success": "true"}, status_code=201))
 
     update_response = await mock_retailcrm_client_v5.tasks.history(
-        TaskHistoryFilterType()
+        TaskHistoryFilter()
     )
 
     assert update_response.success is True
