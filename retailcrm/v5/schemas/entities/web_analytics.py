@@ -4,7 +4,11 @@ from pydantic import Field, field_serializer
 
 from retailcrm.v5.helpers import datetime_serializer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme
-from retailcrm.v5.schemas.shared import SerializedEntityOrder, SerializedEntityCustomer, SerializedSource
+from retailcrm.v5.schemas.shared.customer import SerializedEntityCustomer
+from retailcrm.v5.schemas.shared.order import SerializedEntityOrder
+from retailcrm.v5.schemas.shared.source import SerializedSource
+
+__all__ = ["ClientId", "Source", "Page", "Visit"]
 
 
 class ClientId(BaseRetailCrmScheme):

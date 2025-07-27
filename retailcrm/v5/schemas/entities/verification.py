@@ -3,7 +3,9 @@ from datetime import datetime
 from pydantic import Field, field_serializer
 
 from retailcrm.v5.helpers import datetime_serializer
-from retailcrm.v5.schemas import BaseRetailCrmScheme, RetailCrmResponse
+from retailcrm.v5.schemas import BaseRetailCrmScheme
+
+__all__ = ["SmsVerification", "SmsVerificationConfirm"]
 
 
 class SmsVerification(BaseRetailCrmScheme):

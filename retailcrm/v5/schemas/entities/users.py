@@ -5,7 +5,9 @@ from pydantic import BaseModel, Field, field_serializer
 
 from retailcrm.v5.enums.user_statuses import UserStatuses
 from retailcrm.v5.helpers import bool_flag_serializer, datetime_serializer
-from retailcrm.v5.schemas.base import BaseRetailCrmScheme, RetailCrmResponse
+from retailcrm.v5.schemas.base import BaseRetailCrmScheme
+
+__all__ = ["Group", "ApiUserFilter", "SerializedGroups", "SerializedUser"]
 
 
 class Group(BaseModel):
@@ -36,12 +38,6 @@ class Group(BaseModel):
     )
     grantedSites: Optional[list[str]] = Field(
         None, description="Магазины, заказы которых видны менеджерам данной группы"
-    )
-
-
-class UserGroupsResponse(RetailCrmResponse):
-    groups: list[Group] = Field(
-        default_factory=list, description="Группа пользователей"
     )
 
 

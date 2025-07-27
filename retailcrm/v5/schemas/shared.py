@@ -151,6 +151,7 @@ class CustomerAddress(BaseRetailCrmScheme):
     name: Optional[str] = Field(None, description="Наменование адреса")
 
 
+# TODO: Remove. Use from shared/
 class CustomerPhone(BaseRetailCrmScheme):
     number: str | None = Field(None, description="Номер телефона")
 
@@ -171,6 +172,7 @@ class MGCustomer(BaseRetailCrmScheme):
     mgChannel: Optional[MGChannel] = Field(None, description="MessageGateway канал")
 
 
+# TODO: Remove
 class SerializedSource(BaseRetailCrmScheme):
     source: str = Field("", description="Источник")
     medium: str = Field("", description="Канал")
@@ -405,20 +407,6 @@ class CompanyContragent(BaseRetailCrmScheme):
     bankAddress: Optional[str] = Field(None)
     corrAccount: Optional[str] = Field(None)
     bankAccount: Optional[str] = Field(None)
-
-
-# todo: заполнить
-class SerializedEntityCustomer(BaseRetailCrmScheme):
-    site: Optional[str] = Field(None)
-    id: Optional[int] = Field(None, description="Внутренний ID клиента")
-    externalId: Optional[str] = Field(None, description="Внешний ID клиента")
-    type: Optional[str] = Field(None)
-
-
-class SerializedEntityOrder(BaseRetailCrmScheme):
-    id: Optional[int] = Field(None, description="Внутренний ID заказа")
-    externalId: Optional[str] = Field(None, description="Внешний ID заказа")
-    number: Optional[str] = Field(None, description="Номер заказа")
 
 
 # todo: заполнить

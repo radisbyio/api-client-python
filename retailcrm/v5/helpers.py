@@ -2,7 +2,6 @@ from datetime import datetime, time, timezone
 from typing import Any, Callable, Optional, TypeVar
 
 from pydantic import BaseModel
-from pydantic_core import to_json
 from pydantic_core.core_schema import ValidationInfo, SerializationInfo
 
 from retailcrm.v5.utils import pydantic_list_dumps_to_json, pydantic_to_nested_dict

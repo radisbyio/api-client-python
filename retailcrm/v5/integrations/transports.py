@@ -1,11 +1,13 @@
-import abc
+from typing import Protocol
 
-from retailcrm.v5.schemas.entities.transports import MGTransportOnlineResponse, ChatLastVisit
+from retailcrm.v5.schemas.requests.transports import MgTransportOnlineRequest, MgTransportVisitsRequest
+from retailcrm.v5.schemas.responses.transports import MgTransportOnlineResponse, MgTransportVisitsResponse
 
+__all__ = ["MGTransportActions"]
 
-class IMgTransportActions(abc.ABC):
-    async def online(self, externalUserId: str) -> MGTransportOnlineResponse:
+class MGTransportActions(Protocol):
+    async def online(self, request: MgTransportOnlineRequest) -> MgTransportOnlineResponse:
         pass
 
-    async def visits(self, externalChatId: str) -> ChatLastVisit:
+    async def visits(self, request: MgTransportVisitsRequest) -> MgTransportVisitsResponse:
         pass

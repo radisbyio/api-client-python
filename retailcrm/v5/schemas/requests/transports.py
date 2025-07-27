@@ -1,10 +1,10 @@
 from pydantic import BaseModel, Field
 
-__all__ = ["MGTransportVisitsRequest", "MGTransportOnlineRequest"]
+__all__ = ["MgTransportVisitsRequest", "MgTransportOnlineRequest"]
 
 
-class MGTransportOnlineRequest(BaseModel):
+class MgTransportOnlineRequest(BaseModel):
     externalUserId: str = Field(None, description="GET-параметр с внешним идентификатором клиента чата")
 
-class MGTransportVisitsRequest(BaseModel):
+class MgTransportVisitsRequest(BaseModel):
     externalUserId: str = Field(None, description="GET-параметр с внешним идентификатором клиента чата")

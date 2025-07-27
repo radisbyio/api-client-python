@@ -120,7 +120,7 @@ class CustomersController:
         customer_id: str | int,
         customer: SerializedCustomer,
         site: str = None,
-        by: IdTypes = IdTypes.EXTERNAL_ID,
+        by: IdTypes | str = IdTypes.EXTERNAL_ID,
     ) -> ResponseCustomerEdit:
         """
         Редактирование клиента
@@ -138,7 +138,7 @@ class CustomersController:
         if site is not None:
             params["site"] = site
         if by is not None:
-            params["by"] = by.value
+            params["by"] = by
 
         response = await self._client.post(
             endpoint=f"/customers/{customer_id}/edit",
