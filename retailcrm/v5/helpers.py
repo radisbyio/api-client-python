@@ -129,13 +129,16 @@ def bool_flag_serializer() -> Callable[[Optional[bool]], Optional[int]]:
 
 T = TypeVar("T", bound=BaseModel)
 
-def list_to_json_serializer() -> Callable[[list[T], SerializationInfo], str]:
+def to_json_serializer() -> Callable[[list[T], SerializationInfo], str]:
     """
     Вспомогательная функция, которая позволяет преобразовать массив объектов в JSON строку
     """
 
-    def serializer(value: list[T], info: SerializationInfo) -> str:
-        return pydantic_list_dumps_to_json(value)
+    def serializer(value: T | list[T], info: SerializationInfo) -> str:
+        if isinstance(value, list):
+            return pydantic_list_dumps_to_json(value)
+        else:
+            return value.model_dump_json(exclude_none=True, by_alias=True)
 
     return serializer
 

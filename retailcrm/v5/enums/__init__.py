@@ -87,9 +87,7 @@ class SexTypes(str, Enum):
     MALE = "male"
 
 
-class TasksStatuses(str, Enum):
-    COMPLETED = "completed"
-    PERFORMING = "performing"
+
 
 
 class CombineTechniqueTypes(str, Enum):

@@ -752,36 +752,7 @@ class Source(BaseRetailCrmScheme):
     content: str = ""
 
 
-class AbstractCustomer(BaseRetailCrmScheme):
-    type: str = Field(description="Тип клиента")
-    id: int = Field(description="ID клиента")
-    externalId: Optional[str] = Field(None, description="Внешний ID клиента")
-    site: Optional[str] = Field(None, description="Магазин, с которого пришел клиент")
 
-
-class Task(BaseRetailCrmScheme):
-    id: int = Field(description="ID задачи")
-    text: str = Field("", description="Текст задачи")
-    commentary: str = Field("", description="Комментарий к задаче")
-    datetime_: Optional[datetime] = Field(
-        None, description="Время выполнения задачи", validation_alias="datetime"
-    )
-    createdAt: Optional[datetime] = Field(None, description="Дата создания")
-    complete: bool = Field(False, description="Признак выполнения задачи")
-    creator: Optional[int] = Field(None, description="Автор задачи")
-    performer: Optional[int] = Field(None, description="Исполнитель задачи")
-    performerType: Optional[str] = Field(None, description="Тип исполнителя задачи")
-    customer: Optional[AbstractCustomer] = Field(
-        None, description="Клиент, к которому привязана задача"
-    )
-    order: Optional[Order] = Field(
-        None, description="Заказ, к которому привязана задача"
-    )
-    phone: Optional[str] = Field(None, description="Телефон связанный с задачей")
-    phoneSite: Optional[str] = Field(
-        None, description="Магазин, связанный с задачей на перезвон"
-    )
-    completedAt: Optional[datetime] = Field(None, description="Время завершения задачи")
 
 
 class ApiKey(BaseRetailCrmScheme):

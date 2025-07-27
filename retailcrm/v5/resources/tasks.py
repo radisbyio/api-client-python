@@ -1,91 +1,132 @@
-from dataclasses import dataclass
 from typing import Optional
 
-from retailcrm import RetailCrmApiError
-from retailcrm.http_cilent import BaseHttpClient
-from retailcrm.v5.api.tasks import RetailCrmTasksApi
-from retailcrm.v5.schemas.base import RetailCrmResponse
-from retailcrm.v5.schemas.tasks import (
-    ResponseTaskComments,
-    ResponseTaskCreate,
-    ResponseTaskHistory,
-    ResponseTaskResponse,
-    ResponseTasks,
-    SerializedTask,
-    TaskFilterData,
-    TaskHistoryFilterType,
-)
-from retailcrm.v5.utils import pydantic_to_nested_dict
+from retailcrm.v5.resources.base import ApiResource
+from retailcrm.v5.schemas import SuccessResponse
+from retailcrm.v5.schemas.entities.tasks import TaskFilter, SerializedTask, TaskHistoryFilter
+from retailcrm.v5.schemas.requests.tasks import FilterTasksRequest, CreateTaskRequest, FilterTasksHistoryRequest, \
+    GetTaskCommentsRequest, EditTaskRequest
+from retailcrm.v5.schemas.responses.tasks import FilterTasksResponse, CreateTaskResponse, FilterTaskHistoryResponse, \
+    GetTaskResponse, GetTaskCommentsResponse
 
-__all__ = ["TasksController"]
+__all__ = ["TasksApiResource"]
 
 
-class TasksController:
-    def __init__(self, client: BaseHttpClient):
-        self._api = RetailCrmTasksApi(client)
-
+class TasksApiResource(ApiResource):
     async def filter(
-        self, filter_obj: TaskFilterData | None = None, limit: int = 20, page: int = 1
-    ) -> ResponseTasks:
-        response = await self._api.get_all(
-            pydantic_to_nested_dict(filter_obj, "filter"), limit, page
+        self, filter_obj: TaskFilter | None = None, limit: int = 20, page: int = 1
+    ) -> FilterTasksResponse:
+        """
+        **Получение списка задач**
+
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-tasks
+
+        :param limit: Количество элементов в ответе (по умолчанию равно 20)
+        :param page: Номер страницы с результатами (по умолчанию равно 1)
+        :param filter_obj: Фильтр
+        :return: FilterTasksResponse
+        """
+
+        request = FilterTasksRequest(limit=limit, page=page, filter_obj=filter_obj)
+        response = await self._client.get(
+            endpoint="/tasks",
+            params=request.model_dump(exclude_none=True, by_alias=True),
         )
-        response_obj = ResponseTasks.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        return self._process_response(response, FilterTasksResponse)
 
     async def create(
-        self, task: SerializedTask, site: str = None
-    ) -> ResponseTaskCreate:
-        response = await self._api.create(
-            task_json=task.model_dump_json(exclude_none=True, by_alias=True), site=site
+        self, task: SerializedTask, site: str | None = None
+    ) -> CreateTaskResponse:
+        """
+        **Создание задачи**
+
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-tasks-create
+
+        :param task:
+        :param site: Символьный код магазина
+        :return: CreateTaskResponse
+        """
+
+        request = CreateTaskRequest(task=task, site=site)
+        response = await self._client.get(
+            endpoint="/tasks/create",
+            params=request.model_dump(exclude_none=True, by_alias=True),
         )
-        response_obj = ResponseTaskCreate.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(
-                response.status_code, response_obj.errorMsg, response_obj.errors
-            )
-        return response_obj
+        return self._process_response(response, CreateTaskResponse)
 
     async def history(
-        self, filter_obj: TaskHistoryFilterType | None = None, limit: int = 20, page: int = 1
-    ) -> ResponseTaskHistory:
-        response = await self._api.history(
-            filter_dict=pydantic_to_nested_dict(filter_obj, "filter"),
-            limit=limit,
-            page=page,
-        )
-        response_obj = ResponseTaskHistory.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        self, filter_obj: TaskHistoryFilter | None = None, limit: int = 20, page: int = 1
+    ) -> FilterTaskHistoryResponse:
+        """
+        **Получение истории изменения задач**
 
-    async def get(self, task_id: int) -> ResponseTaskResponse:
-        response = await self._api.get_by_id(task_id)
-        response_obj = ResponseTaskResponse.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-tasks-history
+
+        :param limit: Количество элементов в ответе (по умолчанию равно 20)
+        :param page: Номер страницы с результатами (по умолчанию равно 1)
+        :param filter_obj: Фильтр
+        :return: FilterTaskHistoryResponse
+        """
+
+        request = FilterTasksHistoryRequest(filter_obj=filter_obj, limit=limit, page=page)
+        response = await self._client.post(
+            endpoint="/tasks/history",
+            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+        )
+        return self._process_response(response, FilterTaskHistoryResponse)
+
+    async def get(self, task_id: int) -> GetTaskResponse:
+        """
+        **Получение информации о задаче**
+
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-tasks-id
+
+        :param task_id: ID задачи
+        :return: GetTaskResponse
+        """
+
+        response = await self._client.get(
+            endpoint=f"/tasks/{task_id}",
+        )
+        return self._process_response(response, GetTaskResponse)
 
     async def comments(
         self, task_id: int, limit: int = 20, page: int = 1
-    ) -> ResponseTaskComments:
-        response = await self._api.comments(task_id, limit, page)
-        response_obj = ResponseTaskComments.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+    ) -> GetTaskCommentsResponse:
+        """
+        **Получение комментариев к задаче**
+
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-tasks-id-comments
+
+        :param limit: Количество элементов в ответе (по умолчанию равно 20)
+        :param page: Номер страницы с результатами (по умолчанию равно 1)
+        :param task_id: ID задачи
+        :return: GetTaskCommentsResponse
+        """
+
+        request = GetTaskCommentsRequest(limit=limit, page=page)
+        response = await self._client.get(
+            endpoint=f"/tasks/{task_id}/comments",
+            params=request.model_dump(exclude_none=True, by_alias=True),
+        )
+        return self._process_response(response, GetTaskCommentsResponse)
 
     async def edit(
         self, task_id: int, task: SerializedTask, site: Optional[str] = None
-    ) -> RetailCrmResponse:
-        response = await self._api.edit(
-            task_id, task.model_dump_json(exclude_unset=True, by_alias=True), site
+    ) -> SuccessResponse:
+        """
+        **Редактирование задачи**
+
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-tasks-id-edit
+
+        :param task_id: ID задачи
+        :param task: Задача
+        :param site: Код магазина
+        :return: SuccessResponse
+        """
+
+        request = EditTaskRequest(task=task, site=site)
+        response = await self._client.post(
+            endpoint=f"/tasks/{task_id}/edit",
+            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
         )
-        response_obj = RetailCrmResponse.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(
-                response.status_code, response_obj.errorMsg, errors=response_obj.errors
-            )
-        return response_obj
+        return self._process_response(response, SuccessResponse)
