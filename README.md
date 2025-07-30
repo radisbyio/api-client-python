@@ -53,8 +53,8 @@ except RetailCrmApiError as exc:
 
 ```python
 from retailcrm.v5.actions.transports import MGTransportActions
-from retailcrm.v5.schemas.requests.transports import MGTransportOnlineRequest, MGTransportVisitsRequest
-from retailcrm.v5.schemas.responses.transports import MGTransportOnlineResponse, MGTransportVisitsResponse
+from retailcrm.v5.schemas.requests.transports import MgTransportOnlineRequest, MgTransportVisitsRequest
+from retailcrm.v5.schemas.responses.transports import MgTransportOnlineResponse, MgTransportVisitsResponse
 from retailcrm.v5.schemas.entities.transports import ChatLastVisit
 from datetime import datetime
 from dataclasses import dataclass
@@ -64,17 +64,18 @@ from dataclasses import dataclass
 class TransportConfig:
     client_id: str
 
+
 class MockTransportActionsService(MGTransportActions):
     def __init__(self, transport_config: TransportConfig):
         self._transport_config = transport_config
-    
-    async def online(self, request: MGTransportOnlineRequest) -> MGTransportOnlineResponse:
-        print(f"MockTransportIntegration: Simulating online status for {self._transport_config.client_id}")
-        return MGTransportOnlineResponse(lastOnline=datetime.now())
 
-    async def visits(self, request: MGTransportVisitsRequest) -> MGTransportVisitsResponse:
+    async def online(self, request: MgTransportOnlineRequest) -> MgTransportOnlineResponse:
+        print(f"MockTransportIntegration: Simulating online status for {self._transport_config.client_id}")
+        return MgTransportOnlineResponse(lastOnline=datetime.now())
+
+    async def visits(self, request: MgTransportVisitsRequest) -> MgTransportVisitsResponse:
         print(f"MockTransportIntegration: Simulating visits for {self._transport_config.client_id}")
-        return MGTransportVisitsResponse(
+        return MgTransportVisitsResponse(
             lastVisit=ChatLastVisit(
                 source="test_source",
                 createdAt=datetime.now(),
