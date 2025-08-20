@@ -1,48 +1,100 @@
-from retailcrm.exceptions import RetailCrmApiError
-from retailcrm.http_cilent import BaseHttpClient
-from retailcrm.v5.api.payments import RetailCrmPaymentsApi
-from retailcrm.v5.schemas import ApiCheckRequest, ApiCreateInvoiceRequest
-from retailcrm.v5.schemas.payments import (
-    ApiUpdateInvoiceRequest,
-    PaymentCheckResponse,
-    PaymentCreateInvoiceResponse,
-    PaymentUpdateInvoiceResponse,
-)
+from retailcrm.v5.resources.base import ApiResource
+from retailcrm.v5.schemas import SuccessResponse
+from retailcrm.v5.schemas.entities.payments import ApiCheckRequest, ApiCreateInvoiceRequest, ApiUpdateInvoiceRequest, \
+    ApiImportInvoiceRequest
+from retailcrm.v5.schemas.requests.payments import CreateInvoiceRequest, UpdateInvoiceRequest, InvoiceImportRequest
+from retailcrm.v5.schemas.responses.payments import CheckResponsePayment, CreateInvoiceResponsePayment, \
+    InvoiceImportResponse
 
 
-class PaymentController:
-    def __init__(self, client: BaseHttpClient):
-        self._api = RetailCrmPaymentsApi(client)
+class PaymentController(ApiResource):
+    async def check_payment(self, check: ApiCheckRequest) -> CheckResponsePayment:
+        """
+        **Проверка инвойса**
+        Метод позволяет проверить параметры инвойса перед списанием средств.
 
-    async def check_payment(self, check: ApiCheckRequest) -> PaymentCheckResponse:
-        response = await self._api.check(
-            check_json=check.model_dump_json(exclude_unset=True)
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-payment-check
+        :param check: JSON с данными для проверки
+        :return: PaymentCheckResponse
+        """
+        response = await self._client.post(
+            endpoint="/payment/check",
+            json_str=check.model_dump_json(exclude_none=True, exclude_unset=True),
         )
-        response_obj = PaymentCheckResponse.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        return self._process_response(response, CheckResponsePayment)
 
     async def create_invoice(
         self, create_invoice: ApiCreateInvoiceRequest
-    ) -> PaymentCreateInvoiceResponse:
-        response = await self._api.create_invoice(
-            create_invoice_json=create_invoice.model_dump_json(exclude_unset=True)
+    ) -> CreateInvoiceResponsePayment:
+        """
+        **Создание инвойса**
+        Метод позволяет создать ссылку на оплату для заданного платежа.
+
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-payment-check
+        :param create_invoice: JSON с данными инвойса
+        :return: PaymentCreateInvoiceResponse
+        """
+        request = CreateInvoiceRequest(createInvoice=create_invoice)
+        response = await self._client.post(
+            endpoint="/payment/create-invoice",
+            json_str=request.model_dump_json(exclude_none=True, exclude_unset=True),
         )
-        response_obj = PaymentCreateInvoiceResponse.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        return self._process_response(response, CreateInvoiceResponsePayment)
 
     async def update_invoice(
         self, update_invoice: ApiUpdateInvoiceRequest
-    ) -> PaymentUpdateInvoiceResponse:
-        response = await self._api.update_invoice(
-            update_invoice_json=update_invoice.model_dump_json(exclude_unset=True)
+    ) -> SuccessResponse:
+        """
+        **Изменение инвойса**
+        Метод позволяет изменить данные инвойса в системе.
+
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-payment-update-invoice
+        :param update_invoice: JSON с данными инвойса
+        :return: SuccessResponse
+        """
+        request = UpdateInvoiceRequest(updateInvoice=update_invoice)
+
+        response = await self._client.post(
+            endpoint=f"/payment/update-invoice",
+            json_str=request.model_dump_json(exclude_none=True, exclude_unset=True),
         )
-        response_obj = PaymentUpdateInvoiceResponse.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(
-                response.status_code, response_obj.errorMsg, response_obj.errors
-            )
-        return response_obj
+
+        return self._process_response(response, SuccessResponse)
+
+    async def invoice_import(
+        self, invoice: ApiImportInvoiceRequest
+    ) -> InvoiceImportResponse:
+        """
+        **Импорт инвойса**
+        Метод позволяет импортировать инвойс.
+
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-payment-invoice-import
+        :param invoice: JSON с данными инвойса
+        :return: SuccessResponse
+        """
+        request = InvoiceImportRequest(invoice=invoice)
+
+        response = await self._client.post(
+            endpoint=f"/payment/invoice/import",
+            json_str=request.model_dump_json(exclude_none=True, exclude_unset=True),
+        )
+
+        return self._process_response(response, InvoiceImportResponse)
+
+    async def invoice(
+        self, invoice_uuid: str
+    ) -> SuccessResponse:
+        """
+        **Получение инвойса**
+        Метод позволяет изменить данные инвойса в системе.
+
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-payment-invoice-invoiceUuid
+        :param invoice_uuid: UUID инвойса
+        :return: SuccessResponse
+        """
+
+        response = await self._client.get(
+            endpoint=f"/payment/invoice/{invoice_uuid}",
+        )
+
+        return self._process_response(response, SuccessResponse)
