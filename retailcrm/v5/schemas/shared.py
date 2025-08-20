@@ -156,14 +156,6 @@ class CustomerPhone(BaseRetailCrmScheme):
     number: str | None = Field(None, description="Номер телефона")
 
 
-class MGChannel(BaseRetailCrmScheme):
-    id: Optional[int] = Field(None, description="ID канала")
-    externalId: Optional[int] = Field(None, description="Внешний ID канала")
-    type: Optional[str] = Field(None, description="Тип канала")
-    active: Optional[bool] = Field(False, description="Активность канала")
-    name: Optional[str] = Field(None, description="Название канала")
-
-
 class MGCustomer(BaseRetailCrmScheme):
     id: int = Field(description="ID клиента")
     externalId: Optional[int] = Field(
@@ -227,7 +219,7 @@ class Customer(BaseRetailCrmScheme):
         None, description="Предполагаемый пол на основе ФИО"
     )
     email: str = Field("", description="Адрес электронной почты")
-    phones: list[CustomerPhone] = Field([], description="Телефоны")
+    phones: list[CustomerPhone] = Field(default_factory=list, description="Телефоны")
     birthday: Optional[datetime] = Field(None, description="День рождения")
     source: Optional[SerializedSource] = Field(None, description="Источник клиента")
     mgCustomers: list[MGCustomer] = Field([], description="Клиенты MessageGateway")
@@ -722,19 +714,7 @@ class Order(BaseRetailCrmScheme):
     )
 
 
-class CourierPhone(BaseRetailCrmScheme):
-    number: str = Field("", description="Номер телефона")
 
-
-class Courier(BaseRetailCrmScheme):
-    id: int = Field(description="ID курьера")
-    firstName: str = Field("", description="Имя")
-    lastName: str = Field("", description="Фамилия")
-    patronymic: str = Field("", description="Отчество")
-    active: bool = Field(False, description="Признак активности")
-    email: str = Field("", description="Электронная почта")
-    phone: Optional[CourierPhone] = Field(None, description="Контактный телефон")
-    description: str = Field("", description="Примечание")
 
 
 class Contact(BaseRetailCrmScheme):

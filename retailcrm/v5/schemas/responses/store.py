@@ -2,12 +2,12 @@ from typing import Optional
 
 from pydantic import Field
 
-from retailcrm.v5.schemas.base import SuccessResponse, SuccessPaginatedResponse
+from retailcrm.v5.schemas.base import SuccessResponse, PaginatedResponse
 from retailcrm.v5.schemas.entities.store import Offer, ProductGroup, Product, PriceUploadNotFoundResponse, \
     ProductEditNotFoundResponse, ProductProperty, ProductPropertyValueResponse
 
 
-class InventoriesFilterResponse(SuccessPaginatedResponse):
+class InventoriesFilterResponse(PaginatedResponse):
     offers: list[Offer] = Field(
         default_factory=list, description="Торговое предложение (SKU)"
     )
@@ -19,7 +19,7 @@ class InventoriesUploadResponse(SuccessResponse):
     )
 
 
-class OfferFilterResponse(SuccessPaginatedResponse):
+class OfferFilterResponse(PaginatedResponse):
     offers: list[Offer] = Field(
         default_factory=list, description="Торговое предложение (SKU)"
     )
@@ -33,7 +33,7 @@ class PricesUploadResponse(SuccessResponse):
     )
 
 
-class ProductGroupFilterResponse(SuccessPaginatedResponse):
+class ProductGroupFilterResponse(PaginatedResponse):
     productGroup: list[ProductGroup] = Field(
         default_factory=list, description="Товарная группа"
     )
@@ -51,7 +51,7 @@ class ProductGroupEditResponse(SuccessResponse):
     )
 
 
-class ProductFilterResponse(SuccessPaginatedResponse):
+class ProductFilterResponse(PaginatedResponse):
     products: list[Product] = Field(default_factory=list, description="Товар")
 
 
@@ -72,13 +72,13 @@ class ProductBatchEditResponse(SuccessResponse):
         default_factory=list, description="Список id добавленных товаров"
     )
 
-class ProductPropertiesFilterResponse(SuccessPaginatedResponse):
+class ProductPropertiesFilterResponse(PaginatedResponse):
     properties: list[ProductProperty] = Field(
         default_factory=list, description="Свойство товара"
     )
 
 
-class ProductPropertyValuesFilterResponse(SuccessPaginatedResponse):
+class ProductPropertyValuesFilterResponse(PaginatedResponse):
     productPropertyValues: list[ProductPropertyValueResponse] = Field(
         default_factory=list
     )

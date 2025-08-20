@@ -40,8 +40,12 @@ class ErrorResponse(BaseRetailCrmResponse):
     errors_validator = field_validator("errors", mode="before")(errors_dict_validator())
 
 
-class SuccessPaginatedResponse(SuccessResponse):
+class PaginatedResponse(SuccessResponse):
     pagination: Pagination
+
+
+class IdResponse(SuccessResponse):
+    id: int = Field(description="Внутренний ID созданного объекта")
 
 
 class RetailCrmResponse(BaseModel):
