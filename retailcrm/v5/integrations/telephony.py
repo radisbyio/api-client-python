@@ -3,9 +3,9 @@ from typing import Protocol
 from retailcrm.v5.schemas.requests.telephony import MgTelephonyPersonalAccountUrlRequest, MgTelephonyMakeCallUrlRequest, \
     MgTelephonyChangeUserStatusUrlRequest
 
-__all__ = ["MgTelephonyActions"]
+__all__ = ["MGTelephonyActions"]
 
-class MgTelephonyActions(Protocol):
+class MGTelephonyActions(Protocol):
     async def change_user_status_url(self, request: MgTelephonyChangeUserStatusUrlRequest) -> None:
         pass
 

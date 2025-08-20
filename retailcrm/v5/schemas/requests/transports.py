@@ -1,10 +1,11 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
+from retailcrm.v5.schemas import BaseRetailCrmScheme
 
 __all__ = ["MgTransportVisitsRequest", "MgTransportOnlineRequest"]
 
 
-class MgTransportOnlineRequest(BaseModel):
+class MgTransportOnlineRequest(BaseRetailCrmScheme):
     externalUserId: str = Field(None, description="GET-параметр с внешним идентификатором клиента чата")
 
-class MgTransportVisitsRequest(BaseModel):
+class MgTransportVisitsRequest(BaseRetailCrmScheme):
     externalUserId: str = Field(None, description="GET-параметр с внешним идентификатором клиента чата")
