@@ -13,6 +13,7 @@ from retailcrm.v5.resources.web_analytics import WebAnalyticsApiResource
 from retailcrm.v5.resources.verification import VerificationController
 from retailcrm.v5.resources.statistic import StatisticApiResource
 from retailcrm.v5.resources.telephony import TelephonyApiResource
+from retailcrm.v5.resources.notifications import NotificationsApiResource
 from retailcrm.v5.resources.segments import SegmentsApiResource
 from retailcrm.v5.resources.orders_packs import OrdersPacksApiResource
 from retailcrm.v5.resources.corporate_customers import CorporateCustomersController

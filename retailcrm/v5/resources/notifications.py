@@ -1,18 +1,13 @@
-from retailcrm.exceptions import RetailCrmApiError
-from retailcrm.http_cilent import BaseHttpClient
-from retailcrm.v5.schemas.notifications import (
-    SendNotificationResponse,
-    SerializedApiNotification,
-)
+from retailcrm.v5.resources.base import ApiResource
+from retailcrm.v5.schemas import SuccessResponse
+from retailcrm.v5.schemas.entities.notifications import SerializedApiNotification
+from retailcrm.v5.schemas.requests.notifications import SendNotificationRequest
 
 
-class NotificationsController:
-    def __init__(self, client: BaseHttpClient):
-        self._client = client
-
+class NotificationsApiResource(ApiResource):
     async def send(
         self, notification: SerializedApiNotification
-    ) -> SendNotificationResponse:
+    ) -> SuccessResponse:
         """
         Отправка оповещения
 
@@ -20,16 +15,12 @@ class NotificationsController:
         :param notification:
         :return: SendNotificationResponse
         """
+
+        request = SendNotificationRequest(
+            notification=notification,
+        )
         response = await self._client.post(
             endpoint="/notifications/send",
-            params={
-                "notification": notification.model_dump_json(
-                    exclude_none=True, by_alias=True
-                )
-            },
+            json_str=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
-
-        response_obj = SendNotificationResponse.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        return self._process_response(response, SuccessResponse)

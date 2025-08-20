@@ -134,11 +134,6 @@ class ViewModeTypes(str, Enum):
     NOT_EDITABLE = "not_editable"
 
 
-class NotificationTypes(str, Enum):
-    API_INFO = "api.info"
-    API_ERROR = "api.error"
-
-
 class DeliveryStatusTypes(str, Enum):
     CANCEL = "cancel"
     CANCEL_FORCE = "cancel_force"

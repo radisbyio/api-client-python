@@ -12,7 +12,8 @@ from retailcrm.v5.resources import (
     TasksApiResource,
     SettingsApiResource,
     UsersApiResource, WebAnalyticsApiResource, StatisticApiResource, VerificationController,
-    CorporateCustomersController, TelephonyApiResource, SegmentsApiResource, OrdersPacksApiResource
+    CorporateCustomersController, TelephonyApiResource, SegmentsApiResource, OrdersPacksApiResource,
+    NotificationsApiResource
 )
 from retailcrm.v5.resources.base import ApiResource
 from retailcrm.v5.utils import validate_crm_url
@@ -60,9 +61,7 @@ class RetailCrmApiClientV5:
 
 
 
-    @property
-    def orders(self) -> OrdersController:
-        return self._get_resource("orders", OrdersController)
+
 
     @property
     def corporate_customers(self) -> CorporateCustomersController:
@@ -82,6 +81,14 @@ class RetailCrmApiClientV5:
     def loyalty(self) -> LoyaltyController:
         return self._get_resource("loyalty", LoyaltyController)
 
+
+    @property
+    def notifications(self) -> NotificationsApiResource:
+        return self._get_resource("notifications", NotificationsApiResource)
+
+    @property
+    def orders(self) -> OrdersController:
+        return self._get_resource("orders", OrdersController)
 
     @property
     def orders_packs(self) -> OrdersPacksApiResource:
