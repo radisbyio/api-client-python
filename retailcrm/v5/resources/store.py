@@ -1,42 +1,23 @@
-from retailcrm.exceptions import RetailCrmApiError
-from retailcrm.http_cilent import BaseHttpClient
-from retailcrm.v5.schemas.store import (
-    InventoryAlternativeFilterData,
-    OfferFilterData,
-    PriceUploadInput,
-    ProductCreateInput,
-    ProductFilterData,
-    ProductGroupFilterData,
-    ProductPropertiesFilterData,
-    ProductPropertyValuesFilterData,
-    ResponseInventoriesFilter,
-    ResponseInventoriesUpload,
-    ResponseOfferFilter,
-    ResponsePricesUpload,
-    ResponseProductBatchCreate,
-    ResponseProductBatchEdit,
-    ResponseProductFilter,
-    ResponseProductGroupCreate,
-    ResponseProductGroupEdit,
-    ResponseProductGroupFilter,
-    ResponseProductPropertiesFilter,
-    ResponseProductPropertyValuesFilter,
-    SerializedOffer,
-    SerializedProductGroup, SerializedOfferList,
-)
-from retailcrm.v5.utils import pydantic_list_dumps_to_json, pydantic_to_nested_dict
+from retailcrm.v5.resources.base import ApiResource
+from retailcrm.v5.schemas.entities.store import SerializedOffer, PriceUploadInput, ProductCreateInput, \
+    SerializedProductGroup
+from retailcrm.v5.schemas.filters.store import OfferFilter, ProductGroupFilter, ProductFilter, \
+    InventoryAlternativeFilter, ProductPropertiesFilter, ProductPropertyValuesFilter
+from retailcrm.v5.schemas.requests.store import InventoriesUploadRequest, OffersFilterRequest, PricesUploadRequest, \
+    ProductGroupsFilterRequest, ProductGroupCreateRequest, ProductGroupEditRequest, ProductsFilterRequest, \
+    ProductsBatchCreateRequest, ProductsBatchEditRequest, ProductPropertiesFilter, ProductsPropertyValuesFilterRequest, \
+    ProductPropertiesFilterRequest
+from retailcrm.v5.schemas.responses.store import InventoriesFilterResponse, InventoriesUploadResponse, \
+    OfferFilterResponse, PricesUploadResponse, ProductGroupFilterResponse, ProductGroupCreateResponse, \
+    ProductGroupEditResponse, ProductFilterResponse, ResponseProductBatchCreate, ProductBatchEditResponse, \
+    ProductPropertiesFilterResponse, ProductPropertyValuesFilterResponse
+from retailcrm.v5.utils import pydantic_to_nested_dict
 
 
-class StoreController:
-    def __init__(self, client: BaseHttpClient):
-        self._client = client
-
+class StoreApiResource(ApiResource):
     async def inventories_filter(
-            self,
-            filter_data: InventoryAlternativeFilterData | None = None,
-            limit: int = 20,
-            page: int = 1,
-    ) -> ResponseInventoriesFilter:
+            self, filter_data: InventoryAlternativeFilter | None = None, limit: int = 20, page: int = 1,
+    ) -> InventoriesFilterResponse:
         """
         Получение остатков и закупочных цен
 
@@ -54,15 +35,11 @@ class StoreController:
                 **pydantic_to_nested_dict(filter_data, "filter"),
             },
         )
-
-        response_obj = ResponseInventoriesFilter.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        return self._process_response(response, InventoriesFilterResponse)
 
     async def inventories_upload(
             self, offers: list[SerializedOffer], site: str = None
-    ) -> ResponseInventoriesUpload:
+    ) -> InventoriesUploadResponse:
         """
         Обновление остатков и закупочных цен
 
@@ -71,50 +48,46 @@ class StoreController:
         :param site: Код магазина
         :return: RetailCrmResponse
         """
-        data = {
-            "offers": SerializedOfferList(offers).model_dump_json(exclude_unset=True, by_alias=True)
-        }
-        if site:
-            data["site"] = site
 
-        response = await self._client.post(
-            endpoint="/store/inventories/upload", data=data
+        request = InventoriesUploadRequest(
+            offers=offers,
+            site=site,
         )
 
-        response_obj = ResponseInventoriesUpload.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        response = await self._client.post(
+            endpoint="/store/inventories/upload",
+            json_str=request.model_dump_json(exclude_none=True, by_alias=True)
+        )
+
+        return self._process_response(response, InventoriesUploadResponse)
 
     async def offers_filter(
-            self, filter_data: OfferFilterData | None = None, limit: int = 20, page: int = 1
-    ) -> ResponseOfferFilter:
+            self, filter_obj: OfferFilter | None = None, limit: int = 20, page: int = 1
+    ) -> OfferFilterResponse:
         """
         Получение списка торговых предложений, удовлетворяющих заданному фильтру
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-store-offers
         :param limit: Количество элементов в ответе (по умолчанию равно 20)
         :param page: Номер страницы с результатами (по умолчанию равно 1)
-        :param filter_data: Фильтр
+        :param filter_obj: Фильтр
         :return: ResponseOfferFilter
         """
+        request = OffersFilterRequest(
+            filter_obj=filter_obj,
+            limit=limit,
+            page=page,
+        )
         response = await self._client.get(
             endpoint="/store/offers",
-            params={
-                "limit": limit,
-                "page": page,
-                **pydantic_to_nested_dict(filter_data, "filter"),
-            },
+            params=request.model_dump(exclude_none=True, by_alias=True),
         )
 
-        response_obj = ResponseOfferFilter.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        return self._process_response(response, OfferFilterResponse)
 
     async def prices_upload(
             self, prices: list[PriceUploadInput]
-    ) -> ResponsePricesUpload:
+    ) -> PricesUploadResponse:
         """
         Обновление цен торговых предложений
 
@@ -122,66 +95,59 @@ class StoreController:
         :param prices: Список цен
         :return: Response
         """
+        request = PricesUploadRequest(
+            prices=prices,
+        )
         response = await self._client.post(
             endpoint="/store/prices/upload",
-            data={
-                "prices": [
-                    price.model_dump(exclude_none=True, by_alias=True)
-                    for price in prices
-                ]
-            },
+            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
         )
-
-        response_obj = ResponsePricesUpload.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        return self._process_response(response, PricesUploadResponse)
 
     async def product_groups_filter(
-            self, filter_data: ProductGroupFilterData | None = None, limit: int = 20, page: int = 1
-    ) -> ResponseProductGroupFilter:
+            self, filter_obj: ProductGroupFilter | None = None, limit: int = 20, page: int = 1
+    ) -> ProductGroupFilterResponse:
         """
         Получение списка групп товаров, удовлетворяющих заданному фильтру
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-store-product-groups
         :param limit: Количество элементов в ответе (по умолчанию равно 20)
         :param page: Номер страницы с результатами (по умолчанию равно 1)
-        :param filter_data: Фильтр
+        :param filter_obj: Фильтр
         :return: ResponseProductGroupFilter
         """
-        response = await self._client.get(
-            endpoint="/store/product-groups",
-            params={
-                "limit": limit,
-                "page": page,
-                **pydantic_to_nested_dict(filter_data, "filter"),
-            },
+        request = ProductGroupsFilterRequest(
+            filter_obj=filter_obj,
+            limit=limit,
+            page=page,
         )
 
-        response_obj = ResponseProductGroupFilter.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        response = await self._client.get(
+            endpoint="/store/product-groups",
+            params=request.model_dump(exclude_none=True, by_alias=True),
+        )
+        return self._process_response(response, ProductGroupFilterResponse)
 
     async def product_group_create(
             self, product_group: SerializedProductGroup
-    ) -> ResponseProductGroupCreate:
+    ) -> ProductGroupCreateResponse:
         """
         Добавление товарной группы
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-store-product-groups-create
         :param product_group: Данные товарной группы
-        :return: ResponseProductGroupCreate
+        :return: ProductGroupCreateResponse
         """
-        response = await self._client.post(
-            endpoint="/store/product-groups/create",
-            data={"productGroup": product_group.model_dump(exclude_unset=True)},
+        request = ProductGroupCreateRequest(
+            productGroup=product_group,
         )
 
-        response_obj = ResponseProductGroupCreate.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        response = await self._client.post(
+            endpoint="/store/product-groups/create",
+            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+        )
+
+        return self._process_response(response, ProductGroupCreateResponse)
 
     async def product_group_edit(
             self,
@@ -189,7 +155,7 @@ class StoreController:
             product_group: SerializedProductGroup,
             site: str,
             by: str = "externalId",
-    ) -> ResponseProductGroupEdit:
+    ) -> ProductGroupEditResponse:
         """
         Редактирование товарной группы
 
@@ -200,42 +166,41 @@ class StoreController:
         :param by: Тип идентификатора
         :return: ResponseProductGroupEdit
         """
+        requests = ProductGroupEditRequest(
+            by=by,
+            site=site,
+            productGroup=product_group,
+        )
         response = await self._client.post(
             endpoint=f"/store/product-groups/{external_id}/edit",
-            params={"by": by, "site": site},
-            data={"productGroup": product_group.model_dump(exclude_unset=True)},
+            json_str=requests.model_dump_json(exclude_none=True, by_alias=True),
         )
 
-        response_obj = ResponseProductGroupEdit.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        return self._process_response(response, ProductGroupEditResponse)
 
     async def products_filter(
-            self, filter_data: ProductFilterData | None = None, limit: int = 20, page: int = 1
-    ) -> ResponseProductFilter:
+            self, filter_obj: ProductFilter | None = None, limit: int = 20, page: int = 1
+    ) -> ProductFilterResponse:
         """
         Получение списка товаров с торговыми предложениями, удовлетворяющих заданному фильтру
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-store-products
         :param limit: Количество элементов в ответе (по умолчанию равно 20)
         :param page: Номер страницы с результатами (по умолчанию равно 1)
-        :param filter_data: Фильтр
-        :return: ResponseProductFilter
+        :param filter_obj: Фильтр
+        :return: ProductFilterResponse
         """
+        request = ProductsFilterRequest(
+            limit=limit,
+            page=page,
+            filter_obj=filter_obj,
+        )
         response = await self._client.get(
             endpoint="/store/products",
-            params={
-                "limit": limit,
-                "page": page,
-                **pydantic_to_nested_dict(filter_data, "filter"),
-            },
+            params=request.model_dump(exclude_none=True, by_alias=True),
         )
 
-        response_obj = ResponseProductFilter.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        return self._process_response(response, ProductFilterResponse)
 
     async def products_batch_create(
             self, products: list[ProductCreateInput]
@@ -245,28 +210,23 @@ class StoreController:
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-store-products-batch-create
         :param products: Товары или услуги
-        :return: ResponseProductFilter
+        :return: ResponseProductBatchCreate
         """
 
-        data = {"products": pydantic_list_dumps_to_json(products, ProductCreateInput)}
-
-        response = await self._client.post(
-            endpoint="/store/products/batch/create", data=data
+        request = ProductsBatchCreateRequest(
+            products=products
         )
 
-        response_obj = ResponseProductBatchCreate.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(
-                response.status_code,
-                response_obj.errorMsg,
-                response_obj.errors,
-                response_obj.model_dump(),
-            )
-        return response_obj
+        response = await self._client.post(
+            endpoint="/store/products/batch/create",
+            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+        )
+
+        return self._process_response(response, ResponseProductBatchCreate)
 
     async def products_batch_edit(
             self, products: list[ProductCreateInput]
-    ) -> ResponseProductBatchEdit:
+    ) -> ProductBatchEditResponse:
         """
         Пакетное добавление товаров и услуг
 
@@ -274,71 +234,65 @@ class StoreController:
         :param products: Товары или услуги
         :return: ResponseProductBatchEdit
         """
-        data = {"products": pydantic_list_dumps_to_json(products, ProductCreateInput)}
-        response = await self._client.post(
-            endpoint="/store/products/batch/edit", data=data
+        request = ProductsBatchEditRequest(
+            products=products
         )
 
-        response_obj = ResponseProductBatchEdit.model_validate_json(response.body)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        response = await self._client.post(
+            endpoint="/store/products/batch/edit",
+            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+        )
+
+        return self._process_response(response, ProductBatchEditResponse)
 
     async def product_properties_filter(
-            self, filter_data: ProductPropertiesFilterData | None = None, limit: int = 20, page: int = 1
-    ) -> ResponseProductPropertiesFilter:
+            self, filter_obj: ProductPropertiesFilter | None = None, limit: int = 20, page: int = 1
+    ) -> ProductPropertiesFilterResponse:
         """
         Получение списка свойств товаров, удовлетворяющих заданному фильтру
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-store-products-properties
         :param limit: Количество элементов в ответе (по умолчанию равно 20)
         :param page: Номер страницы с результатами (по умолчанию равно 1)
-        :param filter_data: Фильтр
-        :return: ResponseProductPropertiesFilter
+        :param filter_obj: Фильтр
+        :return: ProductPropertiesFilterResponse
         """
+        request = ProductPropertiesFilterRequest(
+            limit=limit,
+            page=page,
+            filter_obj=filter_obj,
+        )
         response = await self._client.get(
             endpoint="/store/products/properties",
-            params={
-                "limit": limit,
-                "page": page,
-                **pydantic_to_nested_dict(filter_data, "filter"),
-            },
+            params=request.model_dump(exclude_none=True, by_alias=True),
         )
 
-        response_obj = ResponseProductPropertiesFilter.model_validate_json(
-            response.body
-        )
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        return self._process_response(response, ProductPropertiesFilterResponse)
+
 
     async def product_property_values_filter(
             self,
-            filter_data: ProductPropertyValuesFilterData | None = None,
+            filter_obj: ProductPropertyValuesFilter | None = None,
             limit: int = 20,
             page: int = 1,
-    ) -> ResponseProductPropertyValuesFilter:
+    ) -> ProductPropertyValuesFilterResponse:
         """
         method_hint.GET /api/v5/store/products/properties/values
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-store-products-properties-values
         :param limit: Количество элементов в ответе (по умолчанию равно 20)
         :param page: Номер страницы с результатами (по умолчанию равно 1)
-        :param filter_data: Фильтр
-        :return: ResponseProductPropertyValuesFilter
+        :param filter_obj: Фильтр
+        :return: ProductPropertyValuesFilterResponse
         """
+        request = ProductsPropertyValuesFilterRequest(
+            limit=limit,
+            page=page,
+            filter_obj=filter_obj,
+        )
         response = await self._client.get(
             endpoint="/store/products/properties/values",
-            params={
-                "limit": limit,
-                "page": page,
-                **pydantic_to_nested_dict(filter_data, "filter"),
-            },
+            params=request.model_dump(exclude_none=True, by_alias=True),
         )
 
-        response_obj = ResponseProductPropertyValuesFilter.model_validate_json(
-            response.body
-        )
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        return self._process_response(response, ProductPropertyValuesFilterResponse)

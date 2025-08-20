@@ -8,8 +8,9 @@ from retailcrm.v5.resources import (
     OrdersController,
     PaymentController,
     ReferencesController,
-    StoreController,
+    StoreApiResource,
     TasksApiResource,
+    SettingsApiResource,
     UsersApiResource, DeliveryController, WebAnalyticsApiResource, StatisticApiResource, VerificationController, CorporateCustomersController
 )
 from retailcrm.v5.utils import validate_crm_url
@@ -81,6 +82,10 @@ class RetailCrmApiClientV5:
         return self._get_resource("custom_fields", CustomFieldsController)
 
     @property
+    def settings(self) -> SettingsApiResource:
+        return self._get_resource("settings", SettingsApiResource)
+
+    @property
     def tasks(self) -> TasksApiResource:
         return self._get_resource("tasks", TasksApiResource)
 
@@ -89,8 +94,8 @@ class RetailCrmApiClientV5:
         return self._get_resource("loyalty", LoyaltyController)
 
     @property
-    def store(self) -> StoreController:
-        return self._get_resource("store", StoreController)
+    def store(self) -> StoreApiResource:
+        return self._get_resource("store", StoreApiResource)
 
     @property
     def delivery(self) -> DeliveryController:

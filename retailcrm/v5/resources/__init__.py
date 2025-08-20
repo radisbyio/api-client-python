@@ -4,7 +4,8 @@ from retailcrm.v5.resources.loyalty import LoyaltyController
 from retailcrm.v5.resources.orders import OrdersController
 from retailcrm.v5.resources.payments import PaymentController
 from retailcrm.v5.resources.references import ReferencesController
-from retailcrm.v5.resources.store import StoreController
+from retailcrm.v5.resources.settings import SettingsApiResource
+from retailcrm.v5.resources.store import StoreApiResource
 from retailcrm.v5.resources.tasks import TasksApiResource
 from retailcrm.v5.resources.users import UsersApiResource
 from retailcrm.v5.resources.delivery import DeliveryController
