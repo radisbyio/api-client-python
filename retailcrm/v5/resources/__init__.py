@@ -2,7 +2,7 @@ from retailcrm.v5.resources.custom_fields import CustomFieldsController
 from retailcrm.v5.resources.customers import CustomersController
 from retailcrm.v5.resources.loyalty import LoyaltyController
 from retailcrm.v5.resources.orders import OrdersController
-from retailcrm.v5.resources.payments import PaymentController
+from retailcrm.v5.resources.payments import PaymentApiResource
 from retailcrm.v5.resources.references import ReferencesController
 from retailcrm.v5.resources.settings import SettingsApiResource
 from retailcrm.v5.resources.store import StoreApiResource

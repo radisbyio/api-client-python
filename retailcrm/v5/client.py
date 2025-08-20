@@ -6,7 +6,7 @@ from retailcrm.v5.resources import (
     CustomFieldsController,
     LoyaltyController,
     OrdersController,
-    PaymentController,
+    PaymentApiResource,
     ReferencesController,
     StoreApiResource,
     TasksApiResource,
@@ -58,9 +58,7 @@ class RetailCrmApiClientV5:
             self._resource_cache[name] = controller_class(self._client)
         return self._resource_cache[name]
 
-    @property
-    def payments(self) -> PaymentController:
-        return self._get_resource("payments", PaymentController)
+
 
     @property
     def orders(self) -> OrdersController:
@@ -83,6 +81,10 @@ class RetailCrmApiClientV5:
     @property
     def loyalty(self) -> LoyaltyController:
         return self._get_resource("loyalty", LoyaltyController)
+
+    @property
+    def payments(self) -> PaymentApiResource:
+        return self._get_resource("payments", PaymentApiResource)
 
     @property
     def references(self) -> ReferencesController:

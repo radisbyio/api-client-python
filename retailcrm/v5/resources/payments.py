@@ -7,7 +7,7 @@ from retailcrm.v5.schemas.responses.payments import CheckResponsePayment, Create
     InvoiceImportResponse
 
 
-class PaymentController(ApiResource):
+class PaymentApiResource(ApiResource):
     async def check_payment(self, check: ApiCheckRequest) -> CheckResponsePayment:
         """
         **Проверка инвойса**
