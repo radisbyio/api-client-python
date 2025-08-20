@@ -13,8 +13,6 @@ __all__ = ["CallEventRequest", "CallsUploadRequest", "ManagerRequest", "MgTeleph
 class CallEventRequest(BaseRetailCrmScheme):
     event: CallEvent = Field(None, description="Событие звонка")
 
-    event
-
 
 class CallsUploadRequest(BaseRetailCrmScheme):
     calls: list[CallUpload] = Field(

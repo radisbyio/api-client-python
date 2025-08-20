@@ -3,7 +3,8 @@ from typing import Optional
 from pydantic import Field
 
 from retailcrm.v5.schemas.base import SuccessResponse
-from retailcrm.v5.schemas.entities.payments import ApiCheckResponseResult, ApiCreateInvoiceRequest, PaymentInvoice
+from retailcrm.v5.schemas.entities.payments import ApiCheckResponseResult, ApiCreateInvoiceRequest, PaymentInvoice, \
+    InvoiceDetails
 
 
 class CheckResponsePayment(SuccessResponse):
