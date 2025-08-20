@@ -51,7 +51,7 @@ class LoyaltyController:
             },
         )
 
-        response_obj = ResponseLoyaltyAccounts.model_validate_json(response.body)
+        response_obj = ResponseLoyaltyAccounts.model_validate_json(response.content)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
@@ -83,7 +83,7 @@ class LoyaltyController:
             },
         )
 
-        response_obj = ResponseCreateLoyaltyAccount.model_validate_json(response.body)
+        response_obj = ResponseCreateLoyaltyAccount.model_validate_json(response.content)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
@@ -99,7 +99,7 @@ class LoyaltyController:
         """
         response = await self._client.get(f"/loyalty/account/{account_id}")
 
-        response_obj = ResponseCreateLoyaltyAccount.model_validate_json(response.body)
+        response_obj = ResponseCreateLoyaltyAccount.model_validate_json(response.content)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
@@ -126,7 +126,7 @@ class LoyaltyController:
             },
         )
 
-        response_obj = ResponseEditLoyaltyAccount.model_validate_json(response.body)
+        response_obj = ResponseEditLoyaltyAccount.model_validate_json(response.content)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
@@ -142,7 +142,7 @@ class LoyaltyController:
         """
         response = await self._client.post(f"/loyalty/account/{account_id}/activate")
 
-        response_obj = ResponseActivateLoyaltyAccount.model_validate_json(response.body)
+        response_obj = ResponseActivateLoyaltyAccount.model_validate_json(response.content)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
@@ -166,7 +166,7 @@ class LoyaltyController:
         )
 
         response_obj = ResponseChargeLoyaltyAccountBonus.model_validate_json(
-            response.body
+            response.content
         )
 
         if response.status_code >= 400:
@@ -208,7 +208,7 @@ class LoyaltyController:
         )
 
         response_obj = ResponseCreditLoyaltyAccountBonus.model_validate_json(
-            response.body
+            response.content
         )
 
         if response.status_code >= 400:
@@ -242,7 +242,7 @@ class LoyaltyController:
         )
 
         response_obj = ResponseLoyaltyAccountBonusOperations.model_validate_json(
-            response.body
+            response.content
         )
 
         if response.status_code >= 400:
@@ -277,7 +277,7 @@ class LoyaltyController:
             },
         )
 
-        response_obj = ResponseLoyaltyBonusDetails.model_validate_json(response.body)
+        response_obj = ResponseLoyaltyBonusDetails.model_validate_json(response.content)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
@@ -307,7 +307,7 @@ class LoyaltyController:
             },
         )
 
-        response_obj = ResponseLoyaltyBonusOperations.model_validate_json(response.body)
+        response_obj = ResponseLoyaltyBonusOperations.model_validate_json(response.content)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
@@ -333,7 +333,7 @@ class LoyaltyController:
                 "bonuses": bonuses,
             },
         )
-        response_obj = ResponseLoyaltyCalculate.model_validate_json(response.body)
+        response_obj = ResponseLoyaltyCalculate.model_validate_json(response.content)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
@@ -361,7 +361,7 @@ class LoyaltyController:
             },
         )
 
-        response_obj = ResponseLoyaltiesFilter.model_validate_json(response.body)
+        response_obj = ResponseLoyaltiesFilter.model_validate_json(response.content)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
@@ -378,7 +378,7 @@ class LoyaltyController:
         """
         response = await self._client.get(f"/loyalty/loyalties/{loyalty_id}")
 
-        response_obj = ResponseLoyaltyRetrieve.model_validate_json(response.body)
+        response_obj = ResponseLoyaltyRetrieve.model_validate_json(response.content)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)

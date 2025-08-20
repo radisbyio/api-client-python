@@ -42,7 +42,7 @@ class CustomFieldsController:
             },
         )
 
-        response_obj = CustomFieldsRetrieveResponse.model_validate_json(response.body)
+        response_obj = CustomFieldsRetrieveResponse.model_validate_json(response.content)
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
@@ -68,7 +68,7 @@ class CustomFieldsController:
             },
         )
 
-        response_obj = CustomDictionariesRetrieveResponse.model_validate_json(response.body)
+        response_obj = CustomDictionariesRetrieveResponse.model_validate_json(response.content)
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
@@ -92,7 +92,7 @@ class CustomFieldsController:
         )
 
         response_obj = CustomFieldDictionaryCreateResponse.model_validate_json(
-            response.body
+            response.content
         )
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
@@ -108,7 +108,7 @@ class CustomFieldsController:
         response = await self._client.get(f"/custom-fields/dictionaries/{code}")
 
         response_obj = CustomFieldDictionaryRetrieveResponse.model_validate_json(
-            response.body
+            response.content
         )
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
@@ -134,7 +134,7 @@ class CustomFieldsController:
         )
 
         response_obj = CustomFieldDictionaryEditResponse.model_validate_json(
-            response.body
+            response.content
         )
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
@@ -159,7 +159,7 @@ class CustomFieldsController:
             },
         )
 
-        response_obj = CustomFieldCreateResponse.model_validate_json(response.body)
+        response_obj = CustomFieldCreateResponse.model_validate_json(response.content)
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
@@ -174,7 +174,7 @@ class CustomFieldsController:
         """
         response = await self._client.get(f"/custom-fields/{entity}/{code}")
 
-        response_obj = CustomFieldRetrieveResponse.model_validate_json(response.body)
+        response_obj = CustomFieldRetrieveResponse.model_validate_json(response.content)
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
@@ -201,7 +201,7 @@ class CustomFieldsController:
             },
         )
 
-        response_obj = CustomFieldRetrieveResponse.model_validate_json(response.body)
+        response_obj = CustomFieldRetrieveResponse.model_validate_json(response.content)
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj

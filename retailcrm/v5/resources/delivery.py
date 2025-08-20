@@ -35,7 +35,7 @@ class DeliveryController:
                 "order": order.model_dump_json(exclude_unset=True, by_alias=True),
             },
         )
-        response_obj = CalculationResponse.model_validate_json(response.body)
+        response_obj = CalculationResponse.model_validate_json(response.content)
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
@@ -62,7 +62,7 @@ class DeliveryController:
                 ],
             },
         )
-        response_obj = DeliveryTrackingResponse.model_validate_json(response.body)
+        response_obj = DeliveryTrackingResponse.model_validate_json(response.content)
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
@@ -87,7 +87,7 @@ class DeliveryController:
                 **pydantic_to_nested_dict(filter_data, "filter"),
             },
         )
-        response_obj = FilterDeliveryShipmentsResponse.model_validate_json(response.body)
+        response_obj = FilterDeliveryShipmentsResponse.model_validate_json(response.content)
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
@@ -116,7 +116,7 @@ class DeliveryController:
         )
 
         response_obj = CreateDeliveryShipmentsResponse.model_validate_json(
-            response.body
+            response.content
         )
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
@@ -135,7 +135,7 @@ class DeliveryController:
         )
 
         response_obj = GetDeliveryShipmentResponse.model_validate_json(
-            response.body
+            response.content
         )
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
@@ -166,7 +166,7 @@ class DeliveryController:
             endpoint=f"/delivery/shipments/{shipment_id}/edit", data=data
         )
         response_obj = EditDeliveryShipmentsResponse.model_validate_json(
-            response.body
+            response.content
         )
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)

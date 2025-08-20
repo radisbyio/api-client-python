@@ -44,7 +44,7 @@ class CorporateCustomersController:
         }
 
         response = await self._client.get("/customers-corporate", params=params)
-        response_obj = ResponseCustomersCorporateGetAll.model_validate_json(response.body)
+        response_obj = ResponseCustomersCorporateGetAll.model_validate_json(response.content)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
@@ -64,7 +64,7 @@ class CorporateCustomersController:
             params["by"] = by
 
         response = await self._client.get(f"/customers-corporate/{customer_id}", params=params)
-        response_obj = GetByIdCustomerCorporateResponse.model_validate_json(response.body)
+        response_obj = GetByIdCustomerCorporateResponse.model_validate_json(response.content)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
@@ -83,7 +83,7 @@ class CorporateCustomersController:
             params={"site": site},
             data={"customerCorporate": customer.model_dump_json(exclude_unset=True, by_alias=True)},
         )
-        response_obj = ResponseCustomerCorporateCreate.model_validate_json(response.body)
+        response_obj = ResponseCustomerCorporateCreate.model_validate_json(response.content)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
@@ -108,7 +108,7 @@ class CorporateCustomersController:
             params=params,
             data={"customerCorporate": customer.model_dump_json(exclude_none=True, by_alias=True)},
         )
-        response_obj = ResponseCustomerCorporateEdit.model_validate_json(response.body)
+        response_obj = ResponseCustomerCorporateEdit.model_validate_json(response.content)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
@@ -124,7 +124,7 @@ class CorporateCustomersController:
             "/customers-corporate/fix-external-ids",
             data={"customersCorporate": pydantic_list_dumps_to_json(customers, FixExternalRow)},
         )
-        response_obj = RetailCrmResponse.model_validate_json(response.body)
+        response_obj = RetailCrmResponse.model_validate_json(response.content)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
@@ -148,7 +148,7 @@ class CorporateCustomersController:
             },
         )
 
-        response_obj = RetailCrmResponse.model_validate_json(response.body)
+        response_obj = RetailCrmResponse.model_validate_json(response.content)
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
         return response_obj
@@ -173,7 +173,7 @@ class CorporateCustomersController:
        response = await self._client.get(
            f"/customers-corporate/{customer_id}/addresses", params=params
        )
-       response_obj = RetailCrmResponse.model_validate_json(response.body)
+       response_obj = RetailCrmResponse.model_validate_json(response.content)
 
        if response.status_code >= 400:
            raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
@@ -196,7 +196,7 @@ class CorporateCustomersController:
        response = await self._client.post(
            f"/customers-corporate/{customer_id}/addresses/create", params=params, data={"address": address.model_dump_json(exclude_unset=True, by_alias=True)}
        )
-       response_obj = RetailCrmResponse.model_validate_json(response.body)
+       response_obj = RetailCrmResponse.model_validate_json(response.content)
 
 
        if response.status_code >= 400:
@@ -219,7 +219,7 @@ class CorporateCustomersController:
        response = await self._client.post(
            f"/customers-corporate/{customer_id}/addresses/{address_id}/edit", params=params, data={"address": address.model_dump_json(exclude_unset=True, by_alias=True)}
        )
-       response_obj = RetailCrmResponse.model_validate_json(response.body)
+       response_obj = RetailCrmResponse.model_validate_json(response.content)
 
        if response.status_code >= 400:
            raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
@@ -244,7 +244,7 @@ class CorporateCustomersController:
        response = await self._client.get(
            f"/customers-corporate/{customer_id}/companies", params=params
        )
-       response_obj = ResponseCustomerCorporateCompanyGet.model_validate_json(response.body)
+       response_obj = ResponseCustomerCorporateCompanyGet.model_validate_json(response.content)
 
        if response.status_code >= 400:
            raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
@@ -265,7 +265,7 @@ class CorporateCustomersController:
        response = await self._client.post(
            f"/customers-corporate/{customer_id}/companies/create", params=params, data={"company": company.model_dump_json(exclude_unset=True, by_alias=True)}
        )
-       response_obj = ResponseCustomerCorporateCompanyCreate.model_validate_json(response.body)
+       response_obj = ResponseCustomerCorporateCompanyCreate.model_validate_json(response.content)
 
 
        if response.status_code >= 400:
@@ -289,7 +289,7 @@ class CorporateCustomersController:
        response = await self._client.post(
            f"/customers-corporate/{customer_id}/companies/{company_id}/edit", params=params, data={"company": company.model_dump_json(exclude_unset=True, by_alias=True)}
        )
-       response_obj = ResponseCustomerCorporateCompanyEdit.model_validate_json(response.body)
+       response_obj = ResponseCustomerCorporateCompanyEdit.model_validate_json(response.content)
 
        if response.status_code >= 400:
            raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
@@ -315,7 +315,7 @@ class CorporateCustomersController:
        response = await self._client.get(
            f"/customers-corporate/{customer_id}/contacts", params=params
        )
-       response_obj = RetailCrmResponse.model_validate_json(response.body)
+       response_obj = RetailCrmResponse.model_validate_json(response.content)
 
        if response.status_code >= 400:
            raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
@@ -339,7 +339,7 @@ class CorporateCustomersController:
             params=params,
             data={"contact": contact.model_dump_json(exclude_unset=True, by_alias=True)},
         )
-        response_obj = RetailCrmResponse.model_validate_json(response.body)  # Placeholder response model
+        response_obj = RetailCrmResponse.model_validate_json(response.content)  # Placeholder response model
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
@@ -372,7 +372,7 @@ class CorporateCustomersController:
        response = await self._client.post(
            f"/customers-corporate/{customer_id}/contacts/{contact_id}/edit", params=params, data={"contact": contact.model_dump_json(exclude_unset=True, by_alias=True)}
        )
-       response_obj = RetailCrmResponse.model_validate_json(response.body)  # Placeholder response model
+       response_obj = RetailCrmResponse.model_validate_json(response.content)  # Placeholder response model
 
        if response.status_code >= 400:
            raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
@@ -397,7 +397,7 @@ class CorporateCustomersController:
                 "customersCorporate": pydantic_list_dumps_to_json(customers, SerializedCustomerCorporate),
             },
         )
-        response_obj = RetailCrmResponse.model_validate_json(response.body)
+        response_obj = RetailCrmResponse.model_validate_json(response.content)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
@@ -420,7 +420,7 @@ class CorporateCustomersController:
                 **pydantic_to_nested_dict(filter_obj, "filter"),
             },
         )
-        response_obj = ResponseCustomersHistory.model_validate_json(response.body)  # Use a more specific model if defined
+        response_obj = ResponseCustomersHistory.model_validate_json(response.content)  # Use a more specific model if defined
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
@@ -442,7 +442,7 @@ class CorporateCustomersController:
             **pydantic_to_nested_dict(filter_data, "filter"),
         })
 
-        response_obj = ResponseCustomerNotesFilter.model_validate_json(response.body)  # Placeholder
+        response_obj = ResponseCustomerNotesFilter.model_validate_json(response.content)  # Placeholder
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
@@ -460,7 +460,7 @@ class CorporateCustomersController:
             params={"site": site},
             data={"note": note.model_dump_json(exclude_unset=True, by_alias=True)},
         )
-        response_obj = ResponseCustomerNotesCreate.model_validate_json(response.body)  # Define the response model
+        response_obj = ResponseCustomerNotesCreate.model_validate_json(response.content)  # Define the response model
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)
@@ -473,7 +473,7 @@ class CorporateCustomersController:
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-customers-corporate-notes-id-delete
         """
         response = await self._client.post(f"/customers-corporate/notes/{note_id}/delete")
-        response_obj = ResponseCustomerNotesDelete.model_validate_json(response.body)
+        response_obj = ResponseCustomerNotesDelete.model_validate_json(response.content)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg, response_obj.errors)

@@ -11,7 +11,7 @@ from retailcrm.v5.helpers import datetime_serializer, dict_validator, payments_v
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme
 from retailcrm.v5.schemas.entities.customers import Customer
 from retailcrm.v5.schemas.entities.customers_corporate import Company
-from retailcrm.v5.schemas.entities.loyalty import LoyaltyEventDiscount, LoyaltyLevel
+from retailcrm.v5.schemas.entities.loyalty import LoyaltyEventDiscount, LoyaltyLevel, LoyaltyAccount
 from retailcrm.v5.schemas.shared.code_value_model import CodeValueModel
 from retailcrm.v5.schemas.shared.entity_with_external_id import EntityWithExternalIdInput
 from retailcrm.v5.schemas.shared.history_api_key import HistoryApiKey
@@ -22,6 +22,11 @@ from retailcrm.v5.schemas.shared.source import SerializedSource
 
 class SerializedOrderReference(BaseRetailCrmScheme):
     id: Optional[int] = Field(None, description="Внутренний ID заказа")
+
+
+class SerializedOrderLink(BaseRetailCrmScheme):
+    comment: Optional[str] = Field(None, description="Комментарий")
+    orders: Optional[list[SerializedEntityOrder]] = Field(None, description="Заказ")
 
 
 class AbstractDiscount(BaseRetailCrmScheme):
@@ -604,3 +609,34 @@ class OrderHistory(BaseRetailCrmScheme):
     ancestor: Optional[Order] = Field(
         None, description="Информация о заказе из которого был создан текущий заказ"
     )
+
+
+class SerializedLoyaltyOrder(BaseRetailCrmScheme):
+    bonusesCreditTotal: decimal.Decimal | None = Field(None, description="Количество начисленных бонусов")
+    bonusesChargeTotal: decimal.Decimal | None = Field(None, description="Количество списанных бонусов")
+    currency: str | None = Field(None, description="Валюта")
+    privilegeType: PrivilegeType | None = Field(
+        None,
+        description="Тип привилегии. Возможные значения: none, personal_discount, loyalty_level, loyalty_event",
+    )
+    totalSumm: decimal.Decimal | None = Field(
+        None, description="Общая сумма с учетом скидки (в валюте объекта)"
+    )
+    personalDiscountPercent: decimal.Decimal | None = Field(
+        None, description="Персональная скидка на заказ"
+    )
+    loyaltyAccount: LoyaltyAccount = Field(
+        None, description="Участие в программе лояльности"
+    )
+    loyaltyLevel: LoyaltyLevel| None = Field(
+        None, description="Уровень участия в программе лояльности"
+    )
+    loyaltyEventDiscount: LoyaltyEventDiscount| None = Field(
+        None, description="Скидка по событию программы лояльности"
+    )
+    customer: Customer | None = Field(None, description="Клиент")
+    delivery: SerializedOrderDelivery | None = Field(
+        None, description="Данные о доставке"
+    )
+    site: str | None = Field(None, description="Магазин")
+    items: list[OrderProduct] = Field(default_factory=list, description="Позиция в заказе")

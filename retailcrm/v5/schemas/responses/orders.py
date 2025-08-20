@@ -4,8 +4,9 @@ from typing import Optional
 from pydantic import Field
 
 from retailcrm.v5.schemas import SuccessResponse
-from retailcrm.v5.schemas.base import PaginatedResponse
-from retailcrm.v5.schemas.entities.orders import Order, OrderHistory
+from retailcrm.v5.schemas.base import PaginatedResponse, IdTypesLiteral
+from retailcrm.v5.schemas.entities.loyalty import SmsVerification
+from retailcrm.v5.schemas.entities.orders import Order, OrderHistory, SerializedLoyaltyOrder, SerializedPayment
 
 
 class OrdersFilterResponse(PaginatedResponse):
@@ -22,7 +23,20 @@ class OrdersCreateResponse(SuccessResponse):
 
 
 class OrdersHistoryResponse(PaginatedResponse):
-    generated_at: Optional[datetime] = Field(
-        None, description="Время формирования ответа", validation_alias="generatedAt"
+    generatedAt: Optional[datetime] = Field(
+        None, description="Время формирования ответа"
     )
     history: list[OrderHistory] = Field(default_factory=list)
+
+
+class LoyaltyApplyResponse(SuccessResponse):
+    order: SerializedLoyaltyOrder | None = Field(None)
+    verification: SmsVerification | None = Field(None, description="SMS-верификация")
+
+
+class LoyaltyCancelBonusOperationsResponse(SuccessResponse):
+    order: Order | None = Field(None, description="Заказ")
+
+
+class OrdersPaymentCreateResponse(SuccessResponse):
+    payment: Optional[SerializedPayment] = Field(None)

@@ -64,26 +64,7 @@ class SerializedLoyalty(BaseRetailCrmScheme):
     chargeRate: Optional[float] = Field(None, description="Курс при списании бонусов")
 
 
-class SmsVerification(BaseModel):
-    createdAt: Optional[datetime] = Field(None, description="Дата создания")
-    expiredAt: Optional[datetime] = Field(
-        None, description="Дата окончания срока жизни"
-    )
-    verifiedAt: Optional[datetime] = Field(
-        None, description="Дата успешной верификации"
-    )
-    checkId: Optional[str] = Field(None, description="Идентификатор проверки кода")
-    actionType: Optional[str] = Field(None, description="Тип действия")
 
-    createdAt_serializer = field_serializer("createdAt")(
-        datetime_serializer("%Y-%m-%d %H:%M:%S")
-    )
-    expiredAt_serializer = field_serializer("expiredAt")(
-        datetime_serializer("%Y-%m-%d %H:%M:%S")
-    )
-    verifiedAt_serializer = field_serializer("verifiedAt")(
-        datetime_serializer("%Y-%m-%d %H:%M:%S")
-    )
 
 
 class OrderProductPriceItem(BaseRetailCrmScheme):

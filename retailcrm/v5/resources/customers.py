@@ -50,7 +50,7 @@ class CustomersController:
             },
         )
 
-        response_obj = ResponseCustomersFilter.model_validate_json(response.body)
+        response_obj = ResponseCustomersFilter.model_validate_json(response.content)
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
@@ -82,7 +82,7 @@ class CustomersController:
             endpoint=f"/customers/{customer_id}", params=params
         )
 
-        response_obj = ResponseCustomerRetrieve.model_validate_json(response.body)
+        response_obj = ResponseCustomerRetrieve.model_validate_json(response.content)
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
@@ -108,7 +108,7 @@ class CustomersController:
             },
         )
 
-        response_obj = ResponseCustomerCreate.model_validate_json(response.body)
+        response_obj = ResponseCustomerCreate.model_validate_json(response.content)
         if response.status_code >= 400:
             raise RetailCrmApiError(
                 response.status_code, response_obj.errorMsg, response_obj.errors
@@ -148,7 +148,7 @@ class CustomersController:
             },
         )
 
-        response_obj = ResponseCustomerEdit.model_validate_json(response.body)
+        response_obj = ResponseCustomerEdit.model_validate_json(response.content)
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
         return response_obj
@@ -176,7 +176,7 @@ class CustomersController:
             },
         )
 
-        response_obj = ResponseCustomersCombine.model_validate_json(response.body)
+        response_obj = ResponseCustomersCombine.model_validate_json(response.content)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
@@ -204,7 +204,7 @@ class CustomersController:
         )
 
         response_obj = ResponseCustomersFixExternalIds.model_validate_json(
-            response.body
+            response.content
         )
 
         if response.status_code >= 400:
@@ -233,7 +233,7 @@ class CustomersController:
             },
         )
 
-        response_obj = ResponseCustomersHistory.model_validate_json(response.body)
+        response_obj = ResponseCustomersHistory.model_validate_json(response.content)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
@@ -274,7 +274,7 @@ class CustomersController:
             },
         )
 
-        response_obj = RetailCrmResponse.model_validate_json(response.body)
+        response_obj = RetailCrmResponse.model_validate_json(response.content)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
@@ -302,7 +302,7 @@ class CustomersController:
             },
         )
 
-        response_obj = ResponseCustomerNotesFilter.model_validate_json(response.body)
+        response_obj = ResponseCustomerNotesFilter.model_validate_json(response.content)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
@@ -326,7 +326,7 @@ class CustomersController:
             data={"note": note.model_dump_json(exclude_none=True, by_alias=True)},
         )
 
-        response_obj = ResponseCustomerNotesCreate.model_validate_json(response.body)
+        response_obj = ResponseCustomerNotesCreate.model_validate_json(response.content)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
@@ -343,7 +343,7 @@ class CustomersController:
         """
         response = await self._client.post(f"/customers/notes/{note_id}/delete")
 
-        response_obj = ResponseCustomerNotesDelete.model_validate_json(response.body)
+        response_obj = ResponseCustomerNotesDelete.model_validate_json(response.content)
 
         if response.status_code >= 400:
             raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
