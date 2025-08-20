@@ -11,7 +11,8 @@ from retailcrm.v5.resources import (
     StoreApiResource,
     TasksApiResource,
     SettingsApiResource,
-    UsersApiResource, DeliveryController, WebAnalyticsApiResource, StatisticApiResource, VerificationController, CorporateCustomersController
+    UsersApiResource, DeliveryController, WebAnalyticsApiResource, StatisticApiResource, VerificationController,
+    CorporateCustomersController, TelephonyApiResource, SegmentsApiResource
 )
 from retailcrm.v5.utils import validate_crm_url
 from retailcrm.v5.resources.base import ApiResource
@@ -73,33 +74,39 @@ class RetailCrmApiClientV5:
     def customers(self) -> CustomersController:
         return self._get_resource("customers", CustomersController)
 
-    @property
-    def references(self) -> ReferencesController:
-        return self._get_resource("references", ReferencesController)
+
 
     @property
     def custom_fields(self) -> CustomFieldsController:
         return self._get_resource("custom_fields", CustomFieldsController)
 
     @property
-    def settings(self) -> SettingsApiResource:
-        return self._get_resource("settings", SettingsApiResource)
-
-    @property
-    def tasks(self) -> TasksApiResource:
-        return self._get_resource("tasks", TasksApiResource)
-
-    @property
     def loyalty(self) -> LoyaltyController:
         return self._get_resource("loyalty", LoyaltyController)
+
+    @property
+    def references(self) -> ReferencesController:
+        return self._get_resource("references", ReferencesController)
+
+    @property
+    def segments(self) -> SegmentsApiResource:
+        return self._get_resource("segments", SegmentsApiResource)
+
+    @property
+    def settings(self) -> SettingsApiResource:
+        return self._get_resource("settings", SettingsApiResource)
 
     @property
     def store(self) -> StoreApiResource:
         return self._get_resource("store", StoreApiResource)
 
     @property
-    def delivery(self) -> DeliveryController:
-        return self._get_resource("delivery", DeliveryController)
+    def tasks(self) -> TasksApiResource:
+        return self._get_resource("tasks", TasksApiResource)
+
+    @property
+    def telephony(self) -> TelephonyApiResource:
+        return self._get_resource("telephony", TelephonyApiResource)
 
     @property
     def users(self) -> UsersApiResource:

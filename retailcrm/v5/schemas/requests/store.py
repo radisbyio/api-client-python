@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import Field, model_serializer, field_serializer
 
 from retailcrm.v5.helpers import to_json_serializer
@@ -15,9 +17,9 @@ class InventoriesUploadRequest(BaseRetailCrmScheme):
 
 
 class OffersFilterRequest(BaseRetailCrmScheme):
-    filter_obj: OfferFilter | None
-    limit: int
-    page: int
+    limit: Optional[int] = Field(None, description="Количество элементов в ответе")
+    page: Optional[int] = Field(None, description="Номер страницы с результатами")
+    filter_obj: Optional[OfferFilter] = Field(None, description="Объект фильтра")
 
     @model_serializer()
     def serialize_model(self) -> dict:
@@ -33,9 +35,9 @@ class PricesUploadRequest(BaseRetailCrmScheme):
 
 
 class ProductGroupsFilterRequest(BaseRetailCrmScheme):
-    filter_obj: ProductGroupFilter
-    limit: int
-    page: int
+    limit: Optional[int] = Field(None, description="Количество элементов в ответе")
+    page: Optional[int] = Field(None, description="Номер страницы с результатами")
+    filter_obj: Optional[ProductGroupFilter] = Field(None, description="Объект фильтра")
 
     @model_serializer()
     def serialize_model(self) -> dict:
@@ -57,9 +59,9 @@ class ProductGroupEditRequest(BaseRetailCrmScheme):
 
 
 class ProductsFilterRequest(BaseRetailCrmScheme):
-    filter_obj: ProductFilter
-    limit: int
-    page: int
+    limit: Optional[int] = Field(None, description="Количество элементов в ответе")
+    page: Optional[int] = Field(None, description="Номер страницы с результатами")
+    filter_obj: Optional[ProductFilter] = Field(None, description="Объект фильтра")
 
     @model_serializer()
     def serialize_model(self) -> dict:
@@ -82,14 +84,10 @@ class ProductsBatchEditRequest(BaseRetailCrmScheme):
     products_serializer = field_serializer("products")(to_json_serializer())
 
 
-
-
-
-
 class ProductPropertiesFilterRequest(BaseRetailCrmScheme):
-    filter_obj: ProductPropertiesFilter
-    limit: int
-    page: int
+    limit: Optional[int] = Field(None, description="Количество элементов в ответе")
+    page: Optional[int] = Field(None, description="Номер страницы с результатами")
+    filter_obj: Optional[ProductPropertiesFilter] = Field(None, description="Объект фильтра")
 
     @model_serializer()
     def serialize_model(self) -> dict:
@@ -102,9 +100,10 @@ class ProductPropertiesFilterRequest(BaseRetailCrmScheme):
 
 
 class ProductsPropertyValuesFilterRequest(BaseRetailCrmScheme):
-    filter_obj: ProductPropertyValuesFilter
-    limit: int
-    page: int
+    limit: Optional[int] = Field(None, description="Количество элементов в ответе")
+    page: Optional[int] = Field(None, description="Номер страницы с результатами")
+    filter_obj: Optional[ProductPropertyValuesFilter] = Field(None, description="Объект фильтра")
+
 
     @model_serializer()
     def serialize_model(self) -> dict:
