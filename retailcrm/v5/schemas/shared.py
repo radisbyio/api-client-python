@@ -31,7 +31,6 @@ __all__ = [
     "CustomerPhone",
     "CustomerTagLink",
     "MGChannel",
-    "MGDialog",
     "OrderProduct",
     "Payment",
     "Order",
@@ -60,10 +59,7 @@ __all__ = [
 DeliveryType = TypeVar("DeliveryType")
 
 
-class EntityWithExternalIdNameOutput(BaseRetailCrmScheme):
-    id: Optional[int] = Field(None, description="ID")
-    externalId: Optional[str] = Field(None, description="Внешний ID")
-    name: Optional[str] = Field(None, description="Название")
+
 
 
 class EntityWithExternalIdInput(BaseRetailCrmScheme):
@@ -88,10 +84,7 @@ class Item(BaseRetailCrmScheme):
     markingCode: str = Field("", description="Код маркировки")
 
 
-class CustomerTagLink(BaseRetailCrmScheme):
-    name: str = Field("")
-    colorCode: str = Field("")
-    attached: bool = Field(False)
+
 
 
 class SerializedCustomerAddress(BaseRetailCrmScheme):
@@ -122,46 +115,9 @@ class SerializedCustomerAddress(BaseRetailCrmScheme):
     externalId: Optional[str] = Field(None, description="Внешний ID")
     name: Optional[str] = Field(None, description="Наменование адреса")
 
-class CustomerAddress(BaseRetailCrmScheme):
-    id: Optional[int] = Field(None, description="ID адреса")
-    index: Optional[str] = Field(None, description="Индекс")
-    countryIso: Optional[str] = Field(
-        None, description="ISO код страны (ISO 3166-1 alpha-2)"
-    )
-    region: Optional[str] = Field(None, description="Регион")
-    regionId: Optional[int] = Field(
-        None, description="Идентификатор региона в Geohelper"
-    )
-    city: Optional[str] = Field(None, description="Город")
-    cityId: Optional[int] = Field(None, description="Идентификатор города в Geohelper")
-    cityType: Optional[str] = Field(None, description="Тип населенного пункта")
-    street: Optional[str] = Field(None, description="Улица")
-    streetId: Optional[int] = Field(None, description="Идентификатор улицы в Geohelper")
-    streetType: Optional[str] = Field(None, description="Тип улицы")
-    building: Optional[str] = Field(None, description="Дом")
-    flat: Optional[str] = Field(None, description="Номер квартиры/офиса")
-    floor: Optional[int] = Field(None, description="Этаж")
-    block: Optional[int] = Field(None, description="Подъезд")
-    house: Optional[str] = Field(None, description="Строение")
-    housing: Optional[str] = Field(None, description="Корпус")
-    metro: Optional[str] = Field(None, description="Метро")
-    notes: Optional[str] = Field(None, description="Примечания к адресу")
-    text: Optional[str] = Field(None, description="Адрес в текстовом виде")
-    externalId: Optional[str] = Field(None, description="Внешний ID")
-    name: Optional[str] = Field(None, description="Наменование адреса")
 
 
-# TODO: Remove. Use from shared/
-class CustomerPhone(BaseRetailCrmScheme):
-    number: str | None = Field(None, description="Номер телефона")
 
-
-class MGCustomer(BaseRetailCrmScheme):
-    id: int = Field(description="ID клиента")
-    externalId: Optional[int] = Field(
-        None, description="Внешний ID MessageGateway клиента"
-    )
-    mgChannel: Optional[MGChannel] = Field(None, description="MessageGateway канал")
 
 
 # TODO: Remove
@@ -257,129 +213,37 @@ class CodeValueModel(BaseRetailCrmScheme):
     value: Optional[str] = Field(None, description="Значение")
 
 
-class Unit(BaseRetailCrmScheme):
-    code: str = Field(description="Символьный код")
-    name: str = Field(description="Название")
-    sym: str = Field(description="Краткое обозначение")
 
 
-class LoyaltyLevel(BaseRetailCrmScheme):
-    id: Optional[int] = Field(None, description="ID уровня")
-    name: str | None = Field(None, description="Название уровня")
-    sum: decimal.Decimal | None = Field(None, description="Сумма, необходимая для перехода на данный уровень (в валюте объекта)")
-    privilegeSize: int | None = Field(None, description="Размер скидки, процент или курс начисления бонусов для товаров по обычной цене (в валюте объекта)")
-    privilegeSizePromo: int | None = Field(None, description="Размер скидки, процент или курс начисления бонусов для акционных товаров (в валюте объекта)")
 
 
-# todo: заполнить
-class LoyaltyEventDiscount(BaseRetailCrmScheme):
-    id: int
 
 
-class PackageItemOrderProduct(BaseRetailCrmScheme):
-    id: int = Field(description="ID позиции в заказе")
-    externalId: Optional[str] = Field(
-        None, description="[deprecated] Внешний ID позиции в заказе"
-    )
-    externalIds: list[CodeValueModel] = Field(
-        default_factory=list, description="Внешние идентификаторы позиции в заказе"
-    )
 
 
-class PackageItem(BaseRetailCrmScheme):
-    offerId: Optional[str] = Field(None, description="Идентификатор оффера в системе")
-    externalId: Optional[str] = Field(
-        None, description="Идентификатор торгового предложения в магазине"
-    )
-    xmlId: Optional[str] = Field(
-        None, description="Идентификатор торгового предложения в складской системе"
-    )
-    name: Optional[str] = Field(None, description="Наименование товара")
-    declaredValue: Optional[float] = Field(
-        None, description="Объявленная стоимость за единицу товара"
-    )
-    cod: Optional[float] = Field(
-        None, description="Наложенный платеж за единицу товара"
-    )
-    vatRate: Optional[VatRateTypes] = Field(
-        None, description='Ставка НДС ("none" - НДС не облагается)'
-    )
-    quantity: Optional[float] = Field(None, description="Количество товара в упаковке")
-    unit: Optional[Unit] = Field(None, description="Единица измерения товара")
-    cost: Optional[float] = Field(
-        None, description="Стоимость товара (с учетом скидок)"
-    )
-    markingCodes: Optional[list[str]] = Field(
-        None, description="Коды маркировки (формат кода маркировки)"
-    )
-    properties: Optional[list] = Field(
-        None, description="Свойства товара"
-    )  # todo: уточнить тип данных
-    weight: Optional[float] = Field(
-        None, description="Вес товара (может быть null для услуг)"
-    )
 
 
-class Package(BaseRetailCrmScheme):
-    packageId: Optional[str] = Field(None, description="Идентификатор упаковки")
-    weight: Optional[float] = Field(None, description="Вес г.")
-    width: Optional[int] = Field(None, description="Ширина мм.")
-    length: Optional[int] = Field(None, description="Длина мм.")
-    height: Optional[int] = Field(None, description="Высота мм.")
-    items: list[PackageItem] = Field(default_factory=list, description="Содержимое упаковки")
 
 
-class DeclaredValueItem(BaseRetailCrmScheme):
-    orderProduct: PackageItemOrderProduct | None = Field(None, description="Позиция в заказе")
-    value: decimal.Decimal | None = Field(None, description="Объявленная стоимость товара")
 
 
-class TimeInterval(BaseRetailCrmScheme):
-    from_: Optional[time] = Field(
-        None, description='Время "с"', serialization_alias="from"
-    )
-    to: Optional[time] = Field(None, description='Время "до"')
-    custom: Optional[str] = Field(
-        "", description="Временной диапазон в свободной форме"
-    )
-
-    from_serializer = field_serializer("from_")(time_serializer("%H:%M"))
-    to_serializer = field_serializer("to")(time_serializer("%H:%M"))
 
 
-class LinkedOrder(BaseRetailCrmScheme):
-    id: int = Field(description="ID связанного заказа")
-    number: Optional[str] = Field(None, description="Номер связанного заказа")
-    externalId: Optional[str] = Field(None, description="Внешний ID связанного заказа")
 
 
-class OrderLink(BaseRetailCrmScheme):
-    order: Optional[LinkedOrder] = Field(None, description="Связанный заказ")
-    createdAt: Optional[datetime] = Field(
-        None, description="Дата/время создания связи с заказом"
-    )
-    comment: Optional[str] = Field(None, description="Комментарий")
-
-    createdAt_serializer = field_serializer("createdAt")(
-        datetime_serializer("%Y-%m-%d %H:%M:%S")
-    )
 
 
-class OrderProductPriceItem(BaseRetailCrmScheme):
-    price: float = Field(
-        0,
-        description="Итоговая цена c учетом всех скидок на товар и заказ (в валюте объекта)",
-    )
-    quantity: float = Field(0, description="Количество товара по заданной цене")
 
 
-class AbstractDiscount(BaseRetailCrmScheme):
-    type: DiscountTypes = Field(description="Тип скидки")
-    amount: float = Field(0, description="Сумма скидки")
 
 
-class PriceType(BaseRetailCrmScheme):
-    code: str = Field(description="Код типа цены")
+
+
+
+
+
+
+
 
 
 # todo: заполнить
@@ -401,196 +265,22 @@ class CompanyContragent(BaseRetailCrmScheme):
     bankAccount: Optional[str] = Field(None)
 
 
-# todo: заполнить
-class Company(BaseRetailCrmScheme):
-    id: Optional[int] = Field(None)
-    externalId: Optional[str] = Field(None)
-    customer: Optional[SerializedEntityCustomer] = Field(None)
-    active: Optional[bool] = Field(None)
-    name: Optional[str] = Field(None)
-    brand: Optional[str] = Field(None)
-    site: Optional[str] = Field(None)
-    createdAt: Optional[datetime] = Field(None)
-    contragent: Optional[CompanyContragent] = Field(None)
-    address: Optional[CustomerAddress] = Field(None)
-    avgMarginSumm: Optional[float] = Field(None)
-    marginSumm: Optional[float] = Field(None)
-    totalSumm: Optional[float] = Field(None)
-    averageSumm: Optional[float] = Field(None)
-    costSumm: Optional[float] = Field(None)
-    ordersCount: Optional[int] = Field(None)
-    customFields: dict = Field({})
-
-    customFields_validator = field_validator("customFields", mode="before")(
-        dict_validator()
-    )
 
 
-class OrderProductProperties(BaseRetailCrmScheme):
-    code: Optional[str] = Field(
-        None,
-        description="Код свойства (не обязательное поле, код может передаваться в ключе свойства)",
-    )
-    name: Optional[str] = Field(None, description="Имя свойства")
-    value: Optional[str] = Field(None, description="Значение свойства")
 
 
-class OrderProduct(BaseRetailCrmScheme):
-    id: Optional[int] = Field(None, description="ID позиции в заказе")
-    externalIds: list[CodeValueModel] = Field(
-        default_factory=list, description="Внешние идентификаторы позиции в заказе"
-    )
-    discounts: list[AbstractDiscount] = Field(default_factory=list, description="Массив скидок")
-    offer: Optional["Offer"] = Field(None, description="Торговое предложение")
-    ordering: Optional[int] = Field(None, description="Порядок")
-    properties: dict = Field(default_factory=dict, description="Дополнительные свойства позиции в заказе")
-
-    bonusesChargeTotal: Optional[Decimal] = Field(
-        None, description="Количество списанных бонусов"
-    )
-    bonusesCreditTotal: Optional[float] = Field(
-        None, description="Количество начисленных бонусов"
-    )
-    markingCodes: list[str] = Field(default_factory=list, description="Коды маркировки")
-    priceType: Optional[PriceType] = Field(None, description="Тип цены")
-    initialPrice: Optional[Decimal] = Field(
-        None, description="Цена товара/SKU (в валюте объекта)"
-    )
-    discountTotal: Optional[Decimal] = Field(
-        None,
-        description="Итоговая денежная скидка на единицу товара c учетом всех скидок на товар и заказ (в валюте объекта)",
-    )
-    prices: list[OrderProductPriceItem] = Field(
-        default_factory=list, description="Набор итоговых цен реализации с указанием количества"
-    )
-    vatRate: Optional[str] = Field(None, description="Ставка НДС")
-    createdAt: Optional[datetime] = Field(
-        None, description="Дата создания позиции в системе"
-    )
-    quantity: Optional[Decimal] = Field(None, description="Количество")
-    status: Optional[str] = Field(None, description="Статус позиции в заказе")
-    comment: str = Field("", description="Комментарий к позиции в заказе")
-    isCanceled: bool = Field(
-        False, description="Данная позиция в заказе является отменной"
-    )
-    purchasePrice: Decimal | None = Field(None, description="Закупочная цена (в базовой валюте)")
-
-    properties_validator = field_validator("properties", mode="before")(
-        dict_validator()
-    )
-    createdAt_serializer = field_serializer("createdAt")(
-        datetime_serializer("%Y-%m-%d %H:%M:%S")
-    )
 
 
-class Offer(BaseRetailCrmScheme):
-    id: Optional[int] = Field(description="ID торгового предложения")
-    externalId: Optional[str] = Field(
-        "", description="ID торгового предложения в магазине"
-    )
-    xmlId: Optional[str] = Field(
-        "", description="ID торгового предложения в складской системе"
-    )
-    properties: dict[str, Any] = Field({}, description="Свойства SKU")
-    displayName: Optional[str] = Field("", description="Название SKU")
-    name: Optional[str] = Field("", description="")
-    article: Optional[str] = Field("", description="Артикул")
-    vatRate: Optional[str] = Field(None, description="Ставка НДС")
-    unit: Optional[Unit] = Field(None, description="Единица измерения")
-    barcode: Optional[str] = Field("", description="Символьный код")
-
-    properties_validator = field_validator("properties", mode="before")(
-        dict_validator()
-    )
 
 
-class Payment(BaseRetailCrmScheme):
-    id: int = Field(description="Внутренний ID")
-    type: str = Field(None, description="Тип оплаты")
-    external_id: Optional[str] = Field(
-        None, description="Внешний ID платежа", validation_alias="externalId"
-    )
-    status: Optional[str] = Field(None, description="Статус оплаты")
-    amount: float = Field(0, description="Сумма платежа (в валюте объекта)")
-    paidAt: Optional[datetime] = Field(None, description="Дата оплаты")
-    comment: Optional[str] = Field(None, description="Комментарий")
-
-    order: SerializedEntityOrder | None = Field(None, description="Заказ")
-
-    paidAt_serializer = field_serializer("paidAt")(
-        datetime_serializer("%Y-%m-%d %H:%M:%S")
-    )
 
 
-class OrderDeliveryAddress(BaseRetailCrmScheme):
-    index: Optional[str] = Field(None, description="Индекс")
-    countryIso: Optional[str] = Field(
-        None, description="ISO код страны (ISO 3166-1 alpha-2)"
-    )
-    region: Optional[str] = Field(None, description="Регион")
-    regionId: Optional[int] = Field(
-        None, description="Идентификатор региона в Geohelper"
-    )
-    city: Optional[str] = Field(None, description="Город")
-    cityId: Optional[int] = Field(None, description="Идентификатор города в Geohelper")
-    cityType: Optional[str] = Field(None, description="Тип населенного пункта")
-    street: Optional[str] = Field(None, description="Улица")
-    streetId: Optional[int] = Field(None, description="Идентификатор улицы в Geohelper")
-    streetType: Optional[str] = Field(None, description="Тип улицы")
-    building: Optional[str] = Field(None, description="Дом")
-    flat: Optional[str] = Field(None, description="Номер квартиры/офиса")
-    floor: Optional[int] = Field(None, description="Этаж")
-    block: Optional[int] = Field(None, description="Подъезд")
-    house: Optional[str] = Field(None, description="Строение")
-    housing: Optional[str] = Field(None, description="Корпус")
-    metro: Optional[str] = Field(None, description="Метро")
-    notes: Optional[str] = Field(None, description="Примечания к адресу")
-    text: Optional[str] = Field(None, description="Адрес в текстовом виде")
 
 
-class GenericData(BaseRetailCrmScheme):
-    externalId: Optional[str] = Field(
-        None, description="Идентификатор в службе доставки"
-    )
-    trackNumber: Optional[str] = Field(
-        None, description="Номер отправления (поле deprecated на запись)"
-    )
-    locked: bool = Field(False, description="Не синхронизировать со службой доставки")
-    tariff: Optional[str] = Field(None, description="Код тарифа")
-    pickuppointId: Optional[str] = Field(
-        None, description="Идентификатор пункта самовывоза"
-    )
-    payerType: Optional[str] = Field(None, description="	Плательщик за доставку")
-    shipmentpointId: Optional[str] = Field(
-        None, description="Идентификатор терминала отгрузки"
-    )
-    extraData: Optional[dict[str, Any]] = Field(
-        None,
-        description="Дополнительные данные доставки (deliveryDataField.code => значение)",
-    )
-    itemDeclaredValues: Optional[list[DeclaredValueItem]] = Field(default_factory=list)
-    packages: list[Package] = Field(
-        default_factory=list, description="Упаковки"
-    )
+
 
 
 # todo: update vatRate to enum
-class SerializedOrderDelivery(BaseRetailCrmScheme):
-    code: Optional[str] = Field(None, description="Код типа доставки")
-    data: Optional[GenericData] = Field(
-        None, description="Данные службы доставки, подключенной через API"
-    )
-    # service: Optional[SerializedDeliveryService] = Field(None)  # todo realize
-    cost: Optional[float] = Field(None, description="Стоимость доставки")
-    netCost: Optional[float] = Field(None, description="Себестоимость доставки")
-    date_: Optional[date] = Field(
-        None, description="Дата доставки", serialization_alias="date"
-    )
-    time: Optional[TimeInterval] = Field(
-        None, description="Информация о временном диапазоне"
-    )
-    address: Optional[OrderDeliveryAddress] = Field(None, description="Адрес доставки")
-    vatRate: Optional[str] = Field(None, description="Ставка НДС")
 
 
 # todo: заполнить
@@ -613,105 +303,6 @@ class OrderContragent(BaseRetailCrmScheme):
 
 
 # TODO: Изменить float на Decimal
-class Order(BaseRetailCrmScheme):
-    id: int | None = Field(None, description="ID заказа")
-    externalId: str | None = Field(None, description="Внешний ID заказа")
-    number: str | None = Field(None, description="Номер заказа")
-    site: str | None = Field(None, description="Магазин")
-    status: str | None = Field(None, description="Статус заказа")
-    statusComment: str | None = Field(None, description="Комментарий к статусу доставки")
-    managerId: int | None = Field(
-        None, description="Менеджер, прикрепленный к заказу"
-    )
-    bonusesCreditTotal: float = Field(None, description="Количество начисленных бонусов")
-    bonusesChargeTotal: float = Field(None, description="Количество списанных бонусов")
-    summ: float = Field(None, description="Сумма по товарам (в валюте объекта)")
-    currency: Currency | None = Field(None, description="Валюта")
-    orderType: str = Field(None, description="Тип заказа")
-    orderMethod: str = Field(None, description="Способ оформления")
-    privilegeType: PrivilegeType = Field(
-        PrivilegeType.NONE, description="Тип привилегии"
-    )
-    countryIso: CountryCodeIso3166 | None = Field(None, description="ISO код страны (ISO 3166-1 alpha-2)")
-    createdAt: Optional[datetime] = Field(None, description="Дата оформления заказа")
-    statusUpdatedAt: Optional[datetime] = Field(
-        None, description="Дата последнего изменения статуса"
-    )
-    totalSumm: Decimal = Field(
-        None, description="Общая сумма с учетом скидки (в валюте объекта)"
-    )
-    prepaySum: Decimal = Field(None, description="Оплаченная сумма (в валюте объекта)")
-    purchaseSumm: Decimal = Field(
-        None, description="Общая стоимость закупки (в базовой валюте)"
-    )
-    personalDiscountPercent: Optional[Decimal] = Field(
-        None, description="Персональная скидка на заказ"
-    )
-    loyaltyLevel: Optional[LoyaltyLevel] = Field(
-        None, description="Уровень участия в программе лояльности"
-    )
-    loyaltyEventDiscount: Optional[LoyaltyEventDiscount] = Field(
-        None, description="Скидка по событию программы лояльности"
-    )
-    mark: Optional[int] = Field(None, description="Оценка заказа")
-    markDatetime: Optional[datetime] = Field(
-        None, description="Дата и время получение оценки от покупателя"
-    )
-    lastName: Optional[str] = Field(None, description="Фамилия")
-    firstName: Optional[str] = Field(None, description="Имя")
-    patronymic: Optional[str] = Field(None, description="Отчество")
-    phone: Optional[str] = Field(None, description="Телефон")
-    additionalPhone: Optional[str] = Field(None, description="Дополнительный телефон")
-    email: Optional[str] = Field(None, description="E-mail")
-    call: bool = Field(None, description="Требуется позвонить")
-    expired: bool = Field(None, description="Просрочен")
-    customerComment: Optional[str] = Field(None, description="")
-    managerComment: Optional[str] = Field(None, description="")
-    customer: Optional[Customer] = Field(None, description="Клиент")
-    contact: Optional[Customer] = Field(None, description="Контактное лицо")
-    company: Optional[Company] = Field(None, description="Компания")
-    contragent: Optional[OrderContragent] = Field(None, description="Реквизиты")
-    delivery: Optional[SerializedOrderDelivery] = Field(
-        None, description="Данные о доставке"
-    )
-    source: Optional[SerializedSource] = Field(None, description="Источник заказа")
-    items: list[OrderProduct] = Field([], description="Позиция в заказе")
-    fullPaidAt: Optional[datetime] = Field(None, description="Дата полной оплаты")
-    payments: dict[str, Payment] = Field(default_factory=dict, description="Платежи")
-    fromApi: bool = Field(False, description="Заказ поступил через API")
-    weight: Optional[Decimal] = Field(None, description="Вес")
-    length: Optional[int] = Field(None, description="Длина")
-    width: Optional[int] = Field(None, description="Ширина")
-    height: Optional[int] = Field(None, description="Высота")
-    shipmentStore: Optional[str] = Field(None, description="Склад отгрузки")
-    shipmentDate: Optional[datetime] = Field(None, description="Дата отгрузки")
-    shipped: bool = Field(False, description="Заказ отгружен")
-    links: list[OrderLink] = Field(None, description="Связь заказов")
-    customFields: dict = Field({}, validation_alias="customFields")
-    client_id: Optional[str] = Field(None, validation_alias="clientId")
-
-    customFields_validator = field_validator("customFields", mode="before")(
-        dict_validator()
-    )
-    payments_validator = field_validator("payments", mode="before")(
-        payments_validator()
-    )
-
-    createdAt_serializer = field_serializer("createdAt")(
-        datetime_serializer("%Y-%m-%d %H:%M:%S")
-    )
-    statusUpdatedAt_serializer = field_serializer("statusUpdatedAt")(
-        datetime_serializer("%Y-%m-%d %H:%M:%S")
-    )
-    markDatetime_serializer = field_serializer("markDatetime")(
-        datetime_serializer("%Y-%m-%d %H:%M:%S")
-    )
-    fullPaidAt_serializer = field_serializer("fullPaidAt")(
-        datetime_serializer("%Y-%m-%d %H:%M:%S")
-    )
-    shipmentDate_serializer = field_serializer("shipmentDate")(
-        datetime_serializer("%Y-%m-%d %H:%M:%S")
-    )
 
 
 
@@ -747,15 +338,6 @@ class User(BaseRetailCrmScheme):
     id: int = Field(description="ID пользователя")
 
 
-class MGDialog(BaseRetailCrmScheme):
-    pass  # TODO: reailize if need
-
-
-class FixExternalRow(BaseRetailCrmScheme):
-    id: Optional[int] = Field(None, description="Внутренний ID")
-    external_id: Optional[str] = Field(
-        None, description="Внешний ID", validation_alias="externalId"
-    )
 
 
 class Loyalty(BaseRetailCrmScheme):

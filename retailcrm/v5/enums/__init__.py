@@ -28,9 +28,7 @@ class RetailCrmEnum(Enum):
         return str(self.value)
 
 
-class IdTypes(str, RetailCrmEnum):
-    ID = "id"
-    EXTERNAL_ID = "externalId"
+
 
 
 class VatRateTypes(str, RetailCrmEnum):
@@ -90,10 +88,7 @@ class SexTypes(str, Enum):
 
 
 
-class CombineTechniqueTypes(str, Enum):
-    OURS = "ours"
-    SUMM = "summ"
-    THEIRS = "theirs"
+
 
 
 class CustomFieldEntityTypes(str, RetailCrmEnum):

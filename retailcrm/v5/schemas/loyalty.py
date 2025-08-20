@@ -19,11 +19,8 @@ __all__ = [
     "ResponseEditLoyaltyAccount",
     "ResponseLoyaltyAccountBonusOperations",
     "ResponseLoyaltyBonusDetails",
-    "Loyalty",
     "LoyaltyLevel",
-    "LoyaltyAccount",
     "LoyaltyCalculation",
-    "LoyaltyEventDiscount",
     "LoyaltyBonusStatisticResponse",
     "LoyaltyApiFilterData",
     "LoyaltyAccountFilterData",
@@ -87,10 +84,6 @@ class SmsVerification(BaseModel):
     verifiedAt_serializer = field_serializer("verifiedAt")(
         datetime_serializer("%Y-%m-%d %H:%M:%S")
     )
-
-
-class LoyaltyEventDiscount(BaseModel):
-    id: int = Field(None, description="ID")
 
 
 class OrderProductPriceItem(BaseRetailCrmScheme):
