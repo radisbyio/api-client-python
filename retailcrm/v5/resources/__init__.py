@@ -1,6 +1,6 @@
 # from retailcrm.v5.resources.custom_fields import CustomFieldsController
 # from retailcrm.v5.resources.customers import CustomersController
-# from retailcrm.v5.resources.loyalty import LoyaltyController
+from retailcrm.v5.resources.loyalty import LoyaltyApiResource
 from retailcrm.v5.resources.orders import OrdersApiResource
 from retailcrm.v5.resources.files import FilesApiResource
 from retailcrm.v5.resources.payments import PaymentApiResource

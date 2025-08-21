@@ -1,157 +1,102 @@
+import decimal
 from datetime import datetime
 
-from retailcrm.exceptions import RetailCrmApiError
-from retailcrm.http_cilent import BaseHttpClient
-from retailcrm.v5.schemas.loyalty import (
-    LoyaltyAccountBonusApiFilterType,
-    LoyaltyAccountBonusOperationsApiFilterType,
-    LoyaltyAccountFilterData,
-    LoyaltyApiFilterData,
-    LoyaltyBonusOperationsApiFilterType,
-    ResponseActivateLoyaltyAccount,
-    ResponseChargeLoyaltyAccountBonus,
-    ResponseCreateLoyaltyAccount,
-    ResponseCreditLoyaltyAccountBonus,
-    ResponseEditLoyaltyAccount,
-    ResponseLoyaltiesFilter,
-    ResponseLoyaltyAccountBonusOperations,
-    ResponseLoyaltyAccounts,
-    ResponseLoyaltyBonusDetails,
-    ResponseLoyaltyBonusOperations,
-    ResponseLoyaltyCalculate,
-    ResponseLoyaltyRetrieve,
-    SerializedCreateLoyaltyAccount,
-    SerializedEditLoyaltyAccount,
-)
-from retailcrm.v5.schemas.orders import SerializedOrder
-from retailcrm.v5.utils import pydantic_to_nested_dict
+from retailcrm.v5.resources.base import ApiResource
+from retailcrm.v5.schemas.entities.loyalty import SerializedCreateLoyaltyAccount, SerializedEditLoyaltyAccount
+from retailcrm.v5.schemas.entities.orders import SerializedOrder
+from retailcrm.v5.schemas.filters.loyalty import LoyaltyAccountFilterData, LoyaltyAccountBonusOperationsApiFilterType, \
+    LoyaltyAccountBonusApiFilterType, LoyaltyBonusOperationsApiFilterType, LoyaltyApiFilterData
+from retailcrm.v5.schemas.requests.loyalty import LoyaltyAccountsFilterRequest, LoyaltyAccountCreateRequest, \
+    LoyaltyAccountBonusChargeRequest, LoyaltyAccountEditRequest, LoyaltyAccountBonusCreditRequest, \
+    LoyaltyAccountBonusOperationsRequest, LoyaltyBonusDetailsRequest, LoyaltyBonusOperationsAllRequest, \
+    LoyaltyCalculateRequest, LoyaltiesFilterRequest
+from retailcrm.v5.schemas.responses.loyalty import LoyaltyAccountsResponse, LoyaltyAccountCreateResponse, \
+    LoyaltyAccountBonusChargeResponse, LoyaltyAccountActivateResponse, LoyaltyAccountEditResponse, \
+    LoyaltyAccountGetResponse, LoyaltyAccountBonusCreditResponse, LoyaltyAccountBonusOperationsResponse, \
+    LoyaltyBonusDetailsResponse, LoyaltyBonusOperationsResponse, LoyaltyCalculateResponse, LoyaltiesFilterResponse, \
+    LoyaltyRetrieveResponse
 
 
-class LoyaltyController:
-    def __init__(self, client: BaseHttpClient):
-        self._client = client
-
+class LoyaltyApiResource(ApiResource):
     async def accounts_filter(
-        self, filter_data: LoyaltyAccountFilterData | None = None, limit: int = 20, page: int = 1
-    ) -> ResponseLoyaltyAccounts:
+        self, filter_obj: LoyaltyAccountFilterData | None = None, limit: int = 20, page: int = 1
+    ) -> LoyaltyAccountsResponse:
         """Список участий в программе лояльности
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-loyalty-accounts
-        :param filter_data: Фильтр
+        :param filter_obj: Фильтр
         :param limit: Количество элементов на странице
         :param page: Номер страницы
         :return: LoyaltyAccountsResponse
         """
+        request = LoyaltyAccountsFilterRequest(filter_obj=filter_obj, limit=limit, page=page)
         response = await self._client.get(
             "/loyalty/accounts",
-            params={
-                "limit": limit,
-                "page": page,
-                **pydantic_to_nested_dict(filter_data, "filter"),
-            },
+            params=request.model_dump(exclude_none=True, by_alias=True),
         )
-
-        response_obj = ResponseLoyaltyAccounts.model_validate_json(response.content)
-
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-
-        return response_obj
+        return self._process_response(response, LoyaltyAccountsResponse)
 
     async def account_create(
         self, loyalty_account: SerializedCreateLoyaltyAccount, site: str | None = None
-    ) -> ResponseCreateLoyaltyAccount:
+    ) -> LoyaltyAccountCreateResponse:
         """
         **Добавление клиента в программу лояльности**
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-loyalty-account-create
         :param loyalty_account: Данные для добавления клиента в программу лояльности
         :param site: Символьный код магазина
-        :return: ResponseCreateLoyaltyAccount
+        :return: LoyaltyAccountCreateResponse
         """
-        params = {}
-        if site:
-            params["site"] = site
-
+        request = LoyaltyAccountCreateRequest(loyaltyAccount=loyalty_account, site=site)
         response = await self._client.post(
             "/loyalty/account/create",
-            params=params,
-            data={
-                "loyaltyAccount": loyalty_account.model_dump_json(
-                    exclude_unset=True, by_alias=True
-                )
-            },
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
+        return self._process_response(response, LoyaltyAccountCreateResponse)
 
-        response_obj = ResponseCreateLoyaltyAccount.model_validate_json(response.content)
-
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-
-        return response_obj
-
-    async def account_get(self, account_id: int) -> ResponseCreateLoyaltyAccount:
+    async def account_get(self, account_id: int) -> LoyaltyAccountGetResponse:
         """
         **Получение информации об участии в программе лояльности**
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-loyalty-account-id
         :param account_id: ID участия в программе лояльности
+        :return: LoyaltyAccountGetResponse
         """
         response = await self._client.get(f"/loyalty/account/{account_id}")
-
-        response_obj = ResponseCreateLoyaltyAccount.model_validate_json(response.content)
-
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-
-        return response_obj
+        return self._process_response(response, LoyaltyAccountGetResponse)
 
     async def account_edit(
         self, account_id: int, loyalty_account: SerializedEditLoyaltyAccount
-    ) -> ResponseEditLoyaltyAccount:
+    ) -> LoyaltyAccountEditResponse:
         """
         **Редактирование участия в программе лояльности**
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-loyalty-account-id-edit
         :param account_id: ID участия в программе лояльности
         :param loyalty_account: Данные для редактирования участия
-        :return: EditLoyaltyAccountResponse
+        :return: LoyaltyAccountEditResponse
         """
+        request = LoyaltyAccountEditRequest(loyaltyAccount=loyalty_account)
         response = await self._client.post(
             f"/loyalty/account/{account_id}/edit",
-            data={
-                "loyaltyAccount": loyalty_account.model_dump_json(
-                    exclude_unset=True, by_alias=True
-                )
-            },
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
+        return self._process_response(response, LoyaltyAccountEditResponse)
 
-        response_obj = ResponseEditLoyaltyAccount.model_validate_json(response.content)
-
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-
-        return response_obj
-
-    async def account_activate(self, account_id: int) -> ResponseActivateLoyaltyAccount:
+    async def account_activate(self, account_id: int) -> LoyaltyAccountActivateResponse:
         """
         **Активация участия в программе лояльности**
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-loyalty-account-id-activate
         :param account_id: ID участия в программе лояльности
+        :return: LoyaltyAccountActivateResponse
         """
         response = await self._client.post(f"/loyalty/account/{account_id}/activate")
-
-        response_obj = ResponseActivateLoyaltyAccount.model_validate_json(response.content)
-
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-
-        return response_obj
+        return self._process_response(response, LoyaltyAccountActivateResponse)
 
     async def account_bonus_charge(
-        self, account_id: int, amount: float, comment: str
-    ) -> ResponseChargeLoyaltyAccountBonus:
+        self, account_id: int, amount: decimal.Decimal, comment: str
+    ) -> LoyaltyAccountBonusChargeResponse:
         """
         **Списание бонусов участию в программе лояльности**
 
@@ -159,29 +104,23 @@ class LoyaltyController:
         :param account_id: ID участия в программе лояльности
         :param amount: Количество бонусов к списанию
         :param comment: Комментарий
+        :return: LoyaltyAccountBonusChargeResponse
         """
+        request = LoyaltyAccountBonusChargeRequest(amount=amount, comment=comment)
         response = await self._client.post(
             f"/loyalty/account/{account_id}/bonus/charge",
-            data={"amount": amount, "comment": comment},
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
-
-        response_obj = ResponseChargeLoyaltyAccountBonus.model_validate_json(
-            response.content
-        )
-
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-
-        return response_obj
+        return self._process_response(response, LoyaltyAccountBonusChargeResponse)
 
     async def account_bonus_credit(
         self,
         account_id: int,
-        amount: float,
+        amount: decimal.Decimal,
         activation_date: datetime | None = None,
         expire_date: datetime | None = None,
         comment: str | None = None,
-    ) -> ResponseCreditLoyaltyAccountBonus:
+    ) -> LoyaltyAccountBonusCreditResponse:
         """
         **Начисление бонусов участию в программе лояльности**
 
@@ -191,30 +130,19 @@ class LoyaltyController:
         :param activation_date: Дата активации бонусов
         :param expire_date: Дата сгорания бонусов
         :param comment: Комментарий
-        :return: CreditLoyaltyAccountBonusResponse
+        :return: LoyaltyAccountBonusCreditResponse
         """
-        data = {
-            "amount": amount,
-        }
-        if activation_date:
-            data["activation_date"] = activation_date.isoformat()
-        if expire_date:
-            data["expire_date"] = expire_date.isoformat()
-        if comment:
-            data["comment"] = comment
+        request = LoyaltyAccountBonusCreditRequest(
+            amount=amount,
+            activationDate=activation_date,
+            expireDate=expire_date,
+            comment=comment,
+        )
         response = await self._client.post(
             f"/loyalty/account/{account_id}/bonus/credit",
-            data=data
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
-
-        response_obj = ResponseCreditLoyaltyAccountBonus.model_validate_json(
-            response.content
-        )
-
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-
-        return response_obj
+        return self._process_response(response, LoyaltyAccountBonusCreditResponse)
 
     async def account_bonus_operations(
         self,
@@ -222,7 +150,7 @@ class LoyaltyController:
         filter_data: LoyaltyAccountBonusOperationsApiFilterType | None = None,
         limit: int = 20,
         page: int = 1,
-    ) -> ResponseLoyaltyAccountBonusOperations:
+    ) -> LoyaltyAccountBonusOperationsResponse:
         """
         **История бонусного счета для конкретного участия**
 
@@ -231,33 +159,25 @@ class LoyaltyController:
         :param filter_data: Фильтр
         :param limit: Количество элементов на странице
         :param page: Номер страницы
+        :return: LoyaltyAccountBonusOperationsResponse
         """
+        request = LoyaltyAccountBonusOperationsRequest(
+            filter_obj=filter_data, limit=limit, page=page
+        )
         response = await self._client.get(
             f"/loyalty/account/{account_id}/bonus/operations",
-            params={
-                "limit": limit,
-                "page": page,
-                **pydantic_to_nested_dict(filter_data, "filter"),
-            },
+            params=request.model_dump(exclude_none=True, by_alias=True),
         )
-
-        response_obj = ResponseLoyaltyAccountBonusOperations.model_validate_json(
-            response.content
-        )
-
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-
-        return response_obj
+        return self._process_response(response, LoyaltyAccountBonusOperationsResponse)
 
     async def account_bonus_details(
         self,
         account_id: int,
         status: str,
-        filter_data: LoyaltyAccountBonusApiFilterType,
+        filter_data: LoyaltyAccountBonusApiFilterType | None = None,
         limit: int = 20,
         page: int = 1,
-    ) -> ResponseLoyaltyBonusDetails:
+    ) -> LoyaltyBonusDetailsResponse:
         """
         **Получение детализации по бонусному счету**
 
@@ -267,29 +187,23 @@ class LoyaltyController:
         :param filter_data: Фильтр
         :param limit: Количество элементов на странице
         :param page: Номер страницы
+        :return: LoyaltyBonusDetailsResponse
         """
+        request = LoyaltyBonusDetailsRequest(
+            filter_obj=filter_data, limit=limit, page=page
+        )
         response = await self._client.get(
             f"/loyalty/account/{account_id}/bonus/{status}/details",
-            params={
-                "limit": limit,
-                "page": page,
-                **pydantic_to_nested_dict(filter_data, "filter"),
-            },
+            params=request.model_dump(exclude_none=True, by_alias=True),
         )
-
-        response_obj = ResponseLoyaltyBonusDetails.model_validate_json(response.content)
-
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-
-        return response_obj
+        return self._process_response(response, LoyaltyBonusDetailsResponse)
 
     async def bonus_operations(
         self,
-        filter_data: LoyaltyBonusOperationsApiFilterType,
+        filter_data: LoyaltyBonusOperationsApiFilterType | None = None,
         limit: int = 20,
-        cursor: str = None,
-    ) -> ResponseLoyaltyBonusOperations:
+        cursor: str | None = None,
+    ) -> LoyaltyBonusOperationsResponse:
         """
         **История бонусного счета для всех участий**
 
@@ -297,26 +211,20 @@ class LoyaltyController:
         :param filter_data: Фильтр
         :param limit: Количество элементов на странице
         :param cursor: Курсор
+        :return: LoyaltyBonusOperationsResponse
         """
+        request = LoyaltyBonusOperationsAllRequest(
+            filter_obj=filter_data, limit=limit, cursor=cursor
+        )
         response = await self._client.get(
             "/loyalty/bonus/operations",
-            params={
-                "limit": limit,
-                "cursor": cursor,
-                **pydantic_to_nested_dict(filter_data, "filter"),
-            },
+            params=request.model_dump(exclude_none=True, by_alias=True),
         )
-
-        response_obj = ResponseLoyaltyBonusOperations.model_validate_json(response.content)
-
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-
-        return response_obj
+        return self._process_response(response, LoyaltyBonusOperationsResponse)
 
     async def calculate(
-        self, site: str, order: SerializedOrder, bonuses: float = 0
-    ) -> ResponseLoyaltyCalculate:
+        self, site: str, order: SerializedOrder, bonuses: decimal.Decimal = decimal.Decimal(0)
+    ) -> LoyaltyCalculateResponse:
         """
         **Расчёт максимальной скидки**
 
@@ -324,25 +232,18 @@ class LoyaltyController:
         :param site: Символьный код магазина
         :param order: Заказ
         :param bonuses: Количество бонусов
+        :return: LoyaltyCalculateResponse
         """
+        request = LoyaltyCalculateRequest(site=site, order=order, bonuses=bonuses)
         response = await self._client.post(
             "/loyalty/calculate",
-            params={"site": site},
-            data={
-                "order": order.model_dump_json(exclude_none=True, by_alias=True),
-                "bonuses": bonuses,
-            },
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
-        response_obj = ResponseLoyaltyCalculate.model_validate_json(response.content)
-
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-
-        return response_obj
+        return self._process_response(response, LoyaltyCalculateResponse)
 
     async def loyalties_filter(
         self, filter_data: LoyaltyApiFilterData | None = None, limit: int = 20, page: int = 1
-    ) -> ResponseLoyaltiesFilter:
+    ) -> LoyaltiesFilterResponse:
         """
         **Список программ лояльности**
 
@@ -350,37 +251,22 @@ class LoyaltyController:
         :param filter_data: Фильтр
         :param limit: Количество элементов на странице
         :param page: Номер страницы
-        :return: LoyaltiesResponse
+        :return: LoyaltiesFilterResponse
         """
+        request = LoyaltiesFilterRequest(filter_obj=filter_data, limit=limit, page=page)
         response = await self._client.get(
             "/loyalty/loyalties",
-            params={
-                "limit": limit,
-                "page": page,
-                **pydantic_to_nested_dict(filter_data, "filter"),
-            },
+            params=request.model_dump(exclude_none=True, by_alias=True),
         )
+        return self._process_response(response, LoyaltiesFilterResponse)
 
-        response_obj = ResponseLoyaltiesFilter.model_validate_json(response.content)
-
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-
-        return response_obj
-
-    async def loyalty_get(self, loyalty_id: int) -> ResponseLoyaltyRetrieve:
+    async def loyalty_get(self, loyalty_id: int) -> LoyaltyRetrieveResponse:
         """
         **Получение информации о программе лояльности**
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-loyalty-loyalties-id
         :param loyalty_id: ID программы лояльности
-        :return: LoyaltiesResponse
+        :return: LoyaltyRetrieveResponse
         """
         response = await self._client.get(f"/loyalty/loyalties/{loyalty_id}")
-
-        response_obj = ResponseLoyaltyRetrieve.model_validate_json(response.content)
-
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-
-        return response_obj
+        return self._process_response(response, LoyaltyRetrieveResponse)

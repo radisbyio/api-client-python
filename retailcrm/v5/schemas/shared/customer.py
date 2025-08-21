@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Any
 
 from pydantic import Field
 
@@ -12,6 +12,10 @@ class SerializedEntityCustomer(BaseRetailCrmScheme):
     id: Optional[int] = Field(None, description="Внутренний ID клиента")
     externalId: Optional[str] = Field(None, description="Внешний ID клиента")
     type: Optional[str] = Field(None) # TODO: ??
+    firstName: Optional[str] = Field(None) # TODO: ??
+    lastName: Optional[str] = Field(None) # TODO: ??
+    patronymic: Optional[str] = Field(None) # TODO: ??
+    customFields: Optional[Any] = Field(None) # TODO: ??
 
 
 class AbstractCustomer(BaseRetailCrmScheme):

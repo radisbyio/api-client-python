@@ -9,7 +9,7 @@ from retailcrm.v5.resources import (
     SettingsApiResource,
     UsersApiResource, WebAnalyticsApiResource, StatisticApiResource, VerificationController, TelephonyApiResource,
     SegmentsApiResource, OrdersPacksApiResource,
-    NotificationsApiResource, OrdersApiResource, FilesApiResource
+    NotificationsApiResource, OrdersApiResource, FilesApiResource, LoyaltyApiResource
 )
 from retailcrm.v5.resources.base import ApiResource
 from retailcrm.v5.utils import validate_crm_url
@@ -56,9 +56,6 @@ class RetailCrmApiClientV5:
         return self._resource_cache[name]
 
 
-
-
-
     # @property
     # def corporate_customers(self) -> CorporateCustomersController:
     #     return self._get_resource("corporate_customers", CorporateCustomersController)
@@ -66,8 +63,6 @@ class RetailCrmApiClientV5:
     # @property
     # def customers(self) -> CustomersController:
     #     return self._get_resource("customers", CustomersController)
-    #
-    #
     #
     # @property
     # def custom_fields(self) -> CustomFieldsController:
@@ -77,10 +72,9 @@ class RetailCrmApiClientV5:
     def files(self) -> FilesApiResource:
         return self._get_resource("files", FilesApiResource)
 
-    # @property
-    # def loyalty(self) -> LoyaltyController:
-    #     return self._get_resource("loyalty", LoyaltyController)
-
+    @property
+    def loyalty(self) -> LoyaltyApiResource:
+        return self._get_resource("loyalty", LoyaltyApiResource)
 
     @property
     def notifications(self) -> NotificationsApiResource:

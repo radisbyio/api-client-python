@@ -1,12 +1,14 @@
 import decimal
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Any
 
 from pydantic import Field, field_serializer, field_validator
 
 from retailcrm.v5.helpers import datetime_serializer, dict_validator
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme
 from retailcrm.v5.schemas.entities.customers import Customer
+from retailcrm.v5.schemas.entities.orders import Offer
+from retailcrm.v5.schemas.shared.customer import SerializedEntityCustomer
 
 
 class LoyaltyLevel(BaseRetailCrmScheme):
@@ -84,11 +86,11 @@ class LoyaltyAccount(BaseRetailCrmScheme):
     customer: Optional[Customer] = Field(None, description="Клиент")
     phoneNumber: Optional[str] = Field(None, description="Номер телефона")
     cardNumber: Optional[str] = Field(None, description="Номер карты")
-    amount: Optional[float] = Field(None, description="Количество активных бонусов")
-    ordersSum: Optional[float] = Field(
+    amount: Optional[decimal.Decimal] = Field(None, description="Количество активных бонусов")
+    ordersSum: Optional[decimal.Decimal] = Field(
         None, description="Сумма покупок (в валюте объекта)"
     )
-    nextLevelSum: Optional[float] = Field(
+    nextLevelSum: Optional[decimal.Decimal] = Field(
         None, description="Необходимая сумма покупок для перехода на след уровень"
     )
     level: Optional[LoyaltyLevel] = Field(None, description="Уровень участия")
@@ -118,3 +120,80 @@ class LoyaltyAccount(BaseRetailCrmScheme):
     customFields_validator = field_validator("customFields", mode="before")(
         dict_validator()
     )
+
+
+class LoyaltyLevelConditionItemOffer(BaseRetailCrmScheme):
+    id: Optional[int] = Field(None, description="ID элемента условия")
+    offer: Optional[Offer] = Field(None, description="Торговое предложение (SKU)")
+
+
+class LoyaltyLevelCondition(BaseRetailCrmScheme):
+    id: Optional[int] = Field(None, description="ID условия")
+    privilegeSize: Optional[decimal.Decimal] = Field(None, description="Размер скидки, процент или курс начисления бонусов для товаров по обычной цене (в валюте объекта)")
+    privilegeSizePromo: Optional[decimal.Decimal] = Field(None, description="Размер скидки, процент или курс начисления бонусов для акционных товаров (в валюте объекта)")
+    items: list[LoyaltyLevelConditionItemOffer] = Field(default_factory=list, description="Элементы условия")
+
+
+class LoyaltyBonus(BaseRetailCrmScheme):
+    amount: Optional[decimal.Decimal] = Field(None, description="Количество начисленных бонусов")
+    activationDate: Optional[datetime] = Field(None, description="Дата активации бонусов")
+    expireDate: Optional[datetime] = Field(None, description="Дата сгорания бонусов")
+
+class OperationOrder(BaseRetailCrmScheme):
+    id: Optional[int] = Field(None, description="ID заказа")
+    externalId: Optional[str] = Field(None, description="Внешний ID заказа")
+
+
+class OperationBonus(BaseRetailCrmScheme):
+    activationDate: Optional[datetime] = Field(None, description="Дата активации бонусов")
+    expireDate: Optional[datetime] = Field(None, description="Дата сгорания бонусов")
+
+
+class OperationEvent(BaseRetailCrmScheme):
+    id: Optional[int] = Field(None, description="ID события")
+    type: Optional[str] = Field(None, description="Тип события. Возможные значения: birthday, welcome")
+
+
+class OperationLoyaltyAccount(BaseRetailCrmScheme):
+    id: Optional[int] = Field(None, description="ID участия")
+
+
+class OperationLoyalty(BaseRetailCrmScheme):
+    id: Optional[int] = Field(None, description="ID программы лояльности")
+
+
+class Operation(BaseRetailCrmScheme):
+    type: Optional[str] = Field(None, description="Тип действия")
+    createdAt: Optional[datetime] = Field(None, description="Дата действия")
+    amount: Optional[decimal.Decimal] = Field(None, description="Количество бонусов")
+    order: Optional[OperationOrder] = Field(None, description="Связанный заказ")
+    bonus: Optional[OperationBonus] = Field(None, description="Начисленные бонусы")
+    event: Optional[OperationEvent] = Field(None, description="Событие программы лояльности")
+    comment: Optional[str] = Field(None, description="Комментарий")
+    loyaltyAccount: Optional[OperationLoyaltyAccount] = Field(None, alias="loyaltyAccount", description="Связанное участие")
+    loyalty: Optional[OperationLoyalty] = Field(None, description="Связанная программа лояльности")
+
+
+class LoyaltyCalculation(BaseRetailCrmScheme):
+    privilegeType: Optional[str] = Field(None, description="Тип привилегии")
+    discount: Optional[decimal.Decimal] = Field(None, description="Денежная скидка на заказ с учетом списанных бонусов по курсу, заданному в настройках")
+    creditBonuses: Optional[decimal.Decimal] = Field(None, description="Бонусы к начислению")
+    loyaltyEventDiscount: Optional[LoyaltyEventDiscount] = Field(None, description="Скидка по событию программы лояльности")
+    maxChargeBonuses: Optional[decimal.Decimal] = Field(None, description="Бонусы, доступные для списания")
+    maximum: Optional[bool] = Field(None, description="Привилегия с максимальной выгодой")
+
+
+class SerializedCreateLoyaltyAccount(BaseRetailCrmScheme):
+    phoneNumber: Optional[str] = Field(None, description="Номер телефона")
+    cardNumber: Optional[str] = Field(None, description="Номер карты")
+    customFields: Optional[dict] = Field(
+        None, description="Ассоциативный массив пользовательских полей"
+    )
+    customer: Optional[SerializedEntityCustomer] = Field(None, description="Клиент")
+
+
+class SerializedEditLoyaltyAccount(BaseRetailCrmScheme):
+    phoneNumber: Optional[str] = Field(None, description="Номер телефона")
+    cardNumber: Optional[str] = Field(None, description="Номер карты")
+    customFields: Optional[dict[str, Any]] = Field(None, description="Ассоциативный массив пользовательских полей")
+    loyaltyLevelId: Optional[int] = Field(None, description="Идентификатор уровня программы лояльности")

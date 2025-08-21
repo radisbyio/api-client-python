@@ -4,7 +4,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from retailcrm.v5.helpers import errors_dict_validator
 
-__all__ = ["BaseRetailCrmScheme", "RetailCrmResponse", "SuccessResponse", "ErrorResponse","PaginatedResponse", "IdTypesLiteral", "IdResponse"]
+__all__ = ["BaseRetailCrmScheme", "BaseRetailCrmResponse", "SuccessResponse", "ErrorResponse","PaginatedResponse", "IdTypesLiteral", "IdResponse", "CursorPaginatedResponse"]
 
 
 IdTypesLiteral = Literal["id", "externalId"]
@@ -25,6 +25,9 @@ class Pagination(BaseModel):
     totalCount: int | None = None
     currentPage: int | None = None
     totalPageCount: int | None = None
+
+
+class CursorPagination(BaseModel):
     nextCursor: str | None = None
 
 
@@ -44,6 +47,10 @@ class ErrorResponse(BaseRetailCrmResponse):
 
 class PaginatedResponse(SuccessResponse):
     pagination: Pagination
+
+
+class CursorPaginatedResponse(SuccessResponse):
+    pagination: CursorPagination
 
 
 class IdResponse(SuccessResponse):
