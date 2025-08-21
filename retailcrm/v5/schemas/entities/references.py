@@ -2,11 +2,39 @@ import decimal
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, Field, field_serializer
+from pydantic import Field, field_serializer
 
 from retailcrm.v5.helpers import datetime_serializer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme
 from retailcrm.v5.schemas.shared.source import SerializedSource
+
+
+# TODO: Заполнить
+class SerializedOrderProductStatus(BaseRetailCrmScheme):
+    name: Optional[str] = Field(None)
+    code: Optional[str] = Field(None)
+    type: Optional[str] = Field(None)
+    ordering: Optional[int] = Field(None)
+    active: Optional[bool] = Field(None)
+    cancelStatus: Optional[bool] = Field(None)
+    orderStatusByProductStatus: Optional[str] = Field(None)
+    orderStatusForProductStatus: Optional[str] = Field(None)
+
+
+class CostItem(BaseRetailCrmScheme):
+    source: Optional[SerializedSource] = Field(
+        None, description="Данные по источнику клиента"
+    )
+    code: str = Field(description="Символьный код статьи расходов")
+    name: str = Field(description="Название статьи расходов")
+    group: str = Field(description="Символьный код группы расходов")
+    ordering: int = Field(description="Порядок")
+    active: bool = Field(False, description="Активность")
+    appliesToOrders: bool = Field(False, description="Относится к расходам по заказам")
+    type: str = Field(description="Тип расхода")
+    appliesToUsers: bool = Field(
+        False, description="Относится к расходам по пользователям"
+    )
 
 
 class CostGroup(BaseRetailCrmScheme):
@@ -54,7 +82,7 @@ class Courier(BaseRetailCrmScheme):
     description: Optional[str] = Field(None,  description="Примечание")
 
 
-class SerializedCourier(BaseModel):
+class SerializedCourier(BaseRetailCrmScheme):
     firstName: Optional[str] = Field(None, description="Имя")
     lastName: Optional[str] = Field(None, description="Фамилия")
     patronymic: Optional[str] = Field(None, description="Отчество")
@@ -64,7 +92,7 @@ class SerializedCourier(BaseModel):
     phone: Optional[CourierPhone] = Field(None, description="Контактный телефон")
 
 
-class Currency(BaseModel):
+class Currency(BaseRetailCrmScheme):
     id: Optional[int] = Field(None, description="ID")
     code: Optional[str] = Field(None, description="Код валюты")
     isBase: Optional[bool] = Field(None, description="Является базовой валютой")
@@ -74,32 +102,32 @@ class Currency(BaseModel):
     manualConvertValue: Optional[decimal.Decimal] = Field(None, description="Курс валюты при ручной конвертации")
 
 
-class SerializedCurrency(BaseModel):
+class SerializedCurrency(BaseRetailCrmScheme):
     code: Optional[str] = Field(None, description="Код валюты")
     autoConvertExtraPercent: Optional[int] = Field(None, description="Наценка в % при автоматической конвертации")
     manualConvertNominal: Optional[int] = Field(None, description="Номинал валюты при ручной конвертации")
     manualConvertValue: Optional[decimal.Decimal] = Field(None, description="Курс валюты при ручной конвертации")
     isAutoConvert: Optional[bool] = Field(None, description="Автоматическая конвертация валюты")
 
-class DeliveryService(BaseModel):
+class DeliveryService(BaseRetailCrmScheme):
     name: str | None = Field(None, description="Название")
     code: str | None = Field(None, description="Символьный код")
     active: bool | None = Field(None, description="Статус активности")
 
 
-class SerializedDeliveryService(BaseModel):
+class SerializedDeliveryService(BaseRetailCrmScheme):
     name: str = Field(None, description="Название")
     code: str = Field(None, description="Символьный код")
     deliveryType: str = Field(None, description="Тип доставки")
     active: bool = Field(None, description="Статус активности")
 
 
-class DeliveryTypePaymentType(BaseModel):
+class DeliveryTypePaymentType(BaseRetailCrmScheme):
     code: str | None = Field(None, description="Символьный код")
     cod: bool | None = Field(None, description="Оплата наложенным платежом")
 
 
-class DeliveryType(BaseModel):
+class DeliveryType(BaseRetailCrmScheme):
     paymentTypes: list[str] | None = Field(
         default_factory=list,                                           description="(deprecated) Разрешенные типы оплат. Используйте deliveryPaymentTypes")
     isDynamicCostCalculation: bool| None = Field(None,
@@ -147,7 +175,7 @@ class DeliveryType(BaseModel):
     )
 
 
-class SerializedDeliveryType(BaseModel):
+class SerializedDeliveryType(BaseRetailCrmScheme):
     name: str| None = Field(None, description="Название")
     code: str| None = Field(None, description="Символьный код")
     defaultCost: decimal.Decimal | None= Field(None,description="Стоимость по умолчанию (в валюте объекта)")
@@ -176,7 +204,7 @@ class SerializedDeliveryType(BaseModel):
     )
 
 
-class LegalEntity(BaseModel):
+class LegalEntity(BaseRetailCrmScheme):
     contragentType: Optional[str] = Field(None, description="Тип юридического лица")
     legalName: Optional[str] = Field(None, description="Полное наименование")
     legalAddress: Optional[str] = Field(None, description="Адрес регистрации")
@@ -197,7 +225,7 @@ class LegalEntity(BaseModel):
     vatRate: Optional[str] = Field(None, description="Ставка НДС")
 
 
-class SerializedLegalEntity(BaseModel):
+class SerializedLegalEntity(BaseRetailCrmScheme):
     contragentType: Optional[str] = Field(None, description="Тип юридического лица")
     legalName: Optional[str] = Field(None, description="Полное наименование")
     legalAddress: Optional[str] = Field(None, description="Адрес регистрации")
@@ -219,14 +247,14 @@ class SerializedLegalEntity(BaseModel):
 
     certificateDate_serializer = field_serializer("certificateDate")(datetime_serializer("%Y-%m-%d %H:%M:%S"))
 
-class OrderMethod(BaseModel):
+class OrderMethod(BaseRetailCrmScheme):
     name: Optional[str] = Field(None, description="Название")
     code: Optional[str] = Field(None, description="Символьный код")
     active: Optional[bool] = Field(None, description="Статус активности")
     defaultForCrm: Optional[bool] = Field(None, description="Устанавливается по умолчанию для заказов, создаваемых в системе")
     defaultForApi: Optional[bool] = Field(None, description="Устанавливается по умолчанию для заказов, создаваемых через API")
 
-class SerializedOrderMethod(BaseModel):
+class SerializedOrderMethod(BaseRetailCrmScheme):
     name: Optional[str] = Field(None, description="Название")
     code: Optional[str] = Field(None, description="Символьный код")
     active: Optional[bool] = Field(None, description="Статус активности")
@@ -234,7 +262,7 @@ class SerializedOrderMethod(BaseModel):
     defaultForApi: Optional[bool] = Field(None, description="Устанавливается по умолчанию для заказов, создаваемых через API")
 
 
-class OrderType(BaseModel):
+class OrderType(BaseRetailCrmScheme):
     name: Optional[str] = Field(None, description="Название")
     code: Optional[str] = Field(None, description="Символьный код")
     active: Optional[bool] = Field(None, description="Статус активности")
@@ -242,7 +270,7 @@ class OrderType(BaseModel):
     defaultForApi: Optional[bool] = Field(None, description="Устанавливается по умолчанию для заказов, создаваемых через API")
     ordering: Optional[int] = Field(None, description="Порядок")
 
-class SerializedOrderType(BaseModel):
+class SerializedOrderType(BaseRetailCrmScheme):
     name: Optional[str] = Field(None, description="Название")
     code: Optional[str] = Field(None, description="Символьный код")
     active: Optional[bool] = Field(None, description="Статус активности")
@@ -253,7 +281,7 @@ class SerializedOrderType(BaseModel):
     ordering: Optional[int] = Field(None, description="Порядок")
 
 
-class PaymentStatus(BaseModel):
+class PaymentStatus(BaseRetailCrmScheme):
     name: Optional[str] = Field(None, description="	Название")
     code: Optional[str] = Field(None, description="	Символьный код")
     active: Optional[bool] = Field(None, description="	Статус активности")
@@ -265,7 +293,7 @@ class PaymentStatus(BaseModel):
     paymentTypes: list[str] = Field(default_factory=list, description="Типы оплаты, где используется данный статус оплаты")
 
 
-class SerializedPaymentStatus(BaseModel):
+class SerializedPaymentStatus(BaseRetailCrmScheme):
     name: Optional[str] = Field(None, description="	Название")
     code: Optional[str] = Field(None, description="	Символьный код")
     active: Optional[bool] = Field(None, description="	Статус активности")
@@ -295,7 +323,7 @@ class PaymentType(BaseRetailCrmScheme):
     sites: Optional[list[str]] = Field(None, description="Магазины, в которых доступен данный тип оплаты. Если пустой массив, то доступен во всех")
 
 
-class SerializedPaymentType(BaseModel):
+class SerializedPaymentType(BaseRetailCrmScheme):
     name: Optional[str] = Field(None, description="Название")
     code: Optional[str] = Field(None, description="Символьный код")
     sites: Optional[list[str]] = Field(None,
@@ -403,7 +431,7 @@ class SerializedSite(BaseRetailCrmScheme):
     currency: Optional[str] = Field(None, description="Валюта")
 
 
-class StatusGroup(BaseModel):
+class StatusGroup(BaseRetailCrmScheme):
     name: Optional[str] = Field(None, description="Название")
     code: Optional[str] = Field(None, description="Символьный код")
     active: Optional[bool] = Field(None, description="Статус активности")
@@ -415,7 +443,7 @@ class StatusGroup(BaseModel):
         description="Статусы заказов, которые входят в данную группу",
     )
 
-class Status(BaseModel):
+class Status(BaseRetailCrmScheme):
     name: Optional[str] = Field(None, description="Название")
     code: Optional[str] = Field(None, description="Символьный код")
     active: Optional[bool] = Field(None, description="Статус активности")

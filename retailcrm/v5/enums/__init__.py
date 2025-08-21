@@ -1,7 +1,6 @@
 from enum import Enum
 
 __all__ = [
-    "IdTypes",
     "VatRateTypes",
     "PaymentObjects",
     "PaymentMethods",
@@ -10,13 +9,10 @@ __all__ = [
     "PrivilegeType",
     "ContragentTypes",
     "SexTypes",
-    "TasksStatuses",
-    "NotificationTypes",
     "ViewModeTypes",
     "CustomFieldEntityTypes",
     "DisplayAreaTypes",
     "CustomFieldTypes",
-    "CombineTechniqueTypes",
     "DeliveryStatusTypes",
     "DeliveryShipmentStatusTypes",
     "ProductTypes",

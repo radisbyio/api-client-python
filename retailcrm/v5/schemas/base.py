@@ -4,7 +4,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from retailcrm.v5.helpers import errors_dict_validator
 
-__all__ = ["BaseRetailCrmScheme", "RetailCrmResponse", "SuccessResponse", "ErrorResponse","PaginatedResponse", "IdTypesLiteral"]
+__all__ = ["BaseRetailCrmScheme", "RetailCrmResponse", "SuccessResponse", "ErrorResponse","PaginatedResponse", "IdTypesLiteral", "IdResponse"]
 
 
 IdTypesLiteral = Literal["id", "externalId"]

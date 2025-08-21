@@ -1,12 +1,10 @@
-from retailcrm.v5.api.references import RetailCrmReferencesApi
 from retailcrm.v5.resources.base import ApiResource
-from retailcrm.v5.schemas import SuccessResponse
+from retailcrm.v5.schemas.base import SuccessResponse
 from retailcrm.v5.schemas.entities.references import SerializedCurrency, SerializedDeliveryService, \
     SerializedDeliveryType, SerializedLegalEntity, SerializedOrderMethod, SerializedOrderType, SerializedPaymentStatus, \
     SerializedPaymentType, SerializedUnit, SerializedCostGroup, SerializedCostItem, SerializedCourier, \
-    SerializedPriceType, SerializedSite
+    SerializedPriceType, SerializedSite, SerializedOrderProductStatus
 from retailcrm.v5.schemas.entities.store import SerializedStore
-from retailcrm.v5.schemas.references import SerializedOrderProductStatus
 from retailcrm.v5.schemas.requests.references import CostGroupsEditRequest, CostItemsEditRequest, CouriersCreateRequest, \
     CouriersEditRequest, CurrenciesCreateRequest, CurrenciesEditRequest, DeliveryServicesEditRequest, \
     DeliveryTypesEditRequest, LegalEntitiesEditRequest, OrderMethodEditRequest, OrderTypesEditRequest, \
@@ -20,8 +18,6 @@ from retailcrm.v5.schemas.responses.references import CostGroupsResponse, CostIt
 
 
 class ReferencesController(ApiResource):
-    _api: RetailCrmReferencesApi
-
     async def cost_groups(self) -> CostGroupsResponse:
         """
         **Получение списка групп расходов**

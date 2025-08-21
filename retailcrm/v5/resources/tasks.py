@@ -1,7 +1,7 @@
 from typing import Optional
 
 from retailcrm.v5.resources.base import ApiResource
-from retailcrm.v5.schemas import SuccessResponse
+from retailcrm.v5.schemas.base import SuccessResponse
 from retailcrm.v5.schemas.entities.tasks import TaskFilter, SerializedTask, TaskHistoryFilter
 from retailcrm.v5.schemas.requests.tasks import FilterTasksRequest, CreateTaskRequest, FilterTasksHistoryRequest, \
     GetTaskCommentsRequest, EditTaskRequest

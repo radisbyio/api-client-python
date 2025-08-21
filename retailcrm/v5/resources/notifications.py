@@ -1,5 +1,5 @@
 from retailcrm.v5.resources.base import ApiResource
-from retailcrm.v5.schemas import SuccessResponse
+from retailcrm.v5.schemas.base import SuccessResponse
 from retailcrm.v5.schemas.entities.notifications import SerializedApiNotification
 from retailcrm.v5.schemas.requests.notifications import SendNotificationRequest
 

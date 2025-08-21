@@ -139,8 +139,9 @@ class SerializedOrderProductOffer(BaseRetailCrmScheme):
 
 
 class SerializedOrderProduct(BaseRetailCrmScheme):
-    externalId: Optional[str] = Field(None)
-    markingCodes: list[str] = Field(default_factory=list, description="Коды маркировки")
+    id: Optional[int] = Field(None, description="ID позиции в заказе")
+    externalId: Optional[str] = Field(None, description="(deprecated) Внешний ID позиции в заказе")
+    markingCodes: Optional[list[str]] = Field(None, description="Коды маркировки")
     initialPrice: Optional[decimal.Decimal] = Field(
         None, description="Цена товара/SKU (в валюте объекта)"
     )
@@ -156,8 +157,8 @@ class SerializedOrderProduct(BaseRetailCrmScheme):
     )
     quantity: Optional[decimal.Decimal] = Field(None, description="Количество")
     comment: Optional[str] = Field(None, description="Комментарий к позиции в заказе")
-    properties: list[OrderProductProperties] = Field(
-        default_factory=list, description="Дополнительные свойства позиции в заказе"
+    properties: Optional[list[OrderProductProperties]] = Field(
+        None, description="Дополнительные свойства позиции в заказе"
     )
     purchasePrice: decimal.Decimal = Field(None, description="Закупочная цена (в базовой валюте)")
     ordering: Optional[int] = Field(None, description="Порядок")
@@ -167,8 +168,8 @@ class SerializedOrderProduct(BaseRetailCrmScheme):
     productName: Optional[str] = Field(None, description="Название товара")
     status: Optional[str] = Field(None, description="Статус позиции в заказе")
     priceType: Optional[PriceType] = Field(None, description="Тип цены")
-    externalIds: list[CodeValueModel] = Field(
-        default_factory=list, description="Внешние идентификаторы позиции в заказе"
+    externalIds: Optional[list[CodeValueModel]] = Field(
+        None, description="Внешние идентификаторы позиции в заказе"
     )
 
     createdAt_serializer = field_serializer("createdAt")(

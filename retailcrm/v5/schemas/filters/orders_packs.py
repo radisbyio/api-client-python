@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import Field, field_serializer
 
 from retailcrm.v5.helpers import datetime_serializer
-from retailcrm.v5.schemas import BaseRetailCrmScheme
+from retailcrm.v5.schemas.base import BaseRetailCrmScheme
 
 
 class OrderProductPackFilter(BaseRetailCrmScheme):
@@ -20,8 +20,8 @@ class OrderProductPackFilter(BaseRetailCrmScheme):
     invoiceNumber: Optional[str] = Field(None, description="Номер счета-фактуры")
     deliveryNoteNumber: Optional[str] = Field(None, description="Номер накладной")
 
-    shipment_date_from_serializer = field_serializer("shipment_date_from")(datetime_serializer("%Y-%m-%d %H:%M:%S"))
-    shipment_date_to_serializer = field_serializer("shipment_date_to")(datetime_serializer("%Y-%m-%d %H:%M:%S"))
+    shipment_date_from_serializer = field_serializer("shipmentDateFrom")(datetime_serializer("%Y-%m-%d %H:%M:%S"))
+    shipment_date_to_serializer = field_serializer("shipmentDateTo")(datetime_serializer("%Y-%m-%d %H:%M:%S"))
 
 
 class OrderProductPackHistoryFilterType(BaseRetailCrmScheme):

@@ -45,26 +45,20 @@ class HttpClient(BaseHttpClient):
         except httpx.TimeoutException:
             raise RetailCrmTimeoutException()
         else:
-            return Response(response.status_code, response.text)
+            return Response(response.status_code, response.content)
 
     async def post(
         self, endpoint: str, params: Optional[dict] = None, data: Optional[dict] = None, json_str: str | None = None
     ) -> Response:
         try:
             logger.debug(
-                f"Request to {endpoint} with params: {params} and body: {data}"
+                f"Request to {endpoint} with params: {params} and body: {json_str}"
             )
-            # TODO: Remove
-            if data:
-                response = await self._client.post(
-                    endpoint, params=params, data=data, timeout=15.0
-                )
-            else:
-                response = await self._client.post(
-                    endpoint, params=params, json=json_str, timeout=15.0, headers={"Content-Type": "application/json"}
-                )
+            response = await self._client.post(
+                endpoint, params=params, content=json_str, timeout=15.0, headers={"Content-Type": "application/json"}
+            )
             logger.debug(f"Received {response.status_code} with {response.text}")
         except httpx.TimeoutException:
             raise RetailCrmTimeoutException()
         else:
-            return Response(response.status_code, response.text)
+            return Response(response.status_code, response.content)

@@ -1,6 +1,5 @@
 from retailcrm.exceptions import RetailCrmApiError
 from retailcrm.http_cilent import BaseHttpClient
-from retailcrm.v5.schemas import SerializedOrder
 from retailcrm.v5.schemas.delivery import (
     DeliveryTrackingResponse,
     DeliveryShipmentFilterData,

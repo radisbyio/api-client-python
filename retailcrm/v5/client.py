@@ -2,18 +2,14 @@ from typing import TypeVar
 
 from retailcrm.http_cilent import BaseHttpClient, HttpClient
 from retailcrm.v5.resources import (
-    CustomersController,
-    CustomFieldsController,
-    LoyaltyController,
-    OrdersController,
     PaymentApiResource,
     ReferencesController,
     StoreApiResource,
     TasksApiResource,
     SettingsApiResource,
-    UsersApiResource, WebAnalyticsApiResource, StatisticApiResource, VerificationController,
-    CorporateCustomersController, TelephonyApiResource, SegmentsApiResource, OrdersPacksApiResource,
-    NotificationsApiResource
+    UsersApiResource, WebAnalyticsApiResource, StatisticApiResource, VerificationController, TelephonyApiResource,
+    SegmentsApiResource, OrdersPacksApiResource,
+    NotificationsApiResource, OrdersApiResource
 )
 from retailcrm.v5.resources.base import ApiResource
 from retailcrm.v5.utils import validate_crm_url
@@ -63,23 +59,23 @@ class RetailCrmApiClientV5:
 
 
 
-    @property
-    def corporate_customers(self) -> CorporateCustomersController:
-        return self._get_resource("corporate_customers", CorporateCustomersController)
-
-    @property
-    def customers(self) -> CustomersController:
-        return self._get_resource("customers", CustomersController)
-
-
-
-    @property
-    def custom_fields(self) -> CustomFieldsController:
-        return self._get_resource("custom_fields", CustomFieldsController)
-
-    @property
-    def loyalty(self) -> LoyaltyController:
-        return self._get_resource("loyalty", LoyaltyController)
+    # @property
+    # def corporate_customers(self) -> CorporateCustomersController:
+    #     return self._get_resource("corporate_customers", CorporateCustomersController)
+    #
+    # @property
+    # def customers(self) -> CustomersController:
+    #     return self._get_resource("customers", CustomersController)
+    #
+    #
+    #
+    # @property
+    # def custom_fields(self) -> CustomFieldsController:
+    #     return self._get_resource("custom_fields", CustomFieldsController)
+    #
+    # @property
+    # def loyalty(self) -> LoyaltyController:
+    #     return self._get_resource("loyalty", LoyaltyController)
 
 
     @property
@@ -87,8 +83,8 @@ class RetailCrmApiClientV5:
         return self._get_resource("notifications", NotificationsApiResource)
 
     @property
-    def orders(self) -> OrdersController:
-        return self._get_resource("orders", OrdersController)
+    def orders(self) -> OrdersApiResource:
+        return self._get_resource("orders", OrdersApiResource)
 
     @property
     def orders_packs(self) -> OrdersPacksApiResource:

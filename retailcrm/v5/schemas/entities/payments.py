@@ -91,7 +91,7 @@ class ApiImportInvoiceRequest(BaseRetailCrmScheme):
     refunds: Optional[list[ApiImportInvoicePaymentRefund]] = Field(None, description="Данные возвратов")
     refundable: Optional[bool] = Field(None, description="Возможность сделать возврат")
 
-    created_at_serializer = field_serializer("created_at")(
+    createdAt_serializer = field_serializer("createdAt")(
         datetime_serializer("%Y-%m-%d %H:%M:%S")
     )
     paidAt_serializer = field_serializer("paidAt")(

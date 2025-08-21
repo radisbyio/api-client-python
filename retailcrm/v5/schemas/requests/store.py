@@ -3,7 +3,7 @@ from typing import Optional
 from pydantic import Field, model_serializer, field_serializer
 
 from retailcrm.v5.helpers import to_json_serializer
-from retailcrm.v5.schemas import BaseRetailCrmScheme
+from retailcrm.v5.schemas.base import BaseRetailCrmScheme
 from retailcrm.v5.schemas.entities.store import SerializedOffer, PriceUploadInput, SerializedProductGroup, \
     ProductCreateInput
 from retailcrm.v5.schemas.filters.store import OfferFilter, ProductGroupFilter, ProductFilter, \

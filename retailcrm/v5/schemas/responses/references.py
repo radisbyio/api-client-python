@@ -2,12 +2,11 @@ from typing import Optional
 
 from pydantic import Field
 
-from retailcrm.v5.schemas import CostItem
 from retailcrm.v5.schemas.base import SuccessResponse
 from retailcrm.v5.schemas.entities.customers import MGChannel
 from retailcrm.v5.schemas.entities.references import CostGroup, Courier, Currency, DeliveryService, DeliveryType, \
     OrderMethod, OrderType, PaymentStatus, PaymentType, Site, Store, StatusGroup, Status, SerializedUnit, LegalEntity, \
-    PriceType, OrderProductStatus
+    PriceType, OrderProductStatus, CostItem
 
 
 class CostGroupsResponse(SuccessResponse):

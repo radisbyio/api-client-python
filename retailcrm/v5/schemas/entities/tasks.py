@@ -5,7 +5,7 @@ from pydantic import Field, field_serializer
 
 from retailcrm.v5.enums.task import TasksStatuses
 from retailcrm.v5.helpers import datetime_serializer
-from retailcrm.v5.schemas import BaseRetailCrmScheme
+from retailcrm.v5.schemas.base import BaseRetailCrmScheme
 from retailcrm.v5.schemas.shared.customer import SerializedEntityCustomer, AbstractCustomer
 from retailcrm.v5.schemas.shared.history_api_key import HistoryApiKey
 from retailcrm.v5.schemas.shared.history_user import HistoryUser

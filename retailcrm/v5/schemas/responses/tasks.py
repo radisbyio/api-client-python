@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
-from retailcrm.v5.schemas import SuccessResponse
+from retailcrm.v5.schemas.base import SuccessResponse
 from retailcrm.v5.schemas.entities.tasks import Task, TaskHistory, TaskComment
 
 __all__ = ["FilterTasksResponse", "CreateTaskResponse", "FilterTaskHistoryResponse", "GetTaskResponse", "GetTaskCommentsResponse"]

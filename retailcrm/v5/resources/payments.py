@@ -1,5 +1,5 @@
 from retailcrm.v5.resources.base import ApiResource
-from retailcrm.v5.schemas import SuccessResponse
+from retailcrm.v5.schemas.base import SuccessResponse
 from retailcrm.v5.schemas.entities.payments import ApiCheckRequest, ApiCreateInvoiceRequest, ApiUpdateInvoiceRequest, \
     ApiImportInvoiceRequest
 from retailcrm.v5.schemas.requests.payments import CreateInvoiceRequest, UpdateInvoiceRequest, InvoiceImportRequest

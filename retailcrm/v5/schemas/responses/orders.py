@@ -3,8 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
-from retailcrm.v5.schemas import SuccessResponse
-from retailcrm.v5.schemas.base import PaginatedResponse, IdTypesLiteral
+from retailcrm.v5.schemas.base import PaginatedResponse, IdTypesLiteral, SuccessResponse
 from retailcrm.v5.schemas.entities.loyalty import SmsVerification
 from retailcrm.v5.schemas.entities.orders import Order, OrderHistory, SerializedLoyaltyOrder, SerializedPayment
 

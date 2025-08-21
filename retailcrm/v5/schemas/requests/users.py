@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, model_serializer
 
-from retailcrm.v5.schemas import BaseRetailCrmScheme
+from retailcrm.v5.schemas.base import BaseRetailCrmScheme
 from retailcrm.v5.schemas.entities.users import ApiUserFilter
 from retailcrm.v5.utils import pydantic_to_nested_dict
 

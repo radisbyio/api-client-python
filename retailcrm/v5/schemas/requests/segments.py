@@ -2,7 +2,7 @@ from typing import Optional
 
 from pydantic import model_serializer, Field
 
-from retailcrm.v5.schemas import BaseRetailCrmScheme
+from retailcrm.v5.schemas.base import BaseRetailCrmScheme
 from retailcrm.v5.schemas.filters.segments import SegmentsFilter
 from retailcrm.v5.utils import pydantic_to_nested_dict
 

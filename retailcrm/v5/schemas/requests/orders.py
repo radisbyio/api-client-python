@@ -3,7 +3,6 @@ from typing import Optional
 
 from pydantic import Field, model_serializer, field_serializer
 
-from retailcrm.v5.enums import IdTypes
 from retailcrm.v5.enums.orders import CombineTechniqueTypes
 from retailcrm.v5.helpers import to_json_serializer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme, IdTypesLiteral
@@ -40,7 +39,7 @@ class OrdersCombineRequest(BaseRetailCrmScheme):
     technique: CombineTechniqueTypes
 
     order_serializer = field_serializer("order")(to_json_serializer())
-    result_order_serializer = field_serializer("result_order")(to_json_serializer())
+    result_order_serializer = field_serializer("resultOrder")(to_json_serializer())
 
 
 class OrdersCreateRequest(BaseRetailCrmScheme):

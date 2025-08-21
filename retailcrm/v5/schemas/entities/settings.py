@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import Field, field_serializer
 
 from retailcrm.v5.helpers import datetime_serializer
-from retailcrm.v5.schemas import BaseRetailCrmScheme
+from retailcrm.v5.schemas.base import BaseRetailCrmScheme
 
 
 class Value(BaseRetailCrmScheme):

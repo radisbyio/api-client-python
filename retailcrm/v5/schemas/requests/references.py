@@ -5,9 +5,8 @@ from retailcrm.v5.schemas.base import BaseRetailCrmScheme
 from retailcrm.v5.schemas.entities.references import SerializedCostGroup, SerializedCostItem, SerializedCourier, \
     SerializedCurrency, SerializedDeliveryService, SerializedDeliveryType, SerializedLegalEntity, SerializedOrderMethod, \
     SerializedOrderType, SerializedPaymentStatus, SerializedPaymentType, SerializedSite, SerializedUnit, \
-    SerializedPriceType
+    SerializedPriceType, SerializedOrderProductStatus
 from retailcrm.v5.schemas.entities.store import SerializedStore
-from retailcrm.v5.schemas.references import SerializedOrderProductStatus
 
 
 class CostGroupsEditRequest(BaseRetailCrmScheme):

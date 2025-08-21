@@ -5,7 +5,7 @@ from typing import Optional, Any
 from pydantic import Field, field_serializer
 
 from retailcrm.v5.helpers import datetime_serializer
-from retailcrm.v5.schemas import BaseRetailCrmScheme
+from retailcrm.v5.schemas.base import BaseRetailCrmScheme
 from retailcrm.v5.schemas.shared.code_value_model import CodeValueModel
 
 
@@ -43,7 +43,7 @@ class OrderProductPack(BaseRetailCrmScheme):
     invoiceNumber: Optional[str] = Field(None, description="Номер счет-фактуры")
     deliveryNoteNumber: Optional[str] = Field(None, description="Номер товарной накладной")
 
-    shipment_date_serializer = field_serializer("shipment_date")(datetime_serializer("%Y-%m-%d %H:%M:%S"))
+    shipmentDate_serializer = field_serializer("shipmentDate")(datetime_serializer("%Y-%m-%d %H:%M:%S"))
 
 
 class SerializedOrderProductPack(BaseRetailCrmScheme):
