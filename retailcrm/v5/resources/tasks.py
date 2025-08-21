@@ -70,7 +70,7 @@ class TasksApiResource(ApiResource):
         request = FilterTasksHistoryRequest(filter_obj=filter_obj, limit=limit, page=page)
         response = await self._client.post(
             endpoint="/tasks/history",
-            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, FilterTaskHistoryResponse)
 
@@ -127,6 +127,6 @@ class TasksApiResource(ApiResource):
         request = EditTaskRequest(task=task, site=site)
         response = await self._client.post(
             endpoint=f"/tasks/{task_id}/edit",
-            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, SuccessResponse)

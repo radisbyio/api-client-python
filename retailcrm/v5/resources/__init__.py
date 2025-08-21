@@ -2,6 +2,7 @@
 # from retailcrm.v5.resources.customers import CustomersController
 # from retailcrm.v5.resources.loyalty import LoyaltyController
 from retailcrm.v5.resources.orders import OrdersApiResource
+from retailcrm.v5.resources.files import FilesApiResource
 from retailcrm.v5.resources.payments import PaymentApiResource
 from retailcrm.v5.resources.references import ReferencesController
 from retailcrm.v5.resources.settings import SettingsApiResource

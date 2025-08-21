@@ -21,6 +21,6 @@ class NotificationsApiResource(ApiResource):
         )
         response = await self._client.post(
             endpoint="/notifications/send",
-            json_str=request.model_dump_json(exclude_unset=True, by_alias=True),
+            content=request.model_dump_json(exclude_unset=True, by_alias=True),
         )
         return self._process_response(response, SuccessResponse)

@@ -15,7 +15,11 @@ class BaseHttpClient:
         raise NotImplementedError
 
     async def post(
-        self, endpoint: str, params: Optional[dict] = None, data: Optional[dict] = None, json_str: Optional[str] = None
+        self,
+            endpoint: str,
+            params: Optional[dict] = None,
+            content: Optional[str | bytes] = None,
+            headers: Optional[dict] = None,
     ) -> Response:
         raise NotImplementedError
 
@@ -48,14 +52,21 @@ class HttpClient(BaseHttpClient):
             return Response(response.status_code, response.content)
 
     async def post(
-        self, endpoint: str, params: Optional[dict] = None, data: Optional[dict] = None, json_str: str | None = None
+        self,
+            endpoint: str,
+            params: Optional[dict] = None,
+            content: Optional[str | bytes] = None,
+        headers: Optional[dict] = None,
     ) -> Response:
+        if headers is None:
+            headers = {"Content-Type": "application/json"}
+
         try:
             logger.debug(
-                f"Request to {endpoint} with params: {params} and body: {json_str}"
+                f"Request to {endpoint} with params: {params} and body: {content}"
             )
             response = await self._client.post(
-                endpoint, params=params, content=json_str, timeout=15.0, headers={"Content-Type": "application/json"}
+                endpoint, params=params, content=content, timeout=15.0, headers=headers
             )
             logger.debug(f"Received {response.status_code} with {response.text}")
         except httpx.TimeoutException:

@@ -6,13 +6,6 @@ from pydantic import BaseModel, Field, field_serializer, field_validator
 from retailcrm.v5.enums import ContragentTypes, SexTypes
 from retailcrm.v5.helpers import datetime_serializer, dict_validator
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme, RetailCrmResponse
-from retailcrm.v5.schemas.shared import (
-    Customer,
-    CustomerAddress,
-    CustomerPhone,
-    SerializedEntityCustomer,
-    SerializedSource, User, ApiKey,
-)
 
 
 class CustomerFilterCustomerSubscriptionData(BaseModel):

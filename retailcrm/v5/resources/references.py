@@ -43,7 +43,7 @@ class ReferencesController(ApiResource):
         request = CostGroupsEditRequest(costGroup=cost_group)
         response = await self._client.post(
             endpoint=f"/reference/cost-groups/{code}/edit",
-            json_str=request.model_dump_json(exclude_none=True, exclude_unset=True),
+            content=request.model_dump_json(exclude_none=True, exclude_unset=True),
         )
         return self._process_response(response, SuccessResponse)
 
@@ -71,7 +71,7 @@ class ReferencesController(ApiResource):
         request = CostItemsEditRequest(costItem=cost_item)
         response =  await self._client.post(
             endpoint=f"/reference/cost-items/{code}/edit",
-            json_str=request.model_dump_json(exclude_none=True, exclude_unset=True),
+            content=request.model_dump_json(exclude_none=True, exclude_unset=True),
         )
         return self._process_response(response, SuccessResponse)
 
@@ -109,7 +109,7 @@ class ReferencesController(ApiResource):
         request = CouriersCreateRequest(courier=courier)
         response = await self._client.post(
             endpoint="/reference/couriers/create",
-            json_str=request.model_dump_json(exclude_none=True, exclude_unset=True),
+            content=request.model_dump_json(exclude_none=True, exclude_unset=True),
         )
         return self._process_response(response, SuccessResponse)
 
@@ -125,7 +125,7 @@ class ReferencesController(ApiResource):
         request = CouriersEditRequest(courier=courier)
         response = await self._client.post(
             endpoint=f"/reference/couriers/{courier_id}/edit",
-            json_str=request.model_dump_json(exclude_none=True, exclude_unset=True),
+            content=request.model_dump_json(exclude_none=True, exclude_unset=True),
         )
         return self._process_response(response, SuccessResponse)
 
@@ -151,7 +151,7 @@ class ReferencesController(ApiResource):
         request = CurrenciesCreateRequest(currency=currency)
         response = await self._client.post(
             endpoint="/reference/currencies/create",
-            json_str=request.model_dump_json(exclude_none=True, exclude_unset=True),
+            content=request.model_dump_json(exclude_none=True, exclude_unset=True),
         )
         return self._process_response(response, CurrenciesCreateResponse)
 
@@ -165,7 +165,7 @@ class ReferencesController(ApiResource):
         request = CurrenciesEditRequest(currency=currency)
         response = await self._client.post(
             endpoint=f"reference/currencies/{currency_id}/edit",
-            json_str=request.model_dump_json(exclude_none=True, exclude_unset=True),
+            content=request.model_dump_json(exclude_none=True, exclude_unset=True),
         )
         return self._process_response(response, SuccessResponse)
 
@@ -191,7 +191,7 @@ class ReferencesController(ApiResource):
         request = DeliveryServicesEditRequest(deliveryService=delivery_service)
         response = await self._client.post(
             endpoint=f"reference/delivery-services/{code}/edit",
-            json_str=request.model_dump_json(exclude_none=True, exclude_unset=True),
+            content=request.model_dump_json(exclude_none=True, exclude_unset=True),
         )
         return self._process_response(response, SuccessResponse)
 
@@ -219,7 +219,7 @@ class ReferencesController(ApiResource):
         request = DeliveryTypesEditRequest(deliveryType=delivery_type)
         response = await self._client.post(
             endpoint=f"reference/delivery-services/{code}/edit",
-            json_str=request.model_dump_json(exclude_none=True, exclude_unset=True),
+            content=request.model_dump_json(exclude_none=True, exclude_unset=True),
         )
         return self._process_response(response, SuccessResponse)
 
@@ -245,7 +245,7 @@ class ReferencesController(ApiResource):
         request = LegalEntitiesEditRequest(legalEntity=legal_entity)
         response = await self._client.post(
             endpoint=f"/reference/legal-entities/{code}/edit",
-            json_str=request.model_dump_json(exclude_none=True, exclude_unset=True),
+            content=request.model_dump_json(exclude_none=True, exclude_unset=True),
         )
         return self._process_response(response, SuccessResponse)
 
@@ -290,7 +290,7 @@ class ReferencesController(ApiResource):
 
         response = await self._client.post(
             endpoint=f"/reference/order-methods/{code}/edit",
-            json_str=request.model_dump_json(exclude_none=True, exclude_unset=True),
+            content=request.model_dump_json(exclude_none=True, exclude_unset=True),
         )
 
         return self._process_response(response, SuccessResponse)
@@ -323,7 +323,7 @@ class ReferencesController(ApiResource):
 
         response = await self._client.post(
             endpoint=f"/reference/order-types/{code}/edit",
-            json_str=request.model_dump_json(exclude_none=True, exclude_unset=True),
+            content=request.model_dump_json(exclude_none=True, exclude_unset=True),
         )
 
         return self._process_response(response, SuccessResponse)
@@ -355,7 +355,7 @@ class ReferencesController(ApiResource):
 
         response = await self._client.post(
             endpoint=f"/reference/payment-statuses/{code}/edit",
-            json_str=request.model_dump_json(exclude_none=True, exclude_unset=True),
+            content=request.model_dump_json(exclude_none=True, exclude_unset=True),
         )
 
         return self._process_response(response, SuccessResponse)
@@ -384,7 +384,7 @@ class ReferencesController(ApiResource):
         request = PaymentTypesEditRequest(paymentType=payment_type)
         response = await self._client.post(
             endpoint=f"/reference/payment-types/{code}/edit",
-            json_str=request.model_dump_json(exclude_none=True, exclude_unset=True),
+            content=request.model_dump_json(exclude_none=True, exclude_unset=True),
         )
         return self._process_response(response, SuccessResponse)
 
@@ -412,7 +412,7 @@ class ReferencesController(ApiResource):
         request = PriceTypesEditRequest(priceType=price_type)
         response = await self._client.post(
             endpoint=f"/reference/price-types/{code}/edit",
-            json_str=request.model_dump_json(exclude_none=True, exclude_unset=True),
+            content=request.model_dump_json(exclude_none=True, exclude_unset=True),
         )
         return self._process_response(response, SuccessResponse)
 
@@ -440,7 +440,7 @@ class ReferencesController(ApiResource):
         request = ProductStatusesEditRequest(productStatus=product_status)
         response = await self._client.post(
             endpoint=f"/reference/product-statuses/{code}/edit",
-            json_str=request.model_dump_json(exclude_none=True, exclude_unset=True),
+            content=request.model_dump_json(exclude_none=True, exclude_unset=True),
         )
         return self._process_response(response, SuccessResponse)
 
@@ -466,7 +466,7 @@ class ReferencesController(ApiResource):
         request = SitesEditRequest(site=site)
         response = await self._client.post(
             endpoint=f"/reference/sites/{code}/edit",
-            json_str=request.model_dump_json(exclude_none=True, exclude_unset=True),
+            content=request.model_dump_json(exclude_none=True, exclude_unset=True),
         )
         return self._process_response(response, SuccessResponse)
 
@@ -515,7 +515,7 @@ class ReferencesController(ApiResource):
         request = StoreEditRequest(store=store)
         response = await self._client.post(
             endpoint=f"/reference/stores/{code}/edit",
-            json_str=request.model_dump_json(exclude_none=True, exclude_unset=True),
+            content=request.model_dump_json(exclude_none=True, exclude_unset=True),
         )
         return self._process_response(response, SuccessResponse)
 
@@ -542,7 +542,7 @@ class ReferencesController(ApiResource):
 
         response = await self._client.post(
             endpoint=f"/reference/units/{code}/edit",
-            json_str=request.model_dump_json(exclude_none=True, exclude_unset=True),
+            content=request.model_dump_json(exclude_none=True, exclude_unset=True),
         )
 
         return self._process_response(response, SuccessResponse)

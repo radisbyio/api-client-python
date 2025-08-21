@@ -19,7 +19,7 @@ class PaymentApiResource(ApiResource):
         """
         response = await self._client.post(
             endpoint="/payment/check",
-            json_str=check.model_dump_json(exclude_none=True, exclude_unset=True),
+            content=check.model_dump_json(exclude_none=True, exclude_unset=True),
         )
         return self._process_response(response, CheckResponsePayment)
 
@@ -37,7 +37,7 @@ class PaymentApiResource(ApiResource):
         request = CreateInvoiceRequest(createInvoice=create_invoice)
         response = await self._client.post(
             endpoint="/payment/create-invoice",
-            json_str=request.model_dump_json(exclude_none=True, exclude_unset=True),
+            content=request.model_dump_json(exclude_none=True, exclude_unset=True),
         )
         return self._process_response(response, CreateInvoiceResponsePayment)
 
@@ -56,7 +56,7 @@ class PaymentApiResource(ApiResource):
 
         response = await self._client.post(
             endpoint=f"/payment/update-invoice",
-            json_str=request.model_dump_json(exclude_none=True, exclude_unset=True),
+            content=request.model_dump_json(exclude_none=True, exclude_unset=True),
         )
 
         return self._process_response(response, SuccessResponse)
@@ -76,7 +76,7 @@ class PaymentApiResource(ApiResource):
 
         response = await self._client.post(
             endpoint=f"/payment/invoice/import",
-            json_str=request.model_dump_json(exclude_none=True, exclude_unset=True),
+            content=request.model_dump_json(exclude_none=True, exclude_unset=True),
         )
 
         return self._process_response(response, InvoiceImportResponse)

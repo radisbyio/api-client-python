@@ -46,7 +46,7 @@ class OrdersPacksApiResource(ApiResource):
         request = OrdersPacksCreateRequest(pack=pack)
         response = await self._client.post(
             endpoint="/api/v5/orders/packs/create",
-            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, IdResponse)
 
@@ -110,7 +110,7 @@ class OrdersPacksApiResource(ApiResource):
 
         response = await self._client.post(
             endpoint=f"/api/v5/orders/packs/{pack_id}/edit",
-            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
 
         return self._process_response(response, OrderProductPackResponse)

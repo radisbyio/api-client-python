@@ -26,7 +26,7 @@ class WebAnalyticsApiResource(ApiResource):
 
         response = await self._client.post(
             endpoint="/web-analytics/client-ids/upload",
-            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, ClientIdsUploadResponse)
 
@@ -47,7 +47,7 @@ class WebAnalyticsApiResource(ApiResource):
 
         response = await self._client.post(
             endpoint="/web-analytics/sources/upload",
-            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
 
         return self._process_response(response, SourcesUploadResponse)
@@ -70,7 +70,7 @@ class WebAnalyticsApiResource(ApiResource):
 
         response = await self._client.post(
             endpoint="/web-analytics/visits/upload",
-            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
 
         return self._process_response(response, VisitsUploadResponse)

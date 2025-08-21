@@ -61,7 +61,7 @@ class OrdersApiResource(ApiResource):
         )
         response = await self._client.post(
             endpoint="/orders/combine",
-            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, SuccessResponse)
 
@@ -79,7 +79,7 @@ class OrdersApiResource(ApiResource):
         request = OrdersCreateRequest(order=order, site=site)
         response = await self._client.post(
             endpoint="/orders/create",
-            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, OrdersCreateResponse)
 
@@ -97,7 +97,7 @@ class OrdersApiResource(ApiResource):
 
         response = await self._client.post(
             endpoint=f"/orders/fix-external-ids",
-            json_str=request.model_dump(exclude_none=True, by_alias=True)
+            content=request.model_dump(exclude_none=True, by_alias=True)
         )
 
         return self._process_response(response, SuccessResponse)
@@ -157,7 +157,7 @@ class OrdersApiResource(ApiResource):
         request = LoyaltyApplyRequest(order=order, site=site, bonuses=bonuses)
         response = await self._client.post(
             endpoint="/orders/loyalty/apply",
-            json_str=request.model_dump_json(exclude_none=True, by_alias=True)
+            content=request.model_dump_json(exclude_none=True, by_alias=True)
         )
         return self._process_response(response, LoyaltyApplyResponse)
 
@@ -175,7 +175,7 @@ class OrdersApiResource(ApiResource):
         request = LoyaltyCancelBonusOperationsRequest(order=order, site=site)
         response = await self._client.post(
             endpoint="/orders/loyalty/cancel-bonus-operations",
-            json_str=request.model_dump_json(exclude_none=True, by_alias=True)
+            content=request.model_dump_json(exclude_none=True, by_alias=True)
         )
         return self._process_response(response, LoyaltyCancelBonusOperationsResponse)
 
@@ -194,7 +194,7 @@ class OrdersApiResource(ApiResource):
         request = OrdersPaymentCreateRequest(payment=payment, site=site)
         response = await self._client.post(
             endpoint="/orders/payments/create",
-            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, OrdersPaymentCreateResponse)
 
@@ -218,7 +218,7 @@ class OrdersApiResource(ApiResource):
         request = OrdersPaymentEditRequest(payment=payment, site=site, by=by)
         response = await self._client.post(
             endpoint=f"/orders/payments/{payment_id}/edit",
-            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, IdResponse)
 
@@ -251,7 +251,7 @@ class OrdersApiResource(ApiResource):
         request = OrdersUploadRequest(orders=orders, site=site)
         response = await self._client.post(
             endpoint="/orders/upload",
-            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, SuccessResponse)
 
@@ -293,7 +293,7 @@ class OrdersApiResource(ApiResource):
         request = OrdersEditRequest(order=order, site=site, by=by)
         response =  await self._client.post(
             endpoint=f"/orders/{order_id}/edit",
-            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, SuccessResponse)
 
@@ -319,7 +319,7 @@ class OrdersApiResource(ApiResource):
         request = OrdersDeliveryCancelRequest(by=by, force=force)
         response =  await self._client.post(
             endpoint=f"/orders/{order_id}/edit",
-            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, SuccessResponse)
 
@@ -344,7 +344,7 @@ class OrdersApiResource(ApiResource):
         request = OrdersPlatesPrintRequest(site=site, by=by)
         response =  await self._client.post(
             endpoint=f"/orders/{order_id}/plates/{plate_id}/print",
-            json_str=request.model_dump(exclude_none=True, by_alias=True),
+            content=request.model_dump(exclude_none=True, by_alias=True),
         )
         if response.status_code >= 400:
             error_response = ErrorResponse.model_validate_json(response.content)

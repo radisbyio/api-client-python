@@ -19,7 +19,7 @@ class VerificationController(ApiResource):
         """
         response = await self._client.post(
             endpoint="/verification/sms/confirm",
-            json_str=verification.model_dump_json(exclude_none=True, by_alias=True),
+            content=verification.model_dump_json(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, VerificationConfirmResponse)
 

@@ -18,7 +18,7 @@ class TelephonyApiResource(ApiResource):
 
         response = await self._client.post(
             endpoint="/telephony/call/event",
-            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, CallEventResponse)
 
@@ -35,7 +35,7 @@ class TelephonyApiResource(ApiResource):
 
         response = await self._client.post(
             endpoint="/telephony/calls/upload",
-            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, CallsUploadResponse)
 

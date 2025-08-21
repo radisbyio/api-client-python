@@ -56,7 +56,7 @@ class StoreApiResource(ApiResource):
 
         response = await self._client.post(
             endpoint="/store/inventories/upload",
-            json_str=request.model_dump_json(exclude_none=True, by_alias=True)
+            content=request.model_dump_json(exclude_none=True, by_alias=True)
         )
 
         return self._process_response(response, InventoriesUploadResponse)
@@ -100,7 +100,7 @@ class StoreApiResource(ApiResource):
         )
         response = await self._client.post(
             endpoint="/store/prices/upload",
-            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, PricesUploadResponse)
 
@@ -144,7 +144,7 @@ class StoreApiResource(ApiResource):
 
         response = await self._client.post(
             endpoint="/store/product-groups/create",
-            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
 
         return self._process_response(response, ProductGroupCreateResponse)
@@ -173,7 +173,7 @@ class StoreApiResource(ApiResource):
         )
         response = await self._client.post(
             endpoint=f"/store/product-groups/{external_id}/edit",
-            json_str=requests.model_dump_json(exclude_none=True, by_alias=True),
+            content=requests.model_dump_json(exclude_none=True, by_alias=True),
         )
 
         return self._process_response(response, ProductGroupEditResponse)
@@ -219,7 +219,7 @@ class StoreApiResource(ApiResource):
 
         response = await self._client.post(
             endpoint="/store/products/batch/create",
-            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
 
         return self._process_response(response, ResponseProductBatchCreate)
@@ -240,7 +240,7 @@ class StoreApiResource(ApiResource):
 
         response = await self._client.post(
             endpoint="/store/products/batch/edit",
-            json_str=request.model_dump_json(exclude_none=True, by_alias=True),
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
 
         return self._process_response(response, ProductBatchEditResponse)
