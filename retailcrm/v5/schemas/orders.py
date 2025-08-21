@@ -61,6 +61,7 @@ class SerializedOrderProductOffer(BaseRetailCrmScheme):
 
 
 class SerializedOrderProduct(BaseRetailCrmScheme):
+    id: Optional[int] = Field(None)
     externalId: Optional[str] = Field(None)
     markingCodes: list[str] = Field(default_factory=list, description="Коды маркировки")
     initialPrice: Optional[float] = Field(
