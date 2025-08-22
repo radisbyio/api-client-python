@@ -24,7 +24,7 @@ class FilesApiResource(ApiResource):
         :param page: Номер страницы с результатами (по умолчанию равно 1).
         :return: FilesFilterResponse
         """
-        request = FilesFilterRequest(filter=filter_obj, limit=limit, page=page)
+        request = FilesFilterRequest(filter_obj=filter_obj, limit=limit, page=page)
         response = await self._client.get(
             endpoint="/files",
             params=request.model_dump(exclude_none=True, by_alias=True),

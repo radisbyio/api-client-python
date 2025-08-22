@@ -7,10 +7,10 @@ from pydantic import Field, field_serializer, field_validator
 from retailcrm.v5.helpers import datetime_serializer, dict_validator
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme
 from retailcrm.v5.schemas.entities.customers import Customer
-from retailcrm.v5.schemas.entities.orders import Offer
 from retailcrm.v5.schemas.shared.customer import SerializedEntityCustomer
 
 
+# TODO: заполнить https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-loyalty-loyalties-id
 class LoyaltyLevel(BaseRetailCrmScheme):
     id: Optional[int] = Field(None, description="ID уровня")
     name: str | None = Field(None, description="Название уровня")
@@ -120,18 +120,6 @@ class LoyaltyAccount(BaseRetailCrmScheme):
     customFields_validator = field_validator("customFields", mode="before")(
         dict_validator()
     )
-
-
-class LoyaltyLevelConditionItemOffer(BaseRetailCrmScheme):
-    id: Optional[int] = Field(None, description="ID элемента условия")
-    offer: Optional[Offer] = Field(None, description="Торговое предложение (SKU)")
-
-
-class LoyaltyLevelCondition(BaseRetailCrmScheme):
-    id: Optional[int] = Field(None, description="ID условия")
-    privilegeSize: Optional[decimal.Decimal] = Field(None, description="Размер скидки, процент или курс начисления бонусов для товаров по обычной цене (в валюте объекта)")
-    privilegeSizePromo: Optional[decimal.Decimal] = Field(None, description="Размер скидки, процент или курс начисления бонусов для акционных товаров (в валюте объекта)")
-    items: list[LoyaltyLevelConditionItemOffer] = Field(default_factory=list, description="Элементы условия")
 
 
 class LoyaltyBonus(BaseRetailCrmScheme):

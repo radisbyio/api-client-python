@@ -1,11 +1,12 @@
 from typing import Protocol
 
+from retailcrm.v5.interfaces.integrations import IntegrationActionsInterface
 from retailcrm.v5.schemas.callbacks.entities.payments import Create, ModuleApiRequest, Result
 from retailcrm.v5.schemas.entities.payments import ModuleRefund
 
 __all__ = ["PaymentsActions"]
 
-class PaymentsActions(Protocol):
+class PaymentsActions(IntegrationActionsInterface):
     async def approve(self, client_id: str, approve: ModuleApiRequest) -> None:
         pass
 
