@@ -8,6 +8,7 @@ from retailcrm.v5.resources.references import ReferencesController
 from retailcrm.v5.resources.settings import SettingsApiResource
 from retailcrm.v5.resources.store import StoreApiResource
 from retailcrm.v5.resources.tasks import TasksApiResource
+from retailcrm.v5.resources.api import ApiInfoApiResource
 from retailcrm.v5.resources.users import UsersApiResource
 from retailcrm.v5.resources.integrations import IntegrationsApiResource
 # from retailcrm.v5.resources.delivery import DeliveryController

@@ -9,7 +9,8 @@ from retailcrm.v5.resources import (
     SettingsApiResource,
     UsersApiResource, WebAnalyticsApiResource, StatisticApiResource, VerificationController, TelephonyApiResource,
     SegmentsApiResource, OrdersPacksApiResource,
-    NotificationsApiResource, OrdersApiResource, FilesApiResource, LoyaltyApiResource, IntegrationsApiResource
+    NotificationsApiResource, OrdersApiResource, FilesApiResource, LoyaltyApiResource, IntegrationsApiResource,
+    ApiInfoApiResource
 )
 from retailcrm.v5.resources.base import ApiResource
 from retailcrm.v5.utils import validate_crm_url
@@ -54,6 +55,10 @@ class RetailCrmApiClientV5:
         if name not in self._resource_cache:
             self._resource_cache[name] = controller_class(self._client)
         return self._resource_cache[name]
+
+    @property
+    def api(self) -> ApiInfoApiResource:
+        return self._get_resource("api", ApiInfoApiResource)
 
 
     # @property
