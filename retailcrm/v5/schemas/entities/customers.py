@@ -203,11 +203,6 @@ class SerializedEntityCustomer(BaseRetailCrmScheme):
     site: Optional[str] = Field(None, description="Символьный код магазина")
 
 
-class FixExternalRow(BaseRetailCrmScheme):
-    id: Optional[int] = Field(None, description="Внутренний ID")
-    externalId: str = Field(None, description="Внешний ID")
-
-
 class CustomerAddressWithIsMain(CustomerAddress):
     isMain: Optional[bool] = Field(None, description="Адрес клиента является основным")
 

@@ -9,8 +9,8 @@ from retailcrm.v5.enums.country_code_iso3166 import CountryCodeIso3166
 from retailcrm.v5.enums.currency import Currency
 from retailcrm.v5.helpers import datetime_serializer, dict_validator, payments_validator, time_serializer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme
+from retailcrm.v5.schemas.entities.corporate_customers import Company
 from retailcrm.v5.schemas.entities.customers import Customer
-from retailcrm.v5.schemas.entities.customers_corporate import Company
 from retailcrm.v5.schemas.entities.loyalty import LoyaltyEventDiscount, LoyaltyLevel, LoyaltyAccount
 from retailcrm.v5.schemas.shared.code_value_model import CodeValueModel
 from retailcrm.v5.schemas.shared.entity_with_external_id import EntityWithExternalIdInput

@@ -1,6 +1,6 @@
 from retailcrm.v5.resources.base import ApiResource
 from retailcrm.v5.schemas.base import SuccessResponse, IdTypesLiteral
-from retailcrm.v5.schemas.entities.customers import SerializedCustomerReference, SerializedCustomer, FixExternalRow, \
+from retailcrm.v5.schemas.entities.customers import SerializedCustomerReference, SerializedCustomer, \
     SerializedCustomerNote, SerializedSubscription
 from retailcrm.v5.schemas.filters.customers import CustomerFilter, CustomerHistoryFilterV4Type, CustomerNoteFilter
 from retailcrm.v5.schemas.requests.customers import CustomersFilterRequest, CustomersCombineRequest, \
@@ -11,6 +11,7 @@ from retailcrm.v5.schemas.responses.customers import CustomersResponse, Customer
     CustomerCreateResponse, CustomersFixExternalIdsResponse, CustomersHistoryResponse, CustomersNotesResponse, \
     CustomerNoteCreateResponse, CustomersUploadResponse, CustomerGetResponse, CustomerEditResponse, \
     CustomerSubscriptionsResponse
+from retailcrm.v5.schemas.shared.fix_external_row import FixExternalRow
 
 
 class CustomersApiResource(ApiResource):
@@ -188,7 +189,7 @@ class CustomersApiResource(ApiResource):
         return self._process_response(response, CustomerGetResponse)
 
     async def edit(
-        self, customer_id: str, customer: SerializedCustomer, by: IdTypesLiteral = IdTypesLiteral.EXTERNAL_ID, site: str | None = None
+        self, customer_id: str, customer: SerializedCustomer, by: IdTypesLiteral = "externalId", site: str | None = None
     ) -> CustomerEditResponse:
         """
         **Редактирование клиента**

@@ -5,8 +5,9 @@ from pydantic import Field, field_serializer, model_serializer
 from retailcrm.v5.helpers import to_json_serializer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme, IdTypesLiteral
 from retailcrm.v5.schemas.entities.customers import SerializedCustomerReference, SerializedCustomerNote, \
-    SerializedCustomer, SerializedSubscription, FixExternalRow
+    SerializedCustomer, SerializedSubscription
 from retailcrm.v5.schemas.filters.customers import CustomerFilter, CustomerNoteFilter, CustomerHistoryFilterV4Type
+from retailcrm.v5.schemas.shared.fix_external_row import FixExternalRow
 from retailcrm.v5.utils import pydantic_to_nested_dict
 
 
@@ -88,7 +89,7 @@ class CustomersUploadRequest(BaseRetailCrmScheme):
 
 
 class CustomerGetRequest(BaseRetailCrmScheme):
-    by: IdTypesLiteral = Field(IdTypesLiteral.EXTERNAL_ID, description="Указывается, что передается в параметре externalId: внутренний (by=id) или внешний (by=externalId) ID клиента. По умолчанию externalId.")
+    by: IdTypesLiteral = Field(description="Указывается, что передается в параметре externalId: внутренний (by=id) или внешний (by=externalId) ID клиента. По умолчанию externalId.")
     site: Optional[str] = Field(None, description="Символьный код магазина")
 
 
@@ -101,7 +102,7 @@ class CustomerEditRequest(BaseRetailCrmScheme):
 
 
 class CustomerSubscriptionsRequest(BaseRetailCrmScheme):
-    by: IdTypesLiteral = Field(IdTypesLiteral.EXTERNAL_ID, description="Указывается, что передается в параметре externalId: внутренний (by=id) или внешний (by=externalId) ID клиента. По умолчанию externalId.")
+    by: IdTypesLiteral = Field(description="Указывается, что передается в параметре externalId: внутренний (by=id) или внешний (by=externalId) ID клиента. По умолчанию externalId.")
     site: Optional[str] = Field(None, description="Символьный код магазина")
     subscriptions: list[SerializedSubscription] = Field(default_factory=list)
 

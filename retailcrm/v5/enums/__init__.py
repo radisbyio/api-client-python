@@ -81,12 +81,6 @@ class SexTypes(str, Enum):
     MALE = "male"
 
 
-
-
-
-
-
-
 class CustomFieldEntityTypes(str, RetailCrmEnum):
     ORDER = "order"
     CUSTOMER = "customer"
