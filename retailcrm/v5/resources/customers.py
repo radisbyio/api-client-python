@@ -1,350 +1,228 @@
-from retailcrm.exceptions import RetailCrmApiError
-from retailcrm.http_cilent import BaseHttpClient
-from retailcrm.v5.schemas.base import RetailCrmResponse
-from retailcrm.v5.schemas.customers import (
-    CustomerFilterData,
-    CustomerHistoryFilterV4Type,
-    CustomerNoteFilter,
-    ResponseCustomerCreate,
-    ResponseCustomerEdit,
-    ResponseCustomerNotesCreate,
-    ResponseCustomerNotesDelete,
-    ResponseCustomerNotesFilter,
-    ResponseCustomerRetrieve,
-    ResponseCustomersCombine,
-    ResponseCustomersFilter,
-    ResponseCustomersFixExternalIds,
-    SerializedCustomer,
-    SerializedCustomerNote,
-    SerializedCustomerReference,
-    SerializedSubscription, ResponseCustomersHistory,
-)
-from retailcrm.v5.utils import pydantic_to_nested_dict, pydantic_list_dumps_to_json
+from retailcrm.v5.resources.base import ApiResource
+from retailcrm.v5.schemas.base import SuccessResponse, IdTypesLiteral
+from retailcrm.v5.schemas.entities.customers import SerializedCustomerReference, SerializedCustomer, FixExternalRow, \
+    SerializedCustomerNote, SerializedSubscription
+from retailcrm.v5.schemas.filters.customers import CustomerFilter, CustomerHistoryFilterV4Type, CustomerNoteFilter
+from retailcrm.v5.schemas.requests.customers import CustomersFilterRequest, CustomersCombineRequest, \
+    CustomersCreateRequest, CustomersFixExternalIdsRequest, CustomersHistoryRequest, CustomersNotesFilterRequest, \
+    CustomerNoteCreateRequest, CustomersUploadRequest, CustomerGetRequest, CustomerEditRequest, \
+    CustomerSubscriptionsRequest
+from retailcrm.v5.schemas.responses.customers import CustomersResponse, CustomersCombineResponse, \
+    CustomerCreateResponse, CustomersFixExternalIdsResponse, CustomersHistoryResponse, CustomersNotesResponse, \
+    CustomerNoteCreateResponse, CustomersUploadResponse, CustomerGetResponse, CustomerEditResponse, \
+    CustomerSubscriptionsResponse
 
 
-class CustomersController:
-    def __init__(self, client: BaseHttpClient):
-        self._client = client
-
+class CustomersApiResource(ApiResource):
     async def filter(
-        self, filter_data: CustomerFilterData | None = None, limit: int = 20, page: int = 1
-    ) -> ResponseCustomersFilter:
+        self, filter_obj: CustomerFilter | None = None, limit: int = 20, page: int = 1
+    ) -> CustomersResponse:
         """
-        Получение списка клиентов, удовлетворяющих заданному фильтру
-
-        Результат возвращается постранично. В поле pagination содержится информация о постраничной разбивке.
+        **Получение списка клиентов, удовлетворяющих заданному фильтру**
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-customers
-        :param filter_data: Фильтр
-        :param limit: Количество элементов в ответе (по умолчанию равно 20)
-        :param page: Номер страницы с результатами (по умолчанию равно 1)
-        :return: Response
+
+        :param filter_obj: Объект фильтра.
+        :param limit: Количество элементов в ответе (по умолчанию равно 20).
+        :param page: Номер страницы с результатами (по умолчанию равно 1).
+        :return: CustomersResponse
         """
+        request = CustomersFilterRequest(filter_obj=filter_obj, limit=limit, page=page)
         response = await self._client.get(
             endpoint="/customers",
-            params={
-                "limit": limit,
-                "page": page,
-                **pydantic_to_nested_dict(filter_data, "filter"),
-            },
+            params=request.model_dump(exclude_none=True, by_alias=True),
         )
-
-        response_obj = ResponseCustomersFilter.model_validate_json(response.content)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
-
-    async def get(
-        self,
-        customer_id: str | int,
-        site: str = None,
-        by: IdTypes = IdTypes.EXTERNAL_ID,
-    ) -> ResponseCustomerRetrieve:
-        """
-        Получение информации о клиенте
-
-        Метод возвращает полную информацию по клиенту.
-
-        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-customers
-        :param customer_id: Идентификатор клиента
-        :param site: Код магазина
-        :param by: Тип идентификатора (id или externalId)
-        :return: Response
-        """
-        params = {}
-        if site is not None:
-            params["site"] = site
-        if by is not None:
-            params["by"] = by.value
-
-        response = await self._client.get(
-            endpoint=f"/customers/{customer_id}", params=params
-        )
-
-        response_obj = ResponseCustomerRetrieve.model_validate_json(response.content)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
-
-    async def create(
-        self, customer: SerializedCustomer, site: str
-    ) -> ResponseCustomerCreate:
-        """
-        Создание клиента
-
-        Метод создает клиента и возвращает внутренний ID созданного клиента.
-
-        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-customers-create
-        :param customer: Данные клиента для создания
-        :param site: Символьный код магазина
-        :return: Response
-        """
-        response = await self._client.post(
-            endpoint="/customers/create",
-            params={"site": site},
-            data={
-                "customer": customer.model_dump_json(exclude_unset=True, by_alias=True)
-            },
-        )
-
-        response_obj = ResponseCustomerCreate.model_validate_json(response.content)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(
-                response.status_code, response_obj.errorMsg, response_obj.errors
-            )
-        return response_obj
-
-    async def edit(
-        self,
-        customer_id: str | int,
-        customer: SerializedCustomer,
-        site: str = None,
-        by: IdTypes | str = IdTypes.EXTERNAL_ID,
-    ) -> ResponseCustomerEdit:
-        """
-        Редактирование клиента
-
-        Метод редактирует клиента и возвращает внутренний ID измененного клиента.
-
-        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-customers-externalId-edit
-        :param customer_id: Идентификатор клиента
-        :param customer: Данные клиента для редактирования
-        :param site: Символьный код магазина
-        :param by: Тип идентификатора (id или externalId)
-        :return: ResponseCustomerEdit
-        """
-        params = {}
-        if site is not None:
-            params["site"] = site
-        if by is not None:
-            params["by"] = by
-
-        response = await self._client.post(
-            endpoint=f"/customers/{customer_id}/edit",
-            params=params,
-            data={
-                "customer": customer.model_dump_json(exclude_none=True, by_alias=True)
-            },
-        )
-
-        response_obj = ResponseCustomerEdit.model_validate_json(response.content)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        return self._process_response(response, CustomersResponse)
 
     async def combine(
-        self,
-        result_customer: SerializedCustomerReference,
-        customers: list[SerializedCustomerReference],
-    ) -> ResponseCustomersCombine:
+        self, result_customer: SerializedCustomerReference, customers: list[SerializedCustomerReference]
+    ) -> CustomersCombineResponse:
         """
-        Объединение клиентов
+        **Объединение клиентов**
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-customers-combine
-        :param result_customer: Клиент, в которого произойдет объединение
-        :param customers: Массив клиентов для объединения
-        :return: ResponseCustomersCombine
+        :param result_customer: Клиент, в которого произойдет объединение.
+        :param customers: Список клиентов, которые будут объединены.
+        :return: CustomersCombineResponse
         """
+        request = CustomersCombineRequest(resultCustomer=result_customer, customers=customers)
         response = await self._client.post(
-            "/customers/combine",
-            data={
-                "customers": pydantic_list_dumps_to_json(customers, SerializedCustomerReference),
-                "resultCustomer": result_customer.model_dump_json(
-                    exclude_unset=True, by_alias=True
-                ),
-            },
+            endpoint="/customers/combine",
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
+        return self._process_response(response, CustomersCombineResponse)
 
-        response_obj = ResponseCustomersCombine.model_validate_json(response.content)
-
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-
-        return response_obj
-
-    async def fix_external_ids(
-        self, customers: list[SerializedCustomerReference]
-    ) -> ResponseCustomersFixExternalIds:
+    async def create(self, customer: SerializedCustomer, site: str | None = None) -> CustomerCreateResponse:
         """
-        Массовая запись внешних ID клиентов
+        **Создание клиента**
+
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-customers-create
+        :param customer: Объект клиента.
+        :param site: Символьный код магазина.
+        :return: CustomerCreateResponse
+        """
+        request = CustomersCreateRequest(customer=customer, site=site)
+        response = await self._client.post(
+            endpoint="/customers/create",
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
+        )
+        return self._process_response(response, CustomerCreateResponse)
+
+    async def fix_external_ids(self, customers: list[FixExternalRow]) -> CustomersFixExternalIdsResponse:
+        """
+        **Массовая запись внешних ID клиентов**
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-customers-fix-external-ids
-        :param customers: Массив клиентов с внешними ID
-        :return: ResponseCustomersFixExternalIds
+        :param customers: Идентификаторы загруженных объектов.
+        :return: CustomersFixExternalIdsResponse
         """
+        request = CustomersFixExternalIdsRequest(customers=customers)
         response = await self._client.post(
-            "/customers/fix-external-ids",
-            data={
-                "customers": [
-                    customer.model_dump(exclude_unset=True, by_alias=True)
-                    for customer in customers
-                ]
-            },
+            endpoint="/customers/fix-external-ids",
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
-
-        response_obj = ResponseCustomersFixExternalIds.model_validate_json(
-            response.content
-        )
-
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-
-        return response_obj
+        return self._process_response(response, CustomersFixExternalIdsResponse)
 
     async def history(
         self, filter_obj: CustomerHistoryFilterV4Type | None = None, limit: int = 20, page: int = 1
-    ) -> ResponseCustomersHistory:
+    ) -> CustomersHistoryResponse:
         """
-        Получение истории изменения клиентов
+        **Получение истории изменения клиентов**
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-customers-history
-        :param filter_obj: Фильтр для истории
-        :param limit: Количество элементов на странице
-        :param page: Номер страницы
-        :return: ResponseCustomersHistory
+        :param filter_obj: Объект фильтра.
+        :param limit: Количество элементов в ответе (по умолчанию равно 20).
+        :param page: Номер страницы с результатами (по умолчанию равно 1).
+        :return: CustomersHistoryResponse
         """
+        request = CustomersHistoryRequest(filter_obj=filter_obj, limit=limit, page=page)
         response = await self._client.get(
-            "/customers/history",
-            params={
-                "limit": limit,
-                "page": page,
-                **pydantic_to_nested_dict(filter_obj, "filter"),
-            },
+            endpoint="/customers/history",
+            params=request.model_dump(exclude_none=True, by_alias=True),
         )
+        return self._process_response(response, CustomersHistoryResponse)
 
-        response_obj = ResponseCustomersHistory.model_validate_json(response.content)
-
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-
-        return response_obj
-
-    async def subscriptions(
-        self,
-        customer_id: str | int,
-        subscriptions: list[SerializedSubscription],
-        site: str = None,
-        by: IdTypes = IdTypes.EXTERNAL_ID,
-    ) -> RetailCrmResponse:
+    async def notes(
+        self, filter_obj: CustomerNoteFilter | None = None, limit: int = 20, page: int = 1
+    ) -> CustomersNotesResponse:
         """
-        Подписка/отписка клиента на рассылки
-
-        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-customers-externalId-subscriptions
-        :param customer_id: ID клиента
-        :param subscriptions: Массив подписок
-        :param site: Символьный код магазина
-        :param by: Тип идентификатора
-        :return: RetailCrmResponse
-        """
-        params = {}
-        if site is not None:
-            params["site"] = site
-        if by is not None:
-            params["by"] = by.value
-
-        response = await self._client.post(
-            f"/customers/{customer_id}/subscriptions",
-            params=params,
-            data={
-                "subscriptions": [
-                    subscription.model_dump(exclude_unset=True, by_alias=True)
-                    for subscription in subscriptions
-                ]
-            },
-        )
-
-        response_obj = RetailCrmResponse.model_validate_json(response.content)
-
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-
-        return response_obj
-
-    async def notes_filter(
-        self, filter_data: CustomerNoteFilter | None = None, limit: int = 20, page: int = 1
-    ) -> ResponseCustomerNotesFilter:
-        """
-        Получение заметок
+        **Получение заметок**
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-customers-notes
-        :param filter_data: Фильтр
-        :param limit: Количество элементов на странице
-        :param page: Номер страницы
-        :return: CustomerNotesResponse
+        :param filter_obj: Объект фильтра.
+        :param limit: Количество элементов в ответе (по умолчанию равно 20).
+        :param page: Номер страницы с результатами (по умолчанию равно 1).
+        :return: CustomersNotesResponse
         """
+        request = CustomersNotesFilterRequest(filter_obj=filter_obj, limit=limit, page=page)
         response = await self._client.get(
-            "/customers/notes",
-            params={
-                "limit": limit,
-                "page": page,
-                **pydantic_to_nested_dict(filter_data, "filter"),
-            },
+            endpoint="/customers/notes",
+            params=request.model_dump(exclude_none=True, by_alias=True),
         )
+        return self._process_response(response, CustomersNotesResponse)
 
-        response_obj = ResponseCustomerNotesFilter.model_validate_json(response.content)
-
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-
-        return response_obj
-
-    async def note_create(
-        self, note: SerializedCustomerNote, site: str
-    ) -> ResponseCustomerNotesCreate:
+    async def notes_create(self, note: SerializedCustomerNote, site: str | None = None) -> CustomerNoteCreateResponse:
         """
-        Создание заметки
+        **Создание заметки**
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-customers-notes-create
-        :param note: Данные заметки
-        :param site: Символьный код магазина
-        :return: ResponseCustomerNotesCreate
+        :param note: Объект заметки.
+        :param site: Символьный код магазина.
+        :return: CustomerNoteCreateResponse
         """
+        request = CustomerNoteCreateRequest(note=note, site=site)
         response = await self._client.post(
-            "/customers/notes/create",
-            params={"site": site},
-            data={"note": note.model_dump_json(exclude_none=True, by_alias=True)},
+            endpoint="/customers/notes/create",
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
+        return self._process_response(response, CustomerNoteCreateResponse)
 
-        response_obj = ResponseCustomerNotesCreate.model_validate_json(response.content)
-
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-
-        return response_obj
-
-    async def note_delete(self, note_id: int) -> ResponseCustomerNotesDelete:
+    async def notes_delete(self, note_id: int) -> SuccessResponse:
         """
-        Удаление заметки
+        **Удаление заметки**
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-customers-notes-id-delete
-        :param note_id: ID заметки
-        :return: CustomerNotesDeleteResponse
+        :param note_id: ID заметки.
+        :return: SuccessResponse
         """
-        response = await self._client.post(f"/customers/notes/{note_id}/delete")
+        response = await self._client.post(
+            endpoint=f"/customers/notes/{note_id}/delete",
+        )
+        return self._process_response(response, SuccessResponse)
 
-        response_obj = ResponseCustomerNotesDelete.model_validate_json(response.content)
+    async def upload(self, customers: list[SerializedCustomer], site: str) -> CustomersUploadResponse:
+        """
+        **Пакетная загрузка клиентов**
 
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-customers-upload
+        :param customers: Список клиентов.
+        :param site: Символьный код магазина.
+        :return: CustomersUploadResponse
+        """
+        if len(customers) > 50:
+            raise ValueError("Too many customers, only 50 are allowed")
+        request = CustomersUploadRequest(customers=customers, site=site)
+        response = await self._client.post(
+            endpoint="/customers/upload",
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
+        )
+        return self._process_response(response, CustomersUploadResponse)
 
-        return response_obj
+    async def get(
+        self, customer_id: str, by: IdTypesLiteral = "externalId", site: str | None = None
+    ) -> CustomerGetResponse:
+        """
+        **Получение информации о клиенте**
+
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-customers-externalId
+        :param customer_id: ID клиента (внутренний или внешний).
+        :param by: Тип ID клиента (id или externalId).
+        :param site: Символьный код магазина.
+        :return: CustomerGetResponse
+        """
+        request = CustomerGetRequest(by=by, site=site)
+        response = await self._client.get(
+            endpoint=f"/customers/{customer_id}",
+            params=request.model_dump(exclude_none=True, by_alias=True),
+        )
+        return self._process_response(response, CustomerGetResponse)
+
+    async def edit(
+        self, customer_id: str, customer: SerializedCustomer, by: IdTypesLiteral = IdTypesLiteral.EXTERNAL_ID, site: str | None = None
+    ) -> CustomerEditResponse:
+        """
+        **Редактирование клиента**
+
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-customers-externalId-edit
+        :param customer_id: ID клиента (внутренний или внешний).
+        :param customer: Объект клиента с изменениями.
+        :param by: Тип ID клиента (id или externalId).
+        :param site: Символьный код магазина.
+        :return: CustomerEditResponse
+        """
+        request = CustomerEditRequest(customer=customer, by=by, site=site)
+        response = await self._client.post(
+            endpoint=f"/customers/{customer_id}/edit",
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
+        )
+        return self._process_response(response, CustomerEditResponse)
+
+    async def subscriptions(
+        self, customer_id: str, subscriptions: list[SerializedSubscription], by: IdTypesLiteral = "externalId", site: str | None = None
+    ) -> CustomerSubscriptionsResponse:
+        """
+        **Подписка/отписка клиента на рассылки**
+
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-customers-externalId-subscriptions
+        :param customer_id: ID клиента (внутренний или внешний).
+        :param subscriptions: Список подписок клиента.
+        :param by: Тип ID клиента (id или externalId).
+        :param site: Символьный код магазина.
+        :return: CustomerSubscriptionsResponse
+        """
+        request = CustomerSubscriptionsRequest(subscriptions=subscriptions, by=by, site=site)
+        response = await self._client.post(
+            endpoint=f"/customers/{customer_id}/subscriptions",
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
+        )
+        return self._process_response(response, CustomerSubscriptionsResponse)
