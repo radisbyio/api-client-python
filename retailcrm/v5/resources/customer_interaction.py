@@ -4,7 +4,7 @@ from retailcrm.v5.resources.base import ApiResource
 from retailcrm.v5.schemas.base import IdTypesLiteral
 from retailcrm.v5.schemas.entities.customer_interaction import SerializedCart, SerializedFavorite
 from retailcrm.v5.schemas.requests.customer_interaction import CartClearRequest, CartSetRequest, FavoritesRemoveRequest, \
-    FavoritesAddRequest, FavoritesGetRequest
+    FavoritesAddRequest, FavoritesGetRequest, CartGetRequest
 from retailcrm.v5.schemas.responses.customer_interaction import CartClearResponse, CartSetResponse, CartGetResponse, \
     FavoritesRemoveResponse, FavoritesAddResponse, FavoritesGetResponse
 
@@ -107,7 +107,7 @@ class CustomerInteractionApiResource(ApiResource):
         :return: FavoritesAddResponse
         """
         request = FavoritesAddRequest(favorite=favorite)
-        params = {"by": by, "siteBy": site_by.value}
+        params = {"by": by, "siteBy": site_by}
         response = await self._client.post(
             endpoint=f"/customer-interaction/{site}/favorites/{customer_id}/add",
             params=params,
