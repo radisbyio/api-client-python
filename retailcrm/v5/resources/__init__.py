@@ -9,6 +9,7 @@ from retailcrm.v5.resources.settings import SettingsApiResource
 from retailcrm.v5.resources.store import StoreApiResource
 from retailcrm.v5.resources.tasks import TasksApiResource
 from retailcrm.v5.resources.users import UsersApiResource
+from retailcrm.v5.resources.integrations import IntegrationsApiResource
 # from retailcrm.v5.resources.delivery import DeliveryController
 from retailcrm.v5.resources.web_analytics import WebAnalyticsApiResource
 from retailcrm.v5.resources.verification import VerificationController
