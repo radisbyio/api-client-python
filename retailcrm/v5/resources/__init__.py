@@ -21,3 +21,4 @@ from retailcrm.v5.resources.notifications import NotificationsApiResource
 from retailcrm.v5.resources.segments import SegmentsApiResource
 from retailcrm.v5.resources.orders_packs import OrdersPacksApiResource
 from retailcrm.v5.resources.customers_corporate import CustomersCorporateApiResource
+from retailcrm.v5.resources.customer_interaction import  CustomerInteractionApiResource
