@@ -4,8 +4,11 @@ from pydantic import Field
 
 from retailcrm.v5.schemas.base import SuccessResponse, PaginatedResponse
 from retailcrm.v5.schemas.callbacks.entities.delivery import ResponseLoadDeliveryData, ResponseSave
-from retailcrm.v5.schemas.entities.delivery import DeliveryShipment
+from retailcrm.v5.schemas.entities.delivery import DeliveryShipment, DeliveryCalculation
 
+
+class DeliveryCalculateResponse(SuccessResponse):
+    calculations: list[DeliveryCalculation] = Field(default_factory=list)
 
 class DeliveryGetResponse(SuccessResponse):
     result: list[ResponseLoadDeliveryData] = Field(default_factory=list)

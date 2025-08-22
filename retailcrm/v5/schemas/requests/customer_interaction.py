@@ -23,7 +23,7 @@ class CartGetRequest(BaseRetailCrmScheme):
 
 
 class FavoritesGetRequest(BaseRetailCrmScheme):
-    by: IdTypesLiteral = Field(IdTypesLiteral.EXTERNAL_ID)
+    by: IdTypesLiteral
     siteBy: str
 
 

@@ -93,7 +93,7 @@ class CustomerInteractionApiResource(ApiResource):
         return self._process_response(response, FavoritesGetResponse)
 
     async def favorites_add(
-        self, site: str, customer_id: str, favorite: SerializedFavorite, by: IdTypesLiteral = "externalId", site_by: SiteTypesLiteral = SiteTypesLiteral.CODE
+        self, site: str, customer_id: str, favorite: SerializedFavorite, by: IdTypesLiteral = "externalId", site_by: Literal["id", "code"] = "code"
     ) -> FavoritesAddResponse:
         """
         **Добавление товарного предложения в список избранного клиента**

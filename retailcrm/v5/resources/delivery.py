@@ -1,12 +1,12 @@
 from retailcrm.v5.resources.base import ApiResource
+from retailcrm.v5.schemas.base import SuccessResponse
 from retailcrm.v5.schemas.entities.delivery import DeliveryShipment, RequestStatusUpdateItem
 from retailcrm.v5.schemas.entities.orders import SerializedOrder
 from retailcrm.v5.schemas.filters.delivery import DeliveryShipmentFilter
 from retailcrm.v5.schemas.requests.delivery import DeliveryShipmentEditRequest, DeliveryShipmentCreateRequest, \
     DeliveryShipmentsFilterRequest, DeliveryGenericTrackingRequest, DeliveryCalculateRequest
 from retailcrm.v5.schemas.responses.delivery import DeliveryShipmentGetResponse, DeliveryShipmentEditResponse, \
-    DeliveryShipmentCreateResponse, DeliveryShipmentsResponse, DeliveryGenericTrackingResponse, \
-    DeliveryCalculateResponse
+    DeliveryShipmentCreateResponse, DeliveryShipmentsResponse,DeliveryCalculateResponse
 
 
 class DeliveryApiResource(ApiResource):
@@ -28,7 +28,7 @@ class DeliveryApiResource(ApiResource):
         )
         return self._process_response(response, DeliveryCalculateResponse)
 
-    async def generic_tracking(self, subcode: str, status_update: list[RequestStatusUpdateItem]) -> DeliveryGenericTrackingResponse:
+    async def generic_tracking(self, subcode: str, status_update: list[RequestStatusUpdateItem]) -> SuccessResponse:
         """
         **Обновление статусов доставки**
 
@@ -44,7 +44,7 @@ class DeliveryApiResource(ApiResource):
             endpoint=f"/delivery/generic/{subcode}/tracking",
             content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
-        return self._process_response(response, DeliveryGenericTrackingResponse)
+        return self._process_response(response, SuccessResponse)
 
     async def shipments_filter(
         self, filter_obj: DeliveryShipmentFilter | None = None, limit: int = 20, page: int = 1

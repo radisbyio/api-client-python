@@ -247,7 +247,7 @@ class SaveDeliveryData(BaseRetailCrmScheme):
 
 
 class DeliveryCustomer(BaseRetailCrmScheme):
-    id: Optional[id] = Field(None, description="Идентификатор покупателя")
+    id: Optional[int] = Field(None, description="Идентификатор покупателя")
     last_name: Optional[str] = Field(None, alias="lastName", description="Фамилия")
     first_name: Optional[str] = Field(None, alias="firstName", description="Имя")
     patronymic: Optional[str] = Field(None, description="Отчество")
