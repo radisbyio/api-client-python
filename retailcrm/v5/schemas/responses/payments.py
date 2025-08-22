@@ -3,8 +3,12 @@ from typing import Optional
 from pydantic import Field
 
 from retailcrm.v5.schemas.base import SuccessResponse
-from retailcrm.v5.schemas.entities.payments import ApiCheckResponseResult, ApiCreateInvoiceRequest, PaymentInvoice, \
-    InvoiceDetails
+from retailcrm.v5.schemas.entities.payments import (
+    ApiCheckResponseResult,
+    ApiCreateInvoiceRequest,
+    InvoiceDetails,
+    PaymentInvoice,
+)
 
 
 class CheckResponsePayment(SuccessResponse):
@@ -17,6 +21,7 @@ class CreateInvoiceResponsePayment(SuccessResponse):
     result: Optional[ApiCreateInvoiceRequest] = Field(
         None, description="JSON с данными созданного инвойса"
     )
+
 
 class InvoiceImportResponse(SuccessResponse):
     invoice: Optional[PaymentInvoice] = Field(None)

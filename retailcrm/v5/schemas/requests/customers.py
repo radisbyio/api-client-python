@@ -4,9 +4,17 @@ from pydantic import Field, field_serializer, model_serializer
 
 from retailcrm.v5.helpers import to_json_serializer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme, IdTypesLiteral
-from retailcrm.v5.schemas.entities.customers import SerializedCustomerReference, SerializedCustomerNote, \
-    SerializedCustomer, SerializedSubscription
-from retailcrm.v5.schemas.filters.customers import CustomerFilter, CustomerNoteFilter, CustomerHistoryFilterV4Type
+from retailcrm.v5.schemas.entities.customers import (
+    SerializedCustomer,
+    SerializedCustomerNote,
+    SerializedCustomerReference,
+    SerializedSubscription,
+)
+from retailcrm.v5.schemas.filters.customers import (
+    CustomerFilter,
+    CustomerHistoryFilterV4Type,
+    CustomerNoteFilter,
+)
 from retailcrm.v5.schemas.shared.fix_external_row import FixExternalRow
 from retailcrm.v5.utils import pydantic_to_nested_dict
 
@@ -21,7 +29,7 @@ class CustomersFilterRequest(BaseRetailCrmScheme):
         return {
             "limit": self.limit,
             "page": self.page,
-            **pydantic_to_nested_dict(self.filter_obj, "filter")
+            **pydantic_to_nested_dict(self.filter_obj, "filter"),
         }
 
 
@@ -49,14 +57,16 @@ class CustomersFixExternalIdsRequest(BaseRetailCrmScheme):
 class CustomersHistoryRequest(BaseRetailCrmScheme):
     limit: int = Field(description="Количество элементов в ответе")
     page: int = Field(description="Номер страницы с результатами")
-    filter_obj: Optional[CustomerHistoryFilterV4Type] = Field(None, description="Объект фильтра")
+    filter_obj: Optional[CustomerHistoryFilterV4Type] = Field(
+        None, description="Объект фильтра"
+    )
 
     @model_serializer()
     def serialize_model(self) -> dict:
         return {
             "limit": self.limit,
             "page": self.page,
-            **pydantic_to_nested_dict(self.filter_obj, "filter")
+            **pydantic_to_nested_dict(self.filter_obj, "filter"),
         }
 
 
@@ -70,7 +80,7 @@ class CustomersNotesFilterRequest(BaseRetailCrmScheme):
         return {
             "limit": self.limit,
             "page": self.page,
-            **pydantic_to_nested_dict(self.filter_obj, "filter")
+            **pydantic_to_nested_dict(self.filter_obj, "filter"),
         }
 
 
@@ -82,19 +92,25 @@ class CustomerNoteCreateRequest(BaseRetailCrmScheme):
 
 
 class CustomersUploadRequest(BaseRetailCrmScheme):
-    site: str = Field(description="Символьный код магазина, к которому относятся загружаемые клиенты")
+    site: str = Field(
+        description="Символьный код магазина, к которому относятся загружаемые клиенты"
+    )
     customers: list[SerializedCustomer] = Field(default_factory=list)
 
     customers_serializer = field_serializer("customers")(to_json_serializer())
 
 
 class CustomerGetRequest(BaseRetailCrmScheme):
-    by: IdTypesLiteral = Field(description="Указывается, что передается в параметре externalId: внутренний (by=id) или внешний (by=externalId) ID клиента. По умолчанию externalId.")
+    by: IdTypesLiteral = Field(
+        description="Указывается, что передается в параметре externalId: внутренний (by=id) или внешний (by=externalId) ID клиента. По умолчанию externalId."
+    )
     site: Optional[str] = Field(None, description="Символьный код магазина")
 
 
 class CustomerEditRequest(BaseRetailCrmScheme):
-    by: IdTypesLiteral = Field(description="Указывается, что передается в параметре externalId: внутренний (by=id) или внешний (by=externalId) ID клиента. По умолчанию externalId.")
+    by: IdTypesLiteral = Field(
+        description="Указывается, что передается в параметре externalId: внутренний (by=id) или внешний (by=externalId) ID клиента. По умолчанию externalId."
+    )
     site: Optional[str] = Field(None, description="Символьный код магазина")
     customer: SerializedCustomer
 
@@ -102,7 +118,9 @@ class CustomerEditRequest(BaseRetailCrmScheme):
 
 
 class CustomerSubscriptionsRequest(BaseRetailCrmScheme):
-    by: IdTypesLiteral = Field(description="Указывается, что передается в параметре externalId: внутренний (by=id) или внешний (by=externalId) ID клиента. По умолчанию externalId.")
+    by: IdTypesLiteral = Field(
+        description="Указывается, что передается в параметре externalId: внутренний (by=id) или внешний (by=externalId) ID клиента. По умолчанию externalId."
+    )
     site: Optional[str] = Field(None, description="Символьный код магазина")
     subscriptions: list[SerializedSubscription] = Field(default_factory=list)
 

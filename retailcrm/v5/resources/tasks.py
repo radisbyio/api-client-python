@@ -2,11 +2,25 @@ from typing import Optional
 
 from retailcrm.v5.resources.base import ApiResource
 from retailcrm.v5.schemas.base import SuccessResponse
-from retailcrm.v5.schemas.entities.tasks import TaskFilter, SerializedTask, TaskHistoryFilter
-from retailcrm.v5.schemas.requests.tasks import FilterTasksRequest, CreateTaskRequest, FilterTasksHistoryRequest, \
-    GetTaskCommentsRequest, EditTaskRequest
-from retailcrm.v5.schemas.responses.tasks import FilterTasksResponse, CreateTaskResponse, FilterTaskHistoryResponse, \
-    GetTaskResponse, GetTaskCommentsResponse
+from retailcrm.v5.schemas.entities.tasks import (
+    SerializedTask,
+    TaskFilter,
+    TaskHistoryFilter,
+)
+from retailcrm.v5.schemas.requests.tasks import (
+    CreateTaskRequest,
+    EditTaskRequest,
+    FilterTasksHistoryRequest,
+    FilterTasksRequest,
+    GetTaskCommentsRequest,
+)
+from retailcrm.v5.schemas.responses.tasks import (
+    CreateTaskResponse,
+    FilterTaskHistoryResponse,
+    FilterTasksResponse,
+    GetTaskCommentsResponse,
+    GetTaskResponse,
+)
 
 __all__ = ["TasksApiResource"]
 
@@ -54,7 +68,10 @@ class TasksApiResource(ApiResource):
         return self._process_response(response, CreateTaskResponse)
 
     async def history(
-        self, filter_obj: TaskHistoryFilter | None = None, limit: int = 20, page: int = 1
+        self,
+        filter_obj: TaskHistoryFilter | None = None,
+        limit: int = 20,
+        page: int = 1,
     ) -> FilterTaskHistoryResponse:
         """
         **Получение истории изменения задач**
@@ -67,7 +84,9 @@ class TasksApiResource(ApiResource):
         :return: FilterTaskHistoryResponse
         """
 
-        request = FilterTasksHistoryRequest(filter_obj=filter_obj, limit=limit, page=page)
+        request = FilterTasksHistoryRequest(
+            filter_obj=filter_obj, limit=limit, page=page
+        )
         response = await self._client.post(
             endpoint="/tasks/history",
             content=request.model_dump_json(exclude_none=True, by_alias=True),

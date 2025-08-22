@@ -9,9 +9,13 @@ from retailcrm.v5.schemas.base import BaseRetailCrmScheme
 
 class Value(BaseRetailCrmScheme):
     value: Optional[str] = Field(None, description="Значение настройки")
-    updated_at: Optional[datetime] = Field(None, description="Время последнего изменения настройки")
+    updated_at: Optional[datetime] = Field(
+        None, description="Время последнего изменения настройки"
+    )
 
-    updated_at_serializer = field_serializer("updated_at")(datetime_serializer("%Y-%m-%d %H:%M:%S"))
+    updated_at_serializer = field_serializer("updated_at")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
 
 
 class WorkTime(BaseRetailCrmScheme):
@@ -26,8 +30,12 @@ class NonWorkingDay(BaseRetailCrmScheme):
     start_date: Optional[datetime] = Field(None, description="Начало нерабочих дней")
     end_date: Optional[datetime] = Field(None, description="Конец нерабочих дней")
 
-    start_date_serializer = field_serializer("start_date")(datetime_serializer("%Y-%m-%d %H:%M:%S"))
-    end_date_serializer = field_serializer("end_date")(datetime_serializer("%Y-%m-%d %H:%M:%S"))
+    start_date_serializer = field_serializer("start_date")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
+    end_date_serializer = field_serializer("end_date")(
+        datetime_serializer("%Y-%m-%d %H:%M:%S")
+    )
 
 
 class ChannelSetting(BaseRetailCrmScheme):
@@ -37,7 +45,9 @@ class ChannelSetting(BaseRetailCrmScheme):
 
 
 class OrderCreationSettings(BaseRetailCrmScheme):
-    default: Optional[ChannelSetting] = Field(None, description="Параметры по-умолчанию")
+    default: Optional[ChannelSetting] = Field(
+        None, description="Параметры по-умолчанию"
+    )
     channels: Optional[list[ChannelSetting]] = Field(
         None, description="Параметры для отдельных каналов (ключ - externalId канала)"
     )
@@ -48,9 +58,13 @@ class IntegrationData(BaseRetailCrmScheme):
 
 
 class Settings(BaseRetailCrmScheme):
-    default_currency: Optional[Value] = Field(None, description="deprecated Валюта по умолчанию")
+    default_currency: Optional[Value] = Field(
+        None, description="deprecated Валюта по умолчанию"
+    )
     system_language: Optional[Value] = Field(None, description="Язык системы")
     timezone: Optional[Value] = Field(None, description="Временная зона")
     work_times: Optional[list[WorkTime]] = Field(None, description="Рабочее время")
-    non_working_days: Optional[list[NonWorkingDay]] = Field(None, description="Нерабочие дни")
+    non_working_days: Optional[list[NonWorkingDay]] = Field(
+        None, description="Нерабочие дни"
+    )
     mg: Optional[IntegrationData] = Field(None, description="Настройки чатов")

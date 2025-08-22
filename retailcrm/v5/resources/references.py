@@ -1,20 +1,65 @@
 from retailcrm.v5.resources.base import ApiResource
 from retailcrm.v5.schemas.base import SuccessResponse
-from retailcrm.v5.schemas.entities.references import SerializedCurrency, SerializedDeliveryService, \
-    SerializedDeliveryType, SerializedLegalEntity, SerializedOrderMethod, SerializedOrderType, SerializedPaymentStatus, \
-    SerializedPaymentType, SerializedUnit, SerializedCostGroup, SerializedCostItem, SerializedCourier, \
-    SerializedPriceType, SerializedSite, SerializedOrderProductStatus
+from retailcrm.v5.schemas.entities.references import (
+    SerializedCostGroup,
+    SerializedCostItem,
+    SerializedCourier,
+    SerializedCurrency,
+    SerializedDeliveryService,
+    SerializedDeliveryType,
+    SerializedLegalEntity,
+    SerializedOrderMethod,
+    SerializedOrderProductStatus,
+    SerializedOrderType,
+    SerializedPaymentStatus,
+    SerializedPaymentType,
+    SerializedPriceType,
+    SerializedSite,
+    SerializedUnit,
+)
 from retailcrm.v5.schemas.entities.store import SerializedStore
-from retailcrm.v5.schemas.requests.references import CostGroupsEditRequest, CostItemsEditRequest, CouriersCreateRequest, \
-    CouriersEditRequest, CurrenciesCreateRequest, CurrenciesEditRequest, DeliveryServicesEditRequest, \
-    DeliveryTypesEditRequest, LegalEntitiesEditRequest, OrderMethodEditRequest, OrderTypesEditRequest, \
-    PaymentStatusEditRequest, PaymentTypesEditRequest, PriceTypesEditRequest, ProductStatusesEditRequest, \
-    SitesEditRequest, StoreEditRequest, UnitEditRequest
-from retailcrm.v5.schemas.responses.references import CostGroupsResponse, CostItemsResponse, CountriesResponse, \
-    CouriersResponse, CurrenciesResponse, CurrenciesCreateResponse, DeliveryServicesResponse, DeliveryTypesResponse, \
-    LegalEntitiesResponse, MGChannelsResponse, OrderMethodResponse, OrderTypesResponse, PaymentStatusesResponse, \
-    PaymentTypesResponse, PriceTypesResponse, ProductStatusesResponse, SitesResponse, StatusGroupsResponse, \
-    StatusesResponse, StoresResponse
+from retailcrm.v5.schemas.requests.references import (
+    CostGroupsEditRequest,
+    CostItemsEditRequest,
+    CouriersCreateRequest,
+    CouriersEditRequest,
+    CurrenciesCreateRequest,
+    CurrenciesEditRequest,
+    DeliveryServicesEditRequest,
+    DeliveryTypesEditRequest,
+    LegalEntitiesEditRequest,
+    OrderMethodEditRequest,
+    OrderTypesEditRequest,
+    PaymentStatusEditRequest,
+    PaymentTypesEditRequest,
+    PriceTypesEditRequest,
+    ProductStatusesEditRequest,
+    SitesEditRequest,
+    StoreEditRequest,
+    UnitEditRequest,
+)
+from retailcrm.v5.schemas.responses.references import (
+    CostGroupsResponse,
+    CostItemsResponse,
+    CountriesResponse,
+    CouriersResponse,
+    CurrenciesCreateResponse,
+    CurrenciesResponse,
+    DeliveryServicesResponse,
+    DeliveryTypesResponse,
+    LegalEntitiesResponse,
+    MGChannelsResponse,
+    OrderMethodResponse,
+    OrderTypesResponse,
+    PaymentStatusesResponse,
+    PaymentTypesResponse,
+    PriceTypesResponse,
+    ProductStatusesResponse,
+    SitesResponse,
+    StatusesResponse,
+    StatusGroupsResponse,
+    StoresResponse,
+)
 
 
 class ReferencesController(ApiResource):
@@ -69,7 +114,7 @@ class ReferencesController(ApiResource):
         :return: SuccessResponse
         """
         request = CostItemsEditRequest(costItem=cost_item)
-        response =  await self._client.post(
+        response = await self._client.post(
             endpoint=f"/reference/cost-items/{code}/edit",
             content=request.model_dump_json(exclude_none=True, exclude_unset=True),
         )
@@ -141,7 +186,9 @@ class ReferencesController(ApiResource):
         )
         return self._process_response(response, CurrenciesResponse)
 
-    async def currencies_create(self, currency: SerializedCurrency) -> CurrenciesCreateResponse:
+    async def currencies_create(
+        self, currency: SerializedCurrency
+    ) -> CurrenciesCreateResponse:
         """
         **Создание валюты**
 
@@ -155,7 +202,9 @@ class ReferencesController(ApiResource):
         )
         return self._process_response(response, CurrenciesCreateResponse)
 
-    async def currencies_edit(self, currency_id: int, currency: SerializedCurrency) -> SuccessResponse:
+    async def currencies_edit(
+        self, currency_id: int, currency: SerializedCurrency
+    ) -> SuccessResponse:
         """
         **Редактирование валюты**
 
@@ -181,7 +230,9 @@ class ReferencesController(ApiResource):
         )
         return self._process_response(response, DeliveryServicesResponse)
 
-    async def delivery_services_edit(self, code: str, delivery_service: SerializedDeliveryService) -> SuccessResponse:
+    async def delivery_services_edit(
+        self, code: str, delivery_service: SerializedDeliveryService
+    ) -> SuccessResponse:
         """
         **Редактирование валюты**
 
@@ -195,8 +246,6 @@ class ReferencesController(ApiResource):
         )
         return self._process_response(response, SuccessResponse)
 
-
-
     async def delivery_types(self) -> DeliveryTypesResponse:
         """
         **Получение списка типов доставки**
@@ -209,7 +258,9 @@ class ReferencesController(ApiResource):
         )
         return self._process_response(response, DeliveryTypesResponse)
 
-    async def delivery_types_edit(self, code: str, delivery_type: SerializedDeliveryType) -> SuccessResponse:
+    async def delivery_types_edit(
+        self, code: str, delivery_type: SerializedDeliveryType
+    ) -> SuccessResponse:
         """
         **Создание/редактирование типа доставки**
 
@@ -235,7 +286,9 @@ class ReferencesController(ApiResource):
         )
         return self._process_response(response, LegalEntitiesResponse)
 
-    async def legal_entities_edit(self, code: str, legal_entity: SerializedLegalEntity) -> SuccessResponse:
+    async def legal_entities_edit(
+        self, code: str, legal_entity: SerializedLegalEntity
+    ) -> SuccessResponse:
         """
         **Создание/редактирование юридического лица**
 
@@ -261,7 +314,6 @@ class ReferencesController(ApiResource):
         )
         return self._process_response(response, MGChannelsResponse)
 
-
     async def order_methods(self) -> OrderMethodResponse:
         """
         **Получение списка способов оформления заказов**
@@ -270,7 +322,7 @@ class ReferencesController(ApiResource):
         :return: OrderMethodResponse
         """
 
-        response =await self._client.get(
+        response = await self._client.get(
             endpoint="/reference/order-methods",
         )
 
@@ -336,7 +388,7 @@ class ReferencesController(ApiResource):
         :return: PaymentStatusesResponse
         """
 
-        response =  await self._client.get(
+        response = await self._client.get(
             endpoint="/reference/payment-statuses",
         )
         return self._process_response(response, PaymentStatusesResponse)

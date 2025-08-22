@@ -4,7 +4,6 @@ from pydantic import Field
 
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme
 
-
 __all__ = ["SerializedEntityOrder", "AbstractOrder"]
 
 

@@ -2,7 +2,7 @@ from datetime import datetime, time, timezone
 from typing import Any, Callable, Optional, TypeVar
 
 from pydantic import BaseModel
-from pydantic_core.core_schema import ValidationInfo, SerializationInfo
+from pydantic_core.core_schema import SerializationInfo, ValidationInfo
 
 from retailcrm.v5.utils import pydantic_list_dumps_to_json, pydantic_to_nested_dict
 
@@ -52,7 +52,9 @@ def dict_validator() -> Callable[[Any, ValidationInfo], dict]:
     return validator
 
 
-def datetime_serializer(format_str: str) -> Callable[[Optional[datetime]], Optional[str]]:
+def datetime_serializer(
+    format_str: str,
+) -> Callable[[Optional[datetime]], Optional[str]]:
     """
     Вспомогательная функция для форматирования даты при сериализации объекта datetime
     """
@@ -129,6 +131,7 @@ def bool_flag_serializer() -> Callable[[Optional[bool]], Optional[int]]:
 
 T = TypeVar("T", bound=BaseModel)
 
+
 def to_json_serializer() -> Callable[[list[T], SerializationInfo], str]:
     """
     Вспомогательная функция, которая позволяет преобразовать массив объектов в JSON строку
@@ -143,7 +146,9 @@ def to_json_serializer() -> Callable[[list[T], SerializationInfo], str]:
     return serializer
 
 
-def filter_obj_serializer(prefix: str = "") -> Callable[[T | None, SerializationInfo], dict[str, Any]]:
+def filter_obj_serializer(
+    prefix: str = "",
+) -> Callable[[T | None, SerializationInfo], dict[str, Any]]:
     def serializer(value: T | None, info: SerializationInfo) -> dict[str, Any]:
         return pydantic_to_nested_dict(value, prefix)
 

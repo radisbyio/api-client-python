@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import Field, model_serializer, field_serializer
+from pydantic import Field, field_serializer, model_serializer
 
 from retailcrm.v5.helpers import to_json_serializer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme
@@ -19,19 +19,24 @@ class CostsFilterRequest(BaseRetailCrmScheme):
         return {
             "limit": self.limit,
             "page": self.page,
-            **pydantic_to_nested_dict(self.filter_obj, "filter")
+            **pydantic_to_nested_dict(self.filter_obj, "filter"),
         }
 
 
 class CostCreateRequest(BaseRetailCrmScheme):
-    site: Optional[str] = Field(None, description="Символьный код магазина. Указывается в случае привязки к заказу по externalId или number")
+    site: Optional[str] = Field(
+        None,
+        description="Символьный код магазина. Указывается в случае привязки к заказу по externalId или number",
+    )
     cost: SerializedCost
 
     cost_serializer = field_serializer("cost")(to_json_serializer())
 
 
 class CostsDeleteRequest(BaseRetailCrmScheme):
-    ids: list[int] = Field(default_factory=list, description="Идентификаторы удаляемых расходов")
+    ids: list[int] = Field(
+        default_factory=list, description="Идентификаторы удаляемых расходов"
+    )
 
 
 class CostsUploadRequest(BaseRetailCrmScheme):
@@ -41,7 +46,10 @@ class CostsUploadRequest(BaseRetailCrmScheme):
 
 
 class CostEditRequest(BaseRetailCrmScheme):
-    site: Optional[str] = Field(None, description="Символьный код магазина. Указывается в случае привязки к заказу по externalId или number")
+    site: Optional[str] = Field(
+        None,
+        description="Символьный код магазина. Указывается в случае привязки к заказу по externalId или number",
+    )
     cost: SerializedCost
 
     cost_serializer = field_serializer("cost")(to_json_serializer())

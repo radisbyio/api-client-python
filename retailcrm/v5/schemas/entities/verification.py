@@ -15,7 +15,6 @@ class SmsVerification(BaseRetailCrmScheme):
     checkId: str | None = Field(None, description="Идентификатор проверки кода")
     actionType: str | None = Field(None, description="Тип действия")
 
-
     createdAt_serializer = field_serializer("createdAt")(
         datetime_serializer("%Y-%m-%d %H:%M:%S")
     )
@@ -30,5 +29,3 @@ class SmsVerification(BaseRetailCrmScheme):
 class SmsVerificationConfirm(BaseRetailCrmScheme):
     code: str = Field(..., description="Проверочный код")
     checkId: str = Field(..., description="Идентификатор проверки кода")
-
-

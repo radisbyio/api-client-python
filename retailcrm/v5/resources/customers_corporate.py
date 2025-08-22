@@ -1,30 +1,74 @@
 from retailcrm.v5.resources.base import ApiResource
-from retailcrm.v5.schemas.base import SuccessResponse, IdTypesLiteral
-from retailcrm.v5.schemas.entities.corporate_customers import SerializedCustomerCorporate, SerializedCustomerAddress, \
-    SerializedCompany, SerializedCustomerContact
-from retailcrm.v5.schemas.entities.customers import SerializedCustomerReference, SerializedCustomerNote
-from retailcrm.v5.schemas.filters.customers_corporate import CustomerCorporateApiFilterData, \
-    CustomerHistoryFilterV4Type, CustomerNoteFilter, CustomerAddressFilter, CompanyFilter, CustomerContactFilter
-from retailcrm.v5.schemas.requests.customers_corporate import CustomerCorporateFilterRequest, \
-    CustomerCorporateFixExternalIdsRequest, CustomerCorporateCreateRequest, CustomerCorporateCombineRequest, \
-    CustomerCorporateHistoryRequest, CustomerCorporateNotesFilterRequest, CustomerCorporateNoteCreateRequest, \
-    CustomerCorporateUploadRequest, CustomerCorporateGetRequest, CustomerCorporateAddressesRequest, \
-    CustomerCorporateAddressCreateRequest, CustomerCorporateAddressEditRequest, CustomerCorporateCompaniesRequest, \
-    CustomerCorporateCompanyCreateRequest, CustomerCorporateCompanyEditRequest, CustomerCorporateContactsRequest, \
-    CustomerCorporateContactEditRequest, CustomerCorporateEditRequest, CustomerCorporateContactCreateRequest
-from retailcrm.v5.schemas.responses.customers_corporate import CustomerCorporateResponse, \
-    CustomerCorporateCombineResponse, CustomerCorporateCreateResponse, CustomerCorporateFixExternalIdsResponse, \
-    CustomerCorporateHistoryResponse, CustomerCorporateNotesResponse, CustomerCorporateNoteCreateResponse, \
-    CustomerCorporateUploadResponse, CustomerCorporateGetResponse, CustomerCorporateAddressesResponse, \
-    CustomerCorporateAddressCreateResponse, CustomerCorporateAddressEditResponse, CustomerCorporateCompaniesResponse, \
-    CustomerCorporateCompanyCreateResponse, CustomerCorporateCompanyEditResponse, CustomerCorporateContactsResponse, \
-    CustomerCorporateContactCreateResponse, CustomerCorporateContactEditResponse, CustomerCorporateEditResponse
+from retailcrm.v5.schemas.base import IdTypesLiteral, SuccessResponse
+from retailcrm.v5.schemas.entities.corporate_customers import (
+    SerializedCompany,
+    SerializedCustomerAddress,
+    SerializedCustomerContact,
+    SerializedCustomerCorporate,
+)
+from retailcrm.v5.schemas.entities.customers import (
+    SerializedCustomerNote,
+    SerializedCustomerReference,
+)
+from retailcrm.v5.schemas.filters.customers_corporate import (
+    CompanyFilter,
+    CustomerAddressFilter,
+    CustomerContactFilter,
+    CustomerCorporateApiFilterData,
+    CustomerHistoryFilterV4Type,
+    CustomerNoteFilter,
+)
+from retailcrm.v5.schemas.requests.customers_corporate import (
+    CustomerCorporateAddressCreateRequest,
+    CustomerCorporateAddressEditRequest,
+    CustomerCorporateAddressesRequest,
+    CustomerCorporateCombineRequest,
+    CustomerCorporateCompaniesRequest,
+    CustomerCorporateCompanyCreateRequest,
+    CustomerCorporateCompanyEditRequest,
+    CustomerCorporateContactCreateRequest,
+    CustomerCorporateContactEditRequest,
+    CustomerCorporateContactsRequest,
+    CustomerCorporateCreateRequest,
+    CustomerCorporateEditRequest,
+    CustomerCorporateFilterRequest,
+    CustomerCorporateFixExternalIdsRequest,
+    CustomerCorporateGetRequest,
+    CustomerCorporateHistoryRequest,
+    CustomerCorporateNoteCreateRequest,
+    CustomerCorporateNotesFilterRequest,
+    CustomerCorporateUploadRequest,
+)
+from retailcrm.v5.schemas.responses.customers_corporate import (
+    CustomerCorporateAddressCreateResponse,
+    CustomerCorporateAddressEditResponse,
+    CustomerCorporateAddressesResponse,
+    CustomerCorporateCombineResponse,
+    CustomerCorporateCompaniesResponse,
+    CustomerCorporateCompanyCreateResponse,
+    CustomerCorporateCompanyEditResponse,
+    CustomerCorporateContactCreateResponse,
+    CustomerCorporateContactEditResponse,
+    CustomerCorporateContactsResponse,
+    CustomerCorporateCreateResponse,
+    CustomerCorporateEditResponse,
+    CustomerCorporateFixExternalIdsResponse,
+    CustomerCorporateGetResponse,
+    CustomerCorporateHistoryResponse,
+    CustomerCorporateNoteCreateResponse,
+    CustomerCorporateNotesResponse,
+    CustomerCorporateResponse,
+    CustomerCorporateUploadResponse,
+)
 from retailcrm.v5.schemas.shared.fix_external_row import FixExternalRow
 
 
 class CustomersCorporateApiResource(ApiResource):
     async def filter_obj(
-        self, filter_obj: CustomerCorporateApiFilterData | None = None, limit: int = 20, page: int = 1
+        self,
+        filter_obj: CustomerCorporateApiFilterData | None = None,
+        limit: int = 20,
+        page: int = 1,
     ) -> CustomerCorporateResponse:
         """
         **Получение списка корпоративных клиентов, удовлетворяющих заданному фильтру**
@@ -35,7 +79,9 @@ class CustomersCorporateApiResource(ApiResource):
         :param page: Номер страницы с результатами (по умолчанию равно 1).
         :return: CustomerCorporateResponse
         """
-        request = CustomerCorporateFilterRequest(filter_obj=filter_obj, limit=limit, page=page)
+        request = CustomerCorporateFilterRequest(
+            filter_obj=filter_obj, limit=limit, page=page
+        )
         response = await self._client.get(
             endpoint="/customers-corporate",
             params=request.model_dump(exclude_none=True, by_alias=True),
@@ -43,7 +89,9 @@ class CustomersCorporateApiResource(ApiResource):
         return self._process_response(response, CustomerCorporateResponse)
 
     async def combine(
-        self, result_customer: SerializedCustomerReference, customers: list[SerializedCustomerReference]
+        self,
+        result_customer: SerializedCustomerReference,
+        customers: list[SerializedCustomerReference],
     ) -> CustomerCorporateCombineResponse:
         """
         **Объединение корпоративных клиентов**
@@ -53,14 +101,18 @@ class CustomersCorporateApiResource(ApiResource):
         :param customers: Список клиентов, которые будут объединены.
         :return: CustomerCorporateCombineResponse
         """
-        request = CustomerCorporateCombineRequest(resultCustomer=result_customer, customers=customers)
+        request = CustomerCorporateCombineRequest(
+            resultCustomer=result_customer, customers=customers
+        )
         response = await self._client.post(
             endpoint="/customers-corporate/combine",
             content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, CustomerCorporateCombineResponse)
 
-    async def create(self, customer_corporate: SerializedCustomerCorporate) -> CustomerCorporateCreateResponse:
+    async def create(
+        self, customer_corporate: SerializedCustomerCorporate
+    ) -> CustomerCorporateCreateResponse:
         """
         **Создание корпоративного клиента**
 
@@ -75,7 +127,9 @@ class CustomersCorporateApiResource(ApiResource):
         )
         return self._process_response(response, CustomerCorporateCreateResponse)
 
-    async def fix_external_ids(self, customers_corporate: list[FixExternalRow]) -> CustomerCorporateFixExternalIdsResponse:
+    async def fix_external_ids(
+        self, customers_corporate: list[FixExternalRow]
+    ) -> CustomerCorporateFixExternalIdsResponse:
         """
         **Массовая запись внешних ID корпоративных клиентов**
 
@@ -83,7 +137,9 @@ class CustomersCorporateApiResource(ApiResource):
         :param customers_corporate: Идентификаторы загруженных объектов.
         :return: CustomerCorporateFixExternalIdsResponse
         """
-        request = CustomerCorporateFixExternalIdsRequest(customersCorporate=customers_corporate)
+        request = CustomerCorporateFixExternalIdsRequest(
+            customersCorporate=customers_corporate
+        )
         response = await self._client.post(
             endpoint="/customers-corporate/fix-external-ids",
             content=request.model_dump_json(exclude_none=True, by_alias=True),
@@ -91,7 +147,10 @@ class CustomersCorporateApiResource(ApiResource):
         return self._process_response(response, CustomerCorporateFixExternalIdsResponse)
 
     async def history(
-        self, filter_obj: CustomerHistoryFilterV4Type | None = None, limit: int = 20, page: int = 1
+        self,
+        filter_obj: CustomerHistoryFilterV4Type | None = None,
+        limit: int = 20,
+        page: int = 1,
     ) -> CustomerCorporateHistoryResponse:
         """
         **Получение истории изменения корпоративных клиентов**
@@ -102,7 +161,9 @@ class CustomersCorporateApiResource(ApiResource):
         :param page: Номер страницы с результатами (по умолчанию равно 1).
         :return: CustomerCorporateHistoryResponse
         """
-        request = CustomerCorporateHistoryRequest(filter_obj=filter_obj, limit=limit, page=page)
+        request = CustomerCorporateHistoryRequest(
+            filter_obj=filter_obj, limit=limit, page=page
+        )
         response = await self._client.get(
             endpoint="/customers-corporate/history",
             params=request.model_dump(exclude_none=True, by_alias=True),
@@ -110,7 +171,10 @@ class CustomersCorporateApiResource(ApiResource):
         return self._process_response(response, CustomerCorporateHistoryResponse)
 
     async def notes(
-        self, filter_obj: CustomerNoteFilter | None = None, limit: int = 20, page: int = 1
+        self,
+        filter_obj: CustomerNoteFilter | None = None,
+        limit: int = 20,
+        page: int = 1,
     ) -> CustomerCorporateNotesResponse:
         """
         **Получение заметок**
@@ -121,14 +185,18 @@ class CustomersCorporateApiResource(ApiResource):
         :param page: Номер страницы с результатами (по умолчанию равно 1).
         :return: CustomerCorporateNotesResponse
         """
-        request = CustomerCorporateNotesFilterRequest(filter_obj=filter_obj, limit=limit, page=page)
+        request = CustomerCorporateNotesFilterRequest(
+            filter_obj=filter_obj, limit=limit, page=page
+        )
         response = await self._client.get(
             endpoint="/customers-corporate/notes",
             params=request.model_dump(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, CustomerCorporateNotesResponse)
 
-    async def notes_create(self, note: SerializedCustomerNote, site: str | None = None) -> CustomerCorporateNoteCreateResponse:
+    async def notes_create(
+        self, note: SerializedCustomerNote, site: str | None = None
+    ) -> CustomerCorporateNoteCreateResponse:
         """
         **Создание заметки**
 
@@ -157,7 +225,9 @@ class CustomersCorporateApiResource(ApiResource):
         )
         return self._process_response(response, SuccessResponse)
 
-    async def upload(self, customers_corporate: list[SerializedCustomerCorporate], site: str) -> CustomerCorporateUploadResponse:
+    async def upload(
+        self, customers_corporate: list[SerializedCustomerCorporate], site: str
+    ) -> CustomerCorporateUploadResponse:
         """
         **Пакетная загрузка корпоративных клиентов**
 
@@ -168,7 +238,9 @@ class CustomersCorporateApiResource(ApiResource):
         """
         if len(customers_corporate) > 50:
             raise ValueError("Too many customers, only 50 are allowed")
-        request = CustomerCorporateUploadRequest(customersCorporate=customers_corporate, site=site)
+        request = CustomerCorporateUploadRequest(
+            customersCorporate=customers_corporate, site=site
+        )
         response = await self._client.post(
             endpoint="/customers-corporate/upload",
             content=request.model_dump_json(exclude_none=True, by_alias=True),
@@ -176,7 +248,10 @@ class CustomersCorporateApiResource(ApiResource):
         return self._process_response(response, CustomerCorporateUploadResponse)
 
     async def get(
-        self, customer_corporate_id: str, by: IdTypesLiteral = "externalId", site: str | None = None
+        self,
+        customer_corporate_id: str,
+        by: IdTypesLiteral = "externalId",
+        site: str | None = None,
     ) -> CustomerCorporateGetResponse:
         """
         **Получение информации о корпоративном клиенте**
@@ -195,8 +270,13 @@ class CustomersCorporateApiResource(ApiResource):
         return self._process_response(response, CustomerCorporateGetResponse)
 
     async def addresses(
-        self, customer_corporate_id: str, by: IdTypesLiteral = "externalId", site: str | None = None,
-        filter_obj: CustomerAddressFilter | None = None, limit: int = 20, page: int = 1
+        self,
+        customer_corporate_id: str,
+        by: IdTypesLiteral = "externalId",
+        site: str | None = None,
+        filter_obj: CustomerAddressFilter | None = None,
+        limit: int = 20,
+        page: int = 1,
     ) -> CustomerCorporateAddressesResponse:
         """
         **Список адресов корпоративного клиента**
@@ -210,7 +290,9 @@ class CustomersCorporateApiResource(ApiResource):
         :param page: Номер страницы с результатами (по умолчанию равно 1).
         :return: CustomerCorporateAddressesResponse
         """
-        request = CustomerCorporateAddressesRequest(by=by, site=site, filter_obj=filter_obj, limit=limit, page=page)
+        request = CustomerCorporateAddressesRequest(
+            by=by, site=site, filter_obj=filter_obj, limit=limit, page=page
+        )
         response = await self._client.get(
             endpoint=f"/customers-corporate/{customer_corporate_id}/addresses",
             params=request.model_dump(exclude_none=True, by_alias=True),
@@ -218,7 +300,11 @@ class CustomersCorporateApiResource(ApiResource):
         return self._process_response(response, CustomerCorporateAddressesResponse)
 
     async def addresses_create(
-        self, customer_corporate_id: str, address: SerializedCustomerAddress, by: IdTypesLiteral = "externalId", site: str | None = None
+        self,
+        customer_corporate_id: str,
+        address: SerializedCustomerAddress,
+        by: IdTypesLiteral = "externalId",
+        site: str | None = None,
     ) -> CustomerCorporateAddressCreateResponse:
         """
         **Создание адреса для корпоративного клиента**
@@ -230,7 +316,9 @@ class CustomersCorporateApiResource(ApiResource):
         :param site: Символьный код магазина.
         :return: CustomerCorporateAddressCreateResponse
         """
-        request = CustomerCorporateAddressCreateRequest(by=by, site=site, address=address)
+        request = CustomerCorporateAddressCreateRequest(
+            by=by, site=site, address=address
+        )
         response = await self._client.post(
             endpoint=f"/customers-corporate/{customer_corporate_id}/addresses/create",
             content=request.model_dump_json(exclude_none=True, by_alias=True),
@@ -238,8 +326,13 @@ class CustomersCorporateApiResource(ApiResource):
         return self._process_response(response, CustomerCorporateAddressCreateResponse)
 
     async def addresses_edit(
-        self, customer_corporate_id: str, entity_external_id: str, address: SerializedCustomerAddress,
-        by: IdTypesLiteral = "externalId", site: str | None = None, entity_by: IdTypesLiteral = "externalId"
+        self,
+        customer_corporate_id: str,
+        entity_external_id: str,
+        address: SerializedCustomerAddress,
+        by: IdTypesLiteral = "externalId",
+        site: str | None = None,
+        entity_by: IdTypesLiteral = "externalId",
     ) -> CustomerCorporateAddressEditResponse:
         """
         **Редактирование адреса корпоративного клиента**
@@ -253,7 +346,9 @@ class CustomersCorporateApiResource(ApiResource):
         :param entity_by: Тип ID адреса (id или externalId).
         :return: CustomerCorporateAddressEditResponse
         """
-        request = CustomerCorporateAddressEditRequest(by=by, site=site, entityBy=entity_by, address=address)
+        request = CustomerCorporateAddressEditRequest(
+            by=by, site=site, entityBy=entity_by, address=address
+        )
         response = await self._client.post(
             endpoint=f"/customers-corporate/{customer_corporate_id}/addresses/{entity_external_id}/edit",
             content=request.model_dump_json(exclude_none=True, by_alias=True),
@@ -261,8 +356,13 @@ class CustomersCorporateApiResource(ApiResource):
         return self._process_response(response, CustomerCorporateAddressEditResponse)
 
     async def companies(
-        self, customer_corporate_id: str, by: IdTypesLiteral = "externalId", site: str | None = None,
-        filter_obj: CompanyFilter | None = None, limit: int = 20, page: int = 1
+        self,
+        customer_corporate_id: str,
+        by: IdTypesLiteral = "externalId",
+        site: str | None = None,
+        filter_obj: CompanyFilter | None = None,
+        limit: int = 20,
+        page: int = 1,
     ) -> CustomerCorporateCompaniesResponse:
         """
         **Список компаний корпоративного клиента**
@@ -276,7 +376,9 @@ class CustomersCorporateApiResource(ApiResource):
         :param page: Номер страницы с результатами (по умолчанию равно 1).
         :return: CustomerCorporateCompaniesResponse
         """
-        request = CustomerCorporateCompaniesRequest(by=by, site=site, filter_obj=filter_obj, limit=limit, page=page)
+        request = CustomerCorporateCompaniesRequest(
+            by=by, site=site, filter_obj=filter_obj, limit=limit, page=page
+        )
         response = await self._client.get(
             endpoint=f"/customers-corporate/{customer_corporate_id}/companies",
             params=request.model_dump(exclude_none=True, by_alias=True),
@@ -284,7 +386,11 @@ class CustomersCorporateApiResource(ApiResource):
         return self._process_response(response, CustomerCorporateCompaniesResponse)
 
     async def companies_create(
-        self, customer_corporate_id: str, company: SerializedCompany, by: IdTypesLiteral = "externalId", site: str | None = None
+        self,
+        customer_corporate_id: str,
+        company: SerializedCompany,
+        by: IdTypesLiteral = "externalId",
+        site: str | None = None,
     ) -> CustomerCorporateCompanyCreateResponse:
         """
         **Создание компании для корпоративного клиента**
@@ -296,7 +402,9 @@ class CustomersCorporateApiResource(ApiResource):
         :param site: Символьный код магазина.
         :return: CustomerCorporateCompanyCreateResponse
         """
-        request = CustomerCorporateCompanyCreateRequest(by=by, site=site, company=company)
+        request = CustomerCorporateCompanyCreateRequest(
+            by=by, site=site, company=company
+        )
         response = await self._client.post(
             endpoint=f"/customers-corporate/{customer_corporate_id}/companies/create",
             content=request.model_dump_json(exclude_none=True, by_alias=True),
@@ -304,8 +412,13 @@ class CustomersCorporateApiResource(ApiResource):
         return self._process_response(response, CustomerCorporateCompanyCreateResponse)
 
     async def companies_edit(
-        self, customer_corporate_id: str, entity_external_id: str, company: SerializedCompany,
-        by: IdTypesLiteral = "externalId", site: str | None = None, entity_by: IdTypesLiteral = "externalId"
+        self,
+        customer_corporate_id: str,
+        entity_external_id: str,
+        company: SerializedCompany,
+        by: IdTypesLiteral = "externalId",
+        site: str | None = None,
+        entity_by: IdTypesLiteral = "externalId",
     ) -> CustomerCorporateCompanyEditResponse:
         """
         **Редактирование компании корпоративного клиента**
@@ -319,7 +432,9 @@ class CustomersCorporateApiResource(ApiResource):
         :param entity_by: Тип ID компании (id или externalId).
         :return: CustomerCorporateCompanyEditResponse
         """
-        request = CustomerCorporateCompanyEditRequest(by=by, site=site, entityBy=entity_by, company=company)
+        request = CustomerCorporateCompanyEditRequest(
+            by=by, site=site, entityBy=entity_by, company=company
+        )
         response = await self._client.post(
             endpoint=f"/customers-corporate/{customer_corporate_id}/companies/{entity_external_id}/edit",
             content=request.model_dump_json(exclude_none=True, by_alias=True),
@@ -327,8 +442,13 @@ class CustomersCorporateApiResource(ApiResource):
         return self._process_response(response, CustomerCorporateCompanyEditResponse)
 
     async def contacts(
-        self, customer_corporate_id: str, by: IdTypesLiteral = "externalId", site: str | None = None,
-        filter_obj: CustomerContactFilter | None = None, limit: int = 20, page: int = 1
+        self,
+        customer_corporate_id: str,
+        by: IdTypesLiteral = "externalId",
+        site: str | None = None,
+        filter_obj: CustomerContactFilter | None = None,
+        limit: int = 20,
+        page: int = 1,
     ) -> CustomerCorporateContactsResponse:
         """
         **Список контактных лиц корпоративного клиента**
@@ -342,7 +462,9 @@ class CustomersCorporateApiResource(ApiResource):
         :param page: Номер страницы с результатами (по умолчанию равно 1).
         :return: CustomerCorporateContactsResponse
         """
-        request = CustomerCorporateContactsRequest(by=by, site=site, filter_obj=filter_obj, limit=limit, page=page)
+        request = CustomerCorporateContactsRequest(
+            by=by, site=site, filter_obj=filter_obj, limit=limit, page=page
+        )
         response = await self._client.get(
             endpoint=f"/customers-corporate/{customer_corporate_id}/contacts",
             params=request.model_dump(exclude_none=True, by_alias=True),
@@ -350,7 +472,11 @@ class CustomersCorporateApiResource(ApiResource):
         return self._process_response(response, CustomerCorporateContactsResponse)
 
     async def contacts_create(
-        self, customer_corporate_id: str, contact: SerializedCustomerContact, by: IdTypesLiteral = "externalId", site: str | None = None
+        self,
+        customer_corporate_id: str,
+        contact: SerializedCustomerContact,
+        by: IdTypesLiteral = "externalId",
+        site: str | None = None,
     ) -> CustomerCorporateContactCreateResponse:
         """
         **Создание связи корпоративного клиента с контактным лицом**
@@ -362,7 +488,9 @@ class CustomersCorporateApiResource(ApiResource):
         :param site: Символьный код магазина.
         :return: CustomerCorporateContactCreateResponse
         """
-        request = CustomerCorporateContactCreateRequest(by=by, site=site, contact=contact)
+        request = CustomerCorporateContactCreateRequest(
+            by=by, site=site, contact=contact
+        )
         response = await self._client.post(
             endpoint=f"/customers-corporate/{customer_corporate_id}/contacts/create",
             content=request.model_dump_json(exclude_none=True, by_alias=True),
@@ -370,8 +498,13 @@ class CustomersCorporateApiResource(ApiResource):
         return self._process_response(response, CustomerCorporateContactCreateResponse)
 
     async def contacts_edit(
-        self, customer_corporate_id: str, entity_external_id: str, contact: SerializedCustomerContact,
-        by: IdTypesLiteral = "externalId", site: str | None = None, entity_by: IdTypesLiteral = "externalId"
+        self,
+        customer_corporate_id: str,
+        entity_external_id: str,
+        contact: SerializedCustomerContact,
+        by: IdTypesLiteral = "externalId",
+        site: str | None = None,
+        entity_by: IdTypesLiteral = "externalId",
     ) -> CustomerCorporateContactEditResponse:
         """
         **Редактирование связи корпоративного клиента с контактным лицом**
@@ -385,7 +518,9 @@ class CustomersCorporateApiResource(ApiResource):
         :param entity_by: Тип ID контактного лица (id или externalId).
         :return: CustomerCorporateContactEditResponse
         """
-        request = CustomerCorporateContactEditRequest(by=by, site=site, entityBy=entity_by, contact=contact)
+        request = CustomerCorporateContactEditRequest(
+            by=by, site=site, entityBy=entity_by, contact=contact
+        )
         response = await self._client.post(
             endpoint=f"/customers-corporate/{customer_corporate_id}/contacts/{entity_external_id}/edit",
             content=request.model_dump_json(exclude_none=True, by_alias=True),
@@ -393,8 +528,11 @@ class CustomersCorporateApiResource(ApiResource):
         return self._process_response(response, CustomerCorporateContactEditResponse)
 
     async def edit(
-        self, customer_corporate_id: str, customer_corporate: SerializedCustomerCorporate,
-        by: IdTypesLiteral = "externalId", site: str | None = None
+        self,
+        customer_corporate_id: str,
+        customer_corporate: SerializedCustomerCorporate,
+        by: IdTypesLiteral = "externalId",
+        site: str | None = None,
     ) -> CustomerCorporateEditResponse:
         """
         **Редактирование корпоративного клиента**
@@ -406,7 +544,9 @@ class CustomersCorporateApiResource(ApiResource):
         :param site: Символьный код магазина.
         :return: CustomerCorporateEditResponse
         """
-        request = CustomerCorporateEditRequest(by=by, site=site, customerCorporate=customer_corporate)
+        request = CustomerCorporateEditRequest(
+            by=by, site=site, customerCorporate=customer_corporate
+        )
         response = await self._client.post(
             endpoint=f"/customers-corporate/{customer_corporate_id}/edit",
             content=request.model_dump_json(exclude_none=True, by_alias=True),

@@ -2,10 +2,21 @@ from retailcrm.v5.resources.base import ApiResource
 from retailcrm.v5.schemas.base import SuccessResponse
 from retailcrm.v5.schemas.entities.costs import SerializedCost
 from retailcrm.v5.schemas.filters.costs import CostFilter
-from retailcrm.v5.schemas.requests.costs import CostsFilterRequest, CostCreateRequest, CostsUploadRequest, \
-    CostEditRequest, CostsDeleteRequest
-from retailcrm.v5.schemas.responses.costs import CostsFilterResponse, CostCreateResponse, CostsDeleteResponse, \
-    CostsUploadResponse, CostGetResponse, CostEditResponse
+from retailcrm.v5.schemas.requests.costs import (
+    CostCreateRequest,
+    CostEditRequest,
+    CostsDeleteRequest,
+    CostsFilterRequest,
+    CostsUploadRequest,
+)
+from retailcrm.v5.schemas.responses.costs import (
+    CostCreateResponse,
+    CostEditResponse,
+    CostGetResponse,
+    CostsDeleteResponse,
+    CostsFilterResponse,
+    CostsUploadResponse,
+)
 
 
 class CostsApiResource(ApiResource):
@@ -29,7 +40,9 @@ class CostsApiResource(ApiResource):
         )
         return self._process_response(response, CostsFilterResponse)
 
-    async def create(self, cost: SerializedCost, site: str | None = None) -> CostCreateResponse:
+    async def create(
+        self, cost: SerializedCost, site: str | None = None
+    ) -> CostCreateResponse:
         """
         **Создание расхода**
 
@@ -103,7 +116,9 @@ class CostsApiResource(ApiResource):
         )
         return self._process_response(response, SuccessResponse)
 
-    async def edit(self, cost_id: str, cost: SerializedCost, site: str | None = None) -> CostEditResponse:
+    async def edit(
+        self, cost_id: str, cost: SerializedCost, site: str | None = None
+    ) -> CostEditResponse:
         """
         **Редактирование расхода**
 

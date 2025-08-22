@@ -78,13 +78,13 @@ class SerializedGroups(BaseRetailCrmScheme):
 
 
 class SerializedUser(BaseRetailCrmScheme):
-    id: int| None = Field(None, description="ID пользователя")
-    createdAt: datetime | None= Field(None, description="Дата создания пользователя")
-    active: bool| None = Field(None, description="Активность")
+    id: int | None = Field(None, description="ID пользователя")
+    createdAt: datetime | None = Field(None, description="Дата создания пользователя")
+    active: bool | None = Field(None, description="Активность")
     email: Optional[str] = Field(None, description="Электронный адрес")
-    firstName: str| None = Field(None , description="Имя пользователя")
-    lastName: str| None = Field(None, description="Фамилия пользователя")
-    patronymic: str| None= Field(None, description="Отчество пользователя")
+    firstName: str | None = Field(None, description="Имя пользователя")
+    lastName: str | None = Field(None, description="Фамилия пользователя")
+    patronymic: str | None = Field(None, description="Отчество пользователя")
     position: Optional[str] = Field(None, description="Должность")
     photoUrl: Optional[str] = Field(None, description="URL фотографии")
     phone: Optional[str] = Field(None, description="Телефон")

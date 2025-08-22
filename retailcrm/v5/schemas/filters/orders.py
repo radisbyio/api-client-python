@@ -1,4 +1,4 @@
-from datetime import date, time, datetime
+from datetime import date, datetime, time
 from typing import Optional
 
 from pydantic import Field, field_serializer
@@ -148,6 +148,7 @@ class OrdersFilter(BaseRetailCrmScheme):
     customFields: Optional[dict] = Field(
         None, description="Фильтр по пользовательским полям"
     )
+
 
 class OrderHistoryFilterV4Type(BaseRetailCrmScheme):
     orderId: Optional[int] = Field(None, description="ID заказа")

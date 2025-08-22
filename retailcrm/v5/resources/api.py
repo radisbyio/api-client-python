@@ -1,8 +1,11 @@
 from retailcrm.v5.resources.base import ApiResource
-from retailcrm.v5.schemas.responses.api import ApiVersionsResponse, ApiCredentialsResponse
-
+from retailcrm.v5.schemas.responses.api import (
+    ApiCredentialsResponse,
+    ApiVersionsResponse,
+)
 
 __all__ = ["ApiInfoApiResource"]
+
 
 class ApiInfoApiResource(ApiResource):
     async def api_version(self) -> ApiVersionsResponse:
@@ -26,8 +29,5 @@ class ApiInfoApiResource(ApiResource):
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-credentials
         :return: ApiCredentialsResponse
         """
-        response = await self._client.post(
-            endpoint="/credentials",
-            use_version=False
-        )
+        response = await self._client.post(endpoint="/credentials", use_version=False)
         return self._process_response(response, ApiCredentialsResponse)

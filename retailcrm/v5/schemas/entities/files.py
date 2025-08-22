@@ -11,6 +11,7 @@ class AttachmentCustomer(BaseRetailCrmScheme):
     externalId: Optional[str] = Field(None, description="Внешний ID клиента")
     site: Optional[str] = Field(None, description="Магазин")
 
+
 class AttachmentOrder(BaseRetailCrmScheme):
     id: Optional[int] = Field(None, description="	ID заказа")
     number: Optional[str] = Field(None, description="	Номер заказа")
@@ -29,9 +30,13 @@ class File(BaseRetailCrmScheme):
     type: Optional[str] = Field(None, description="MIME-тип файла")
     createdAt: Optional[datetime] = Field(None, description="Дата создания")
     size: Optional[int] = Field(None, description="Размер файла в байтах")
-    attachment: list[Attachment] = Field(default_factory=list, description="Прикрепленный объект (вложение)")
+    attachment: list[Attachment] = Field(
+        default_factory=list, description="Прикрепленный объект (вложение)"
+    )
 
 
 class SerializedFile(BaseRetailCrmScheme):
     filename: Optional[str] = Field(None, description="Имя файла")
-    attachment: Optional[list[Attachment]] = Field(None, description="Прикрепленные объекты")
+    attachment: Optional[list[Attachment]] = Field(
+        None, description="Прикрепленные объекты"
+    )

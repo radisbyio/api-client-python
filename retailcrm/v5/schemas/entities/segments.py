@@ -11,6 +11,10 @@ class Segment(BaseRetailCrmScheme):
     code: Optional[str] = Field(None, description="Символьный код")
     name: Optional[str] = Field(None, description="Название сегмента")
     createdAt: Optional[datetime] = Field(None, description="Дата создания сегмента")
-    isDynamic: Optional[bool] = Field(None, description="Является ли сегмент автоматически пересчитываемым")
-    customersCount: Optional[int] = Field(None, description="Количество клиентов в сегменте")
+    isDynamic: Optional[bool] = Field(
+        None, description="Является ли сегмент автоматически пересчитываемым"
+    )
+    customersCount: Optional[int] = Field(
+        None, description="Количество клиентов в сегменте"
+    )
     active: Optional[bool] = Field(None, description="Активность сегмента")

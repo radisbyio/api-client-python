@@ -3,9 +3,14 @@ from typing import Optional
 
 from pydantic import Field
 
-from retailcrm.v5.schemas.base import PaginatedResponse, IdTypesLiteral, SuccessResponse
+from retailcrm.v5.schemas.base import IdTypesLiteral, PaginatedResponse, SuccessResponse
 from retailcrm.v5.schemas.entities.loyalty import SmsVerification
-from retailcrm.v5.schemas.entities.orders import Order, OrderHistory, SerializedLoyaltyOrder, SerializedPayment
+from retailcrm.v5.schemas.entities.orders import (
+    Order,
+    OrderHistory,
+    SerializedLoyaltyOrder,
+    SerializedPayment,
+)
 
 
 class OrdersFilterResponse(PaginatedResponse):
@@ -18,7 +23,6 @@ class OrderGetResponse(SuccessResponse):
 
 class OrdersCreateResponse(SuccessResponse):
     order: Optional[Order] = Field(None, description="Заказ")
-
 
 
 class OrdersHistoryResponse(PaginatedResponse):

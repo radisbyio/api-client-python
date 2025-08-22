@@ -1,22 +1,55 @@
 from retailcrm.v5.resources.base import ApiResource
-from retailcrm.v5.schemas.entities.store import SerializedOffer, PriceUploadInput, ProductCreateInput, \
-    SerializedProductGroup
-from retailcrm.v5.schemas.filters.store import OfferFilter, ProductGroupFilter, ProductFilter, \
-    InventoryAlternativeFilter, ProductPropertiesFilter, ProductPropertyValuesFilter
-from retailcrm.v5.schemas.requests.store import InventoriesUploadRequest, OffersFilterRequest, PricesUploadRequest, \
-    ProductGroupsFilterRequest, ProductGroupCreateRequest, ProductGroupEditRequest, ProductsFilterRequest, \
-    ProductsBatchCreateRequest, ProductsBatchEditRequest, ProductPropertiesFilter, ProductsPropertyValuesFilterRequest, \
-    ProductPropertiesFilterRequest
-from retailcrm.v5.schemas.responses.store import InventoriesFilterResponse, InventoriesUploadResponse, \
-    OfferFilterResponse, PricesUploadResponse, ProductGroupFilterResponse, ProductGroupCreateResponse, \
-    ProductGroupEditResponse, ProductFilterResponse, ResponseProductBatchCreate, ProductBatchEditResponse, \
-    ProductPropertiesFilterResponse, ProductPropertyValuesFilterResponse
+from retailcrm.v5.schemas.entities.store import (
+    PriceUploadInput,
+    ProductCreateInput,
+    SerializedOffer,
+    SerializedProductGroup,
+)
+from retailcrm.v5.schemas.filters.store import (
+    InventoryAlternativeFilter,
+    OfferFilter,
+    ProductFilter,
+    ProductGroupFilter,
+    ProductPropertiesFilter,
+    ProductPropertyValuesFilter,
+)
+from retailcrm.v5.schemas.requests.store import (
+    InventoriesUploadRequest,
+    OffersFilterRequest,
+    PricesUploadRequest,
+    ProductGroupCreateRequest,
+    ProductGroupEditRequest,
+    ProductGroupsFilterRequest,
+    ProductPropertiesFilter,
+    ProductPropertiesFilterRequest,
+    ProductsBatchCreateRequest,
+    ProductsBatchEditRequest,
+    ProductsFilterRequest,
+    ProductsPropertyValuesFilterRequest,
+)
+from retailcrm.v5.schemas.responses.store import (
+    InventoriesFilterResponse,
+    InventoriesUploadResponse,
+    OfferFilterResponse,
+    PricesUploadResponse,
+    ProductBatchEditResponse,
+    ProductFilterResponse,
+    ProductGroupCreateResponse,
+    ProductGroupEditResponse,
+    ProductGroupFilterResponse,
+    ProductPropertiesFilterResponse,
+    ProductPropertyValuesFilterResponse,
+    ResponseProductBatchCreate,
+)
 from retailcrm.v5.utils import pydantic_to_nested_dict
 
 
 class StoreApiResource(ApiResource):
     async def inventories_filter(
-            self, filter_data: InventoryAlternativeFilter | None = None, limit: int = 20, page: int = 1,
+        self,
+        filter_data: InventoryAlternativeFilter | None = None,
+        limit: int = 20,
+        page: int = 1,
     ) -> InventoriesFilterResponse:
         """
         Получение остатков и закупочных цен
@@ -38,7 +71,7 @@ class StoreApiResource(ApiResource):
         return self._process_response(response, InventoriesFilterResponse)
 
     async def inventories_upload(
-            self, offers: list[SerializedOffer], site: str = None
+        self, offers: list[SerializedOffer], site: str = None
     ) -> InventoriesUploadResponse:
         """
         Обновление остатков и закупочных цен
@@ -56,13 +89,13 @@ class StoreApiResource(ApiResource):
 
         response = await self._client.post(
             endpoint="/store/inventories/upload",
-            content=request.model_dump_json(exclude_none=True, by_alias=True)
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
 
         return self._process_response(response, InventoriesUploadResponse)
 
     async def offers_filter(
-            self, filter_obj: OfferFilter | None = None, limit: int = 20, page: int = 1
+        self, filter_obj: OfferFilter | None = None, limit: int = 20, page: int = 1
     ) -> OfferFilterResponse:
         """
         Получение списка торговых предложений, удовлетворяющих заданному фильтру
@@ -86,7 +119,7 @@ class StoreApiResource(ApiResource):
         return self._process_response(response, OfferFilterResponse)
 
     async def prices_upload(
-            self, prices: list[PriceUploadInput]
+        self, prices: list[PriceUploadInput]
     ) -> PricesUploadResponse:
         """
         Обновление цен торговых предложений
@@ -105,7 +138,10 @@ class StoreApiResource(ApiResource):
         return self._process_response(response, PricesUploadResponse)
 
     async def product_groups_filter(
-            self, filter_obj: ProductGroupFilter | None = None, limit: int = 20, page: int = 1
+        self,
+        filter_obj: ProductGroupFilter | None = None,
+        limit: int = 20,
+        page: int = 1,
     ) -> ProductGroupFilterResponse:
         """
         Получение списка групп товаров, удовлетворяющих заданному фильтру
@@ -129,7 +165,7 @@ class StoreApiResource(ApiResource):
         return self._process_response(response, ProductGroupFilterResponse)
 
     async def product_group_create(
-            self, product_group: SerializedProductGroup
+        self, product_group: SerializedProductGroup
     ) -> ProductGroupCreateResponse:
         """
         Добавление товарной группы
@@ -150,11 +186,11 @@ class StoreApiResource(ApiResource):
         return self._process_response(response, ProductGroupCreateResponse)
 
     async def product_group_edit(
-            self,
-            external_id: str,
-            product_group: SerializedProductGroup,
-            site: str,
-            by: str = "externalId",
+        self,
+        external_id: str,
+        product_group: SerializedProductGroup,
+        site: str,
+        by: str = "externalId",
     ) -> ProductGroupEditResponse:
         """
         Редактирование товарной группы
@@ -179,7 +215,7 @@ class StoreApiResource(ApiResource):
         return self._process_response(response, ProductGroupEditResponse)
 
     async def products_filter(
-            self, filter_obj: ProductFilter | None = None, limit: int = 20, page: int = 1
+        self, filter_obj: ProductFilter | None = None, limit: int = 20, page: int = 1
     ) -> ProductFilterResponse:
         """
         Получение списка товаров с торговыми предложениями, удовлетворяющих заданному фильтру
@@ -203,7 +239,7 @@ class StoreApiResource(ApiResource):
         return self._process_response(response, ProductFilterResponse)
 
     async def products_batch_create(
-            self, products: list[ProductCreateInput]
+        self, products: list[ProductCreateInput]
     ) -> ResponseProductBatchCreate:
         """
         Пакетное добавление товаров и услуг
@@ -213,9 +249,7 @@ class StoreApiResource(ApiResource):
         :return: ResponseProductBatchCreate
         """
 
-        request = ProductsBatchCreateRequest(
-            products=products
-        )
+        request = ProductsBatchCreateRequest(products=products)
 
         response = await self._client.post(
             endpoint="/store/products/batch/create",
@@ -225,7 +259,7 @@ class StoreApiResource(ApiResource):
         return self._process_response(response, ResponseProductBatchCreate)
 
     async def products_batch_edit(
-            self, products: list[ProductCreateInput]
+        self, products: list[ProductCreateInput]
     ) -> ProductBatchEditResponse:
         """
         Пакетное добавление товаров и услуг
@@ -234,9 +268,7 @@ class StoreApiResource(ApiResource):
         :param products: Товары или услуги
         :return: ResponseProductBatchEdit
         """
-        request = ProductsBatchEditRequest(
-            products=products
-        )
+        request = ProductsBatchEditRequest(products=products)
 
         response = await self._client.post(
             endpoint="/store/products/batch/edit",
@@ -246,7 +278,10 @@ class StoreApiResource(ApiResource):
         return self._process_response(response, ProductBatchEditResponse)
 
     async def product_properties_filter(
-            self, filter_obj: ProductPropertiesFilter | None = None, limit: int = 20, page: int = 1
+        self,
+        filter_obj: ProductPropertiesFilter | None = None,
+        limit: int = 20,
+        page: int = 1,
     ) -> ProductPropertiesFilterResponse:
         """
         Получение списка свойств товаров, удовлетворяющих заданному фильтру
@@ -269,12 +304,11 @@ class StoreApiResource(ApiResource):
 
         return self._process_response(response, ProductPropertiesFilterResponse)
 
-
     async def product_property_values_filter(
-            self,
-            filter_obj: ProductPropertyValuesFilter | None = None,
-            limit: int = 20,
-            page: int = 1,
+        self,
+        filter_obj: ProductPropertyValuesFilter | None = None,
+        limit: int = 20,
+        page: int = 1,
     ) -> ProductPropertyValuesFilterResponse:
         """
         method_hint.GET /api/v5/store/products/properties/values

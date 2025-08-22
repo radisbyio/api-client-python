@@ -3,10 +3,18 @@ from typing import Optional
 
 from pydantic import Field
 
-from retailcrm.v5.schemas.base import SuccessResponse, PaginatedResponse
-from retailcrm.v5.schemas.entities.corporate_customers import CustomerContact, Company, CustomerCorporate, \
-    CustomerCorporateHistory
-from retailcrm.v5.schemas.entities.customers import CustomerAddress, EntityWithExternalId, CustomerNote
+from retailcrm.v5.schemas.base import PaginatedResponse, SuccessResponse
+from retailcrm.v5.schemas.entities.corporate_customers import (
+    Company,
+    CustomerContact,
+    CustomerCorporate,
+    CustomerCorporateHistory,
+)
+from retailcrm.v5.schemas.entities.customers import (
+    CustomerAddress,
+    CustomerNote,
+    EntityWithExternalId,
+)
 from retailcrm.v5.schemas.shared.fix_external_row import FixExternalRow
 
 
@@ -27,7 +35,9 @@ class CustomerCorporateFixExternalIdsResponse(SuccessResponse):
 
 
 class CustomerCorporateHistoryResponse(PaginatedResponse):
-    generatedAt: Optional[datetime] = Field(None, description="Время формирования ответа")
+    generatedAt: Optional[datetime] = Field(
+        None, description="Время формирования ответа"
+    )
     history: list[CustomerCorporateHistory] = Field(default_factory=list)
 
 
@@ -86,4 +96,6 @@ class CustomerCorporateContactEditResponse(SuccessResponse):
 
 class CustomerCorporateEditResponse(SuccessResponse):
     id: Optional[int] = Field(None, description="Внутренний ID клиента")
-    state: Optional[str] = Field(None, description="Состояние клиента (по умолчанию не возвращается)")
+    state: Optional[str] = Field(
+        None, description="Состояние клиента (по умолчанию не возвращается)"
+    )

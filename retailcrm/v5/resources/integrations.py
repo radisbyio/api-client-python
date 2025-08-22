@@ -1,8 +1,10 @@
 from retailcrm.v5.resources.base import ApiResource
 from retailcrm.v5.schemas.entities.integrations import IntegrationModule
 from retailcrm.v5.schemas.requests.integrations import IntegrationModuleEditRequest
-from retailcrm.v5.schemas.responses.integrations import IntegrationModuleGetResponse, IntegrationModuleEditResponse
-
+from retailcrm.v5.schemas.responses.integrations import (
+    IntegrationModuleEditResponse,
+    IntegrationModuleGetResponse,
+)
 
 __all__ = ["IntegrationsApiResource"]
 
@@ -21,7 +23,9 @@ class IntegrationsApiResource(ApiResource):
         )
         return self._process_response(response, IntegrationModuleGetResponse)
 
-    async def edit(self, code: str, integration_module: IntegrationModule) -> IntegrationModuleEditResponse:
+    async def edit(
+        self, code: str, integration_module: IntegrationModule
+    ) -> IntegrationModuleEditResponse:
         """
         **Создание/редактирование интеграционного модуля**
 

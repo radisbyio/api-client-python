@@ -8,11 +8,17 @@ from retailcrm.v5.schemas.base import BaseRetailCrmScheme
 
 
 class LoyaltyAccountFilterData(BaseRetailCrmScheme):
-    ids: Optional[List[int]] = Field(None, description="Массив ID участий в программе лояльности")
+    ids: Optional[List[int]] = Field(
+        None, description="Массив ID участий в программе лояльности"
+    )
     id: Optional[int] = Field(None, description="ID участия")
     customer: Optional[str] = Field(None, description="Клиент")
-    loyalties: Optional[List[int]] = Field(None, description="Массив ID Программ лояльности")
-    sites: Optional[List[str]] = Field(None, description="Магазины программы лояльности")
+    loyalties: Optional[List[int]] = Field(
+        None, description="Массив ID Программ лояльности"
+    )
+    sites: Optional[List[str]] = Field(
+        None, description="Магазины программы лояльности"
+    )
     status: Optional[str] = Field(None, description="Статус")
     phoneNumber: Optional[str] = Field(None, description="Номер телефона")
     cardNumber: Optional[str] = Field(None, description="Номер карты")
@@ -22,18 +28,30 @@ class LoyaltyAccountFilterData(BaseRetailCrmScheme):
     customerSites: Optional[List[str]] = Field(None, description="Магазины клиента")
     createdAtFrom: Optional[datetime] = Field(None, description="Дата регистрации (от)")
     createdAtTo: Optional[datetime] = Field(None, description="Дата регистрации (до)")
-    burnDateFrom: Optional[datetime] = Field(None, description="Дата сгорания бонусов (от)")
-    burnDateTo: Optional[datetime] = Field(None, description="Дата сгорания бонусов (до)")
+    burnDateFrom: Optional[datetime] = Field(
+        None, description="Дата сгорания бонусов (от)"
+    )
+    burnDateTo: Optional[datetime] = Field(
+        None, description="Дата сгорания бонусов (до)"
+    )
     minOrdersSum: Optional[int] = Field(None, description="Сумма покупок (от)")
     maxOrdersSum: Optional[int] = Field(None, description="Сумма покупок (до)")
     minAmount: Optional[int] = Field(None, description="Баланс бонусов (от)")
     maxAmount: Optional[int] = Field(None, description="Баланс бонусов (до)")
     customFields: Optional[dict] = Field(None, description="Пользовательские поля")
 
-    createdAtFrom_serializer = field_serializer("createdAtFrom")(datetime_serializer("%Y-%m-%d"))
-    createdAtTo_serializer = field_serializer("createdAtTo")(datetime_serializer("%Y-%m-%d"))
-    burnDateFrom_serializer = field_serializer("burnDateFrom")(datetime_serializer("%Y-%m-%d"))
-    burnDateTo_serializer = field_serializer("burnDateTo")(datetime_serializer("%Y-%m-%d"))
+    createdAtFrom_serializer = field_serializer("createdAtFrom")(
+        datetime_serializer("%Y-%m-%d")
+    )
+    createdAtTo_serializer = field_serializer("createdAtTo")(
+        datetime_serializer("%Y-%m-%d")
+    )
+    burnDateFrom_serializer = field_serializer("burnDateFrom")(
+        datetime_serializer("%Y-%m-%d")
+    )
+    burnDateTo_serializer = field_serializer("burnDateTo")(
+        datetime_serializer("%Y-%m-%d")
+    )
 
 
 class LoyaltyAccountBonusOperationsApiFilterType(BaseRetailCrmScheme):
@@ -48,7 +66,9 @@ class LoyaltyAccountBonusApiFilterType(BaseRetailCrmScheme):
 
 
 class LoyaltyBonusOperationsApiFilterType(BaseRetailCrmScheme):
-    loyalties: Optional[List[int]] = Field(None, description="Массив ID Программ лояльности")
+    loyalties: Optional[List[int]] = Field(
+        None, description="Массив ID Программ лояльности"
+    )
 
 
 class LoyaltyApiFilterData(BaseRetailCrmScheme):

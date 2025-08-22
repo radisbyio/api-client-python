@@ -3,7 +3,7 @@ from typing import Optional
 from pydantic import Field
 
 from retailcrm.v5.schemas.base import SuccessResponse
-from retailcrm.v5.schemas.entities.telephony import Manager, Customer, Links
+from retailcrm.v5.schemas.entities.telephony import Customer, Links, Manager
 
 
 class CallEventResponse(SuccessResponse):

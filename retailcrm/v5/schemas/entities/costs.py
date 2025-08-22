@@ -16,7 +16,9 @@ class CostsOrder(BaseRetailCrmScheme):
 
 class Cost(BaseRetailCrmScheme):
     currency: Optional[str] = Field(None, description="Валюта")
-    source: Optional[SerializedSource] = Field(None, description="Данные по источнику клиента")
+    source: Optional[SerializedSource] = Field(
+        None, description="Данные по источнику клиента"
+    )
     id: Optional[int] = Field(None, description="ID расхода")
     dateFrom: Optional[datetime] = Field(None, description="Дата (от)")
     dateTo: Optional[datetime] = Field(None, description="Дата (до)")
@@ -24,10 +26,17 @@ class Cost(BaseRetailCrmScheme):
     costItem: Optional[str] = Field(None, description="Код статьи расхода")
     comment: Optional[str] = Field(None, description="Комментарий")
     createdAt: Optional[datetime] = Field(None, description="Дата создания")
-    createdBy: Optional[str] = Field(None, description="ID пользователя, создавшего расход")
+    createdBy: Optional[str] = Field(
+        None, description="ID пользователя, создавшего расход"
+    )
     order: Optional[CostsOrder] = Field(None, description="Заказ")
-    userId: Optional[int] = Field(None, description="ID пользователя, связанного с расходом")
-    sites: list[str] = Field(default_factory=list, description="Символьные коды магазинов, по которым понесён расход")
+    userId: Optional[int] = Field(
+        None, description="ID пользователя, связанного с расходом"
+    )
+    sites: list[str] = Field(
+        default_factory=list,
+        description="Символьные коды магазинов, по которым понесён расход",
+    )
 
 
 class SerializedCost(BaseRetailCrmScheme):
@@ -37,6 +46,12 @@ class SerializedCost(BaseRetailCrmScheme):
     comment: Optional[str] = Field(None, description="Комментарий")
     costItem: Optional[str] = Field(None, description="Код статьи расхода")
     order: Optional[SerializedEntityOrder] = Field(None, description="Заказ")
-    userId: Optional[int] = Field(None, description="ID пользователя, связанного с расходом")
-    sites: Optional[list[str]] = Field(None, description="Символьные коды магазинов, по которым понесён расход")
-    source: Optional[SerializedSource] = Field(None, description="Данные по источнику клиента")
+    userId: Optional[int] = Field(
+        None, description="ID пользователя, связанного с расходом"
+    )
+    sites: Optional[list[str]] = Field(
+        None, description="Символьные коды магазинов, по которым понесён расход"
+    )
+    source: Optional[SerializedSource] = Field(
+        None, description="Данные по источнику клиента"
+    )

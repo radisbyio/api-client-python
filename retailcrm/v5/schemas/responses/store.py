@@ -2,9 +2,16 @@ from typing import Optional
 
 from pydantic import Field
 
-from retailcrm.v5.schemas.base import SuccessResponse, PaginatedResponse
-from retailcrm.v5.schemas.entities.store import Offer, ProductGroup, Product, PriceUploadNotFoundResponse, \
-    ProductEditNotFoundResponse, ProductProperty, ProductPropertyValueResponse
+from retailcrm.v5.schemas.base import PaginatedResponse, SuccessResponse
+from retailcrm.v5.schemas.entities.store import (
+    Offer,
+    PriceUploadNotFoundResponse,
+    Product,
+    ProductEditNotFoundResponse,
+    ProductGroup,
+    ProductProperty,
+    ProductPropertyValueResponse,
+)
 
 
 class InventoriesFilterResponse(PaginatedResponse):
@@ -23,6 +30,7 @@ class OfferFilterResponse(PaginatedResponse):
     offers: list[Offer] = Field(
         default_factory=list, description="Торговое предложение (SKU)"
     )
+
 
 class PricesUploadResponse(SuccessResponse):
     processedOffersCount: Optional[int] = Field(
@@ -71,6 +79,7 @@ class ProductBatchEditResponse(SuccessResponse):
     notFoundProducts: list[ProductEditNotFoundResponse] = Field(
         default_factory=list, description="Список id добавленных товаров"
     )
+
 
 class ProductPropertiesFilterResponse(PaginatedResponse):
     properties: list[ProductProperty] = Field(

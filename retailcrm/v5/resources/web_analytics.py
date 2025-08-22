@@ -1,13 +1,20 @@
 from retailcrm.v5.resources.base import ApiResource
 from retailcrm.v5.schemas.entities.web_analytics import ClientId, Source, Visit
-from retailcrm.v5.schemas.requests.web_analytics import ClientIdsUploadRequest, SourceUploadRequest, VisitsUploadRequest
-from retailcrm.v5.schemas.responses.web_analytics import ClientIdsUploadResponse, SourcesUploadResponse, \
-    VisitsUploadResponse
+from retailcrm.v5.schemas.requests.web_analytics import (
+    ClientIdsUploadRequest,
+    SourceUploadRequest,
+    VisitsUploadRequest,
+)
+from retailcrm.v5.schemas.responses.web_analytics import (
+    ClientIdsUploadResponse,
+    SourcesUploadResponse,
+    VisitsUploadResponse,
+)
 
 
 class WebAnalyticsApiResource(ApiResource):
     async def client_ids_upload(
-            self, client_ids: list[ClientId], site: str
+        self, client_ids: list[ClientId], site: str
     ) -> ClientIdsUploadResponse:
         """
         Пакетная загрузка clientId веб-аналитики.
@@ -30,7 +37,9 @@ class WebAnalyticsApiResource(ApiResource):
         )
         return self._process_response(response, ClientIdsUploadResponse)
 
-    async def sources_upload(self, sources: list[Source], site: str) -> SourcesUploadResponse:
+    async def sources_upload(
+        self, sources: list[Source], site: str
+    ) -> SourcesUploadResponse:
         """
         Пакетная загрузка источников.
 
@@ -52,7 +61,9 @@ class WebAnalyticsApiResource(ApiResource):
 
         return self._process_response(response, SourcesUploadResponse)
 
-    async def visits_upload(self, visits: list[Visit], site: str) -> VisitsUploadResponse:
+    async def visits_upload(
+        self, visits: list[Visit], site: str
+    ) -> VisitsUploadResponse:
         """
         Пакетная загрузка визитов.
 

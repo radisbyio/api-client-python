@@ -5,9 +5,7 @@ from retailcrm.v5.schemas.requests.notifications import SendNotificationRequest
 
 
 class NotificationsApiResource(ApiResource):
-    async def send(
-        self, notification: SerializedApiNotification
-    ) -> SuccessResponse:
+    async def send(self, notification: SerializedApiNotification) -> SuccessResponse:
         """
         Отправка оповещения
 

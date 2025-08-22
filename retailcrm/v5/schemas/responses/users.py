@@ -2,7 +2,7 @@ from typing import Optional
 
 from pydantic import Field
 
-from retailcrm.v5.schemas.base import SuccessResponse, PaginatedResponse
+from retailcrm.v5.schemas.base import PaginatedResponse, SuccessResponse
 from retailcrm.v5.schemas.entities.users import Group, SerializedUser
 
 __all__ = ["UserGroupsResponse", "UserListResponse", "UserResponse"]

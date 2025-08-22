@@ -2,10 +2,13 @@ from retailcrm.v5.resources.base import ApiResource
 from retailcrm.v5.schemas.base import SuccessResponse
 from retailcrm.v5.schemas.entities.files import SerializedFile
 from retailcrm.v5.schemas.filters.files import FileFilter
-from retailcrm.v5.schemas.requests.files import FilesFilterRequest, FileEditRequest
-from retailcrm.v5.schemas.responses.files import FilesFilterResponse, FileUploadResponse, FileGetResponse, \
-    FileEditResponse
-
+from retailcrm.v5.schemas.requests.files import FileEditRequest, FilesFilterRequest
+from retailcrm.v5.schemas.responses.files import (
+    FileEditResponse,
+    FileGetResponse,
+    FilesFilterResponse,
+    FileUploadResponse,
+)
 
 __all__ = ["FilesApiResource"]
 
@@ -42,7 +45,7 @@ class FilesApiResource(ApiResource):
         response = await self._client.post(
             endpoint="/files/upload",
             content=file_content,
-            headers={"Content-Type": "application/octet-stream"}
+            headers={"Content-Type": "application/octet-stream"},
         )
         return self._process_response(response, FileUploadResponse)
 

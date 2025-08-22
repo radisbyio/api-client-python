@@ -1,8 +1,11 @@
-from pydantic import field_serializer, Field
+from pydantic import Field, field_serializer
 
 from retailcrm.v5.helpers import to_json_serializer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme, IdTypesLiteral
-from retailcrm.v5.schemas.entities.customer_interaction import SerializedCart, SerializedFavorite
+from retailcrm.v5.schemas.entities.customer_interaction import (
+    SerializedCart,
+    SerializedFavorite,
+)
 
 
 class CartClearRequest(BaseRetailCrmScheme):

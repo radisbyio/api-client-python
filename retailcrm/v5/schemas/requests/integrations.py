@@ -8,7 +8,10 @@ from retailcrm.v5.schemas.entities.integrations import IntegrationModule, Requir
 class IntegrationModuleEditRequest(BaseRetailCrmScheme):
     integrationModule: IntegrationModule = Field(description="Интеграционный модуль")
 
-    integrationModule_serializer = field_serializer("integrationModule")(to_json_serializer())
+    integrationModule_serializer = field_serializer("integrationModule")(
+        to_json_serializer()
+    )
+
 
 class IntegrationModuleUpdateScopesRequest(BaseRetailCrmScheme):
     requires: Requires

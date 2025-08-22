@@ -24,9 +24,6 @@ class RetailCrmEnum(Enum):
         return str(self.value)
 
 
-
-
-
 class VatRateTypes(str, RetailCrmEnum):
     NONE = "none"
     VAT0 = "vat0"

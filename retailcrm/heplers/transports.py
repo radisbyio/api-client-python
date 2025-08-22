@@ -32,7 +32,9 @@ class RetryTransport(httpx.AsyncBaseTransport, httpx.BaseTransport):
             else self.RETRYABLE_STATUS_CODES
         )
 
-    async def handle_async_request(self, request: httpx.Request) -> httpx.Response | None:
+    async def handle_async_request(
+        self, request: httpx.Request
+    ) -> httpx.Response | None:
         for attempt in range(self.max_attempts + 1):
             try:
                 response = await self.wrapped_transport.handle_async_request(request)

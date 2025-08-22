@@ -3,7 +3,9 @@ from retailcrm.v5.resources.base import ApiResource
 from retailcrm.v5.schemas.base import SuccessResponse
 from retailcrm.v5.schemas.entities.users import ApiUserFilter
 from retailcrm.v5.schemas.requests.users import (
-    FilterUserGroupsRequest, FilterUsersRequest, SetUserStatusRequest,
+    FilterUserGroupsRequest,
+    FilterUsersRequest,
+    SetUserStatusRequest,
 )
 from retailcrm.v5.schemas.responses.users import (
     UserGroupsResponse,

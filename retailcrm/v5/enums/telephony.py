@@ -14,6 +14,7 @@ class HangupStatus(StrEnum):
     CANCEL = "cancel"
     FAILED = "failed"
 
+
 class CallUploadType(StrEnum):
     IN = "in"
     OUT = "out"

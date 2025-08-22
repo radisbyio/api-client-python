@@ -1,7 +1,7 @@
 from enum import StrEnum
 
-
 __all__ = ["ContragentType", "PaymentObject", "PaymentMethod", "Vat"]
+
 
 class ContragentType(StrEnum):
     INDIVIDUAL = "individual"
@@ -18,6 +18,7 @@ class PaymentObject(StrEnum):
 class PaymentMethod(StrEnum):
     FULL_PREPAYMENT = "full_prepayment"
     ADVANCE = "advance"
+
 
 class Vat(StrEnum):
     NONE = "none"

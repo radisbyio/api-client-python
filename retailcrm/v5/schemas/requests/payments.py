@@ -2,8 +2,12 @@ from pydantic import field_serializer
 
 from retailcrm.v5.helpers import to_json_serializer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme
-from retailcrm.v5.schemas.entities.payments import ApiCheckRequest, ApiCreateInvoiceRequest, ApiUpdateInvoiceRequest, \
-    ApiImportInvoiceRequest
+from retailcrm.v5.schemas.entities.payments import (
+    ApiCheckRequest,
+    ApiCreateInvoiceRequest,
+    ApiImportInvoiceRequest,
+    ApiUpdateInvoiceRequest,
+)
 
 
 class CheckRequest(BaseRetailCrmScheme):

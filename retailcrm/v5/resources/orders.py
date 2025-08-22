@@ -6,24 +6,52 @@ from retailcrm.v5.resources.base import ApiResource
 
 __all__ = ["OrdersApiResource"]
 
-from retailcrm.v5.schemas.entities.orders import SerializedOrderReference, SerializedOrder, SerializedOrderLink, \
-    SerializedPayment
-
-from retailcrm.v5.schemas.filters.orders import OrdersFilter, OrderHistoryFilterV4Type
-from retailcrm.v5.schemas.base import IdTypesLiteral, IdResponse, SuccessResponse, ErrorResponse
-from retailcrm.v5.schemas.requests.orders import OrdersFilterRequest, OrdersGetRequest, OrdersCombineRequest, \
-    OrdersCreateRequest, FixExternalIdsRequest, OrdersHistoryRequest, OrderLinkCreateRequest, LoyaltyApplyRequest, \
-    LoyaltyCancelBonusOperationsRequest, OrdersPaymentCreateRequest, OrdersPaymentEditRequest, OrdersUploadRequest, \
-    OrdersEditRequest, OrdersDeliveryCancelRequest, OrdersPlatesPrintRequest
-from retailcrm.v5.schemas.responses.orders import OrdersFilterResponse, OrderGetResponse, OrdersCreateResponse, \
-    OrdersHistoryResponse, LoyaltyApplyResponse, LoyaltyCancelBonusOperationsResponse, OrdersPaymentCreateResponse
+from retailcrm.v5.schemas.base import (
+    ErrorResponse,
+    IdResponse,
+    IdTypesLiteral,
+    SuccessResponse,
+)
+from retailcrm.v5.schemas.entities.orders import (
+    SerializedOrder,
+    SerializedOrderLink,
+    SerializedOrderReference,
+    SerializedPayment,
+)
+from retailcrm.v5.schemas.filters.orders import OrderHistoryFilterV4Type, OrdersFilter
+from retailcrm.v5.schemas.requests.orders import (
+    FixExternalIdsRequest,
+    LoyaltyApplyRequest,
+    LoyaltyCancelBonusOperationsRequest,
+    OrderLinkCreateRequest,
+    OrdersCombineRequest,
+    OrdersCreateRequest,
+    OrdersDeliveryCancelRequest,
+    OrdersEditRequest,
+    OrdersFilterRequest,
+    OrdersGetRequest,
+    OrdersHistoryRequest,
+    OrdersPaymentCreateRequest,
+    OrdersPaymentEditRequest,
+    OrdersPlatesPrintRequest,
+    OrdersUploadRequest,
+)
+from retailcrm.v5.schemas.responses.orders import (
+    LoyaltyApplyResponse,
+    LoyaltyCancelBonusOperationsResponse,
+    OrderGetResponse,
+    OrdersCreateResponse,
+    OrdersFilterResponse,
+    OrdersHistoryResponse,
+    OrdersPaymentCreateResponse,
+)
 from retailcrm.v5.schemas.shared.fix_external_row import FixExternalRow
 from retailcrm.v5.schemas.shared.order import SerializedEntityOrder
 
 
 class OrdersApiResource(ApiResource):
     async def filter(
-            self, filter_obj: OrdersFilter, limit: int = 20, page: int = 1
+        self, filter_obj: OrdersFilter, limit: int = 20, page: int = 1
     ) -> OrdersFilterResponse:
         """
         **Получение списка заказов, удовлетворяющих заданному фильтру**
@@ -65,9 +93,7 @@ class OrdersApiResource(ApiResource):
         )
         return self._process_response(response, SuccessResponse)
 
-    async def create(
-        self, order: SerializedOrder, site: str
-    ) -> OrdersCreateResponse:
+    async def create(self, order: SerializedOrder, site: str) -> OrdersCreateResponse:
         """
         **Создание заказа**
 
@@ -97,13 +123,16 @@ class OrdersApiResource(ApiResource):
 
         response = await self._client.post(
             endpoint=f"/orders/fix-external-ids",
-            content=request.model_dump(exclude_none=True, by_alias=True)
+            content=request.model_dump(exclude_none=True, by_alias=True),
         )
 
         return self._process_response(response, SuccessResponse)
 
     async def history(
-        self, filter_obj: OrderHistoryFilterV4Type | None = None, limit: int = 20, page: int = 1
+        self,
+        filter_obj: OrderHistoryFilterV4Type | None = None,
+        limit: int = 20,
+        page: int = 1,
     ) -> OrdersHistoryResponse:
         """
         **Получение истории изменений по заказам**
@@ -141,9 +170,11 @@ class OrdersApiResource(ApiResource):
         )
         return self._process_response(response, OrdersHistoryResponse)
 
-
     async def loyalty_apply(
-        self,        order: SerializedEntityOrder,         site: str,        bonuses: decimal.Decimal,
+        self,
+        order: SerializedEntityOrder,
+        site: str,
+        bonuses: decimal.Decimal,
     ) -> LoyaltyApplyResponse:
         """
         Применение бонусов по программе лояльности
@@ -157,12 +188,14 @@ class OrdersApiResource(ApiResource):
         request = LoyaltyApplyRequest(order=order, site=site, bonuses=bonuses)
         response = await self._client.post(
             endpoint="/orders/loyalty/apply",
-            content=request.model_dump_json(exclude_none=True, by_alias=True)
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, LoyaltyApplyResponse)
 
     async def loyalty_cancel_bonus_operations(
-        self,        order: SerializedEntityOrder,         site: str,
+        self,
+        order: SerializedEntityOrder,
+        site: str,
     ) -> LoyaltyCancelBonusOperationsResponse:
         """
         Отмена операций с бонусами по программе лояльности
@@ -175,10 +208,9 @@ class OrdersApiResource(ApiResource):
         request = LoyaltyCancelBonusOperationsRequest(order=order, site=site)
         response = await self._client.post(
             endpoint="/orders/loyalty/cancel-bonus-operations",
-            content=request.model_dump_json(exclude_none=True, by_alias=True)
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, LoyaltyCancelBonusOperationsResponse)
-
 
     async def payment_create(
         self, payment: SerializedPayment, site: str
@@ -203,7 +235,7 @@ class OrdersApiResource(ApiResource):
         payment_id: str,
         payment: SerializedPayment,
         site: str,
-        by: IdTypesLiteral | str = "externalId"
+        by: IdTypesLiteral | str = "externalId",
     ) -> IdResponse:
         """
         **Редактирование платежа**
@@ -235,9 +267,7 @@ class OrdersApiResource(ApiResource):
         )
         return self._process_response(response, SuccessResponse)
 
-    async def upload(
-        self, orders: list[SerializedOrder], site: str
-    ) -> SuccessResponse:
+    async def upload(self, orders: list[SerializedOrder], site: str) -> SuccessResponse:
         """
         **Массовая загрузка заказов**
 
@@ -255,7 +285,12 @@ class OrdersApiResource(ApiResource):
         )
         return self._process_response(response, SuccessResponse)
 
-    async def get(self, order_id: int | str, site: str | None = None, by: IdTypesLiteral | str = "externalId") -> OrderGetResponse:
+    async def get(
+        self,
+        order_id: int | str,
+        site: str | None = None,
+        by: IdTypesLiteral | str = "externalId",
+    ) -> OrderGetResponse:
         """
         Получение информации о заказе.
         Для доступа к методу необходимо разрешение order_read.
@@ -269,7 +304,7 @@ class OrdersApiResource(ApiResource):
         request = OrdersGetRequest(site=site, by=by)
         response = await self._client.get(
             endpoint=f"/orders/{order_id}",
-            params=request.model_dump(exclude_none=True, by_alias=True)
+            params=request.model_dump(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, OrderGetResponse)
 
@@ -278,7 +313,7 @@ class OrdersApiResource(ApiResource):
         order_id: int | str,
         order: SerializedOrder,
         site: str | None = None,
-        by: IdTypesLiteral | str = "externalId"
+        by: IdTypesLiteral | str = "externalId",
     ) -> SuccessResponse:
         """
         **Редактирование заказа**
@@ -291,18 +326,14 @@ class OrdersApiResource(ApiResource):
         :return: SuccessResponse
         """
         request = OrdersEditRequest(order=order, site=site, by=by)
-        response =  await self._client.post(
+        response = await self._client.post(
             endpoint=f"/orders/{order_id}/edit",
             content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, SuccessResponse)
 
-
     async def delivery_cancel(
-        self,
-        order_id: int | str,
-        force: bool,
-        by: IdTypesLiteral | str = "externalId"
+        self, order_id: int | str, force: bool, by: IdTypesLiteral | str = "externalId"
     ) -> SuccessResponse:
         """
         **Отмена интеграционной доставки**
@@ -317,19 +348,18 @@ class OrdersApiResource(ApiResource):
         :return: SuccessResponse
         """
         request = OrdersDeliveryCancelRequest(by=by, force=force)
-        response =  await self._client.post(
+        response = await self._client.post(
             endpoint=f"/orders/{order_id}/edit",
             content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, SuccessResponse)
-
 
     async def plates_print(
         self,
         order_id: int | str,
         plate_id: int,
         site: str | None = None,
-        by: IdTypesLiteral | str = "externalId"
+        by: IdTypesLiteral | str = "externalId",
     ) -> bytes:
         """
         **Редактирование заказа**
@@ -342,7 +372,7 @@ class OrdersApiResource(ApiResource):
         :return: SuccessResponse
         """
         request = OrdersPlatesPrintRequest(site=site, by=by)
-        response =  await self._client.post(
+        response = await self._client.post(
             endpoint=f"/orders/{order_id}/plates/{plate_id}/print",
             content=request.model_dump(exclude_none=True, by_alias=True),
         )

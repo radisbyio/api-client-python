@@ -2,12 +2,16 @@ from pydantic import Field, field_serializer
 
 from retailcrm.v5.helpers import to_json_serializer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme
-
 from retailcrm.v5.schemas.entities.telephony import CallEvent, CallUpload
 
-__all__ = ["CallEventRequest", "CallsUploadRequest", "ManagerRequest", "MgTelephonyMakeCallUrlRequest", "MgTelephonyPersonalAccountUrlRequest", "MgTelephonyChangeUserStatusUrlRequest"]
-
-
+__all__ = [
+    "CallEventRequest",
+    "CallsUploadRequest",
+    "ManagerRequest",
+    "MgTelephonyMakeCallUrlRequest",
+    "MgTelephonyPersonalAccountUrlRequest",
+    "MgTelephonyChangeUserStatusUrlRequest",
+]
 
 
 class CallEventRequest(BaseRetailCrmScheme):
@@ -20,6 +24,7 @@ class CallsUploadRequest(BaseRetailCrmScheme):
     )
 
     calls_serializer = field_serializer("calls")(to_json_serializer())
+
 
 class ManagerRequest(BaseRetailCrmScheme):
     phone: str | None = Field(None, description="Телефон")

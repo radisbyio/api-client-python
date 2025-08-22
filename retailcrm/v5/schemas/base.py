@@ -1,13 +1,23 @@
-from typing import Optional, Any, Literal
+from typing import Any, Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from retailcrm.v5.helpers import errors_dict_validator
 
-__all__ = ["BaseRetailCrmScheme", "BaseRetailCrmResponse", "SuccessResponse", "ErrorResponse","PaginatedResponse", "IdTypesLiteral", "IdResponse", "CursorPaginatedResponse"]
+__all__ = [
+    "BaseRetailCrmScheme",
+    "BaseRetailCrmResponse",
+    "SuccessResponse",
+    "ErrorResponse",
+    "PaginatedResponse",
+    "IdTypesLiteral",
+    "IdResponse",
+    "CursorPaginatedResponse",
+]
 
 
 IdTypesLiteral = Literal["id", "externalId"]
+
 
 class BaseRetailCrmScheme(BaseModel):
     model_config = ConfigDict(

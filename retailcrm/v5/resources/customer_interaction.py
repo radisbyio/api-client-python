@@ -2,11 +2,26 @@ from typing import Literal
 
 from retailcrm.v5.resources.base import ApiResource
 from retailcrm.v5.schemas.base import IdTypesLiteral
-from retailcrm.v5.schemas.entities.customer_interaction import SerializedCart, SerializedFavorite
-from retailcrm.v5.schemas.requests.customer_interaction import CartClearRequest, CartSetRequest, FavoritesRemoveRequest, \
-    FavoritesAddRequest, FavoritesGetRequest, CartGetRequest
-from retailcrm.v5.schemas.responses.customer_interaction import CartClearResponse, CartSetResponse, CartGetResponse, \
-    FavoritesRemoveResponse, FavoritesAddResponse, FavoritesGetResponse
+from retailcrm.v5.schemas.entities.customer_interaction import (
+    SerializedCart,
+    SerializedFavorite,
+)
+from retailcrm.v5.schemas.requests.customer_interaction import (
+    CartClearRequest,
+    CartGetRequest,
+    CartSetRequest,
+    FavoritesAddRequest,
+    FavoritesGetRequest,
+    FavoritesRemoveRequest,
+)
+from retailcrm.v5.schemas.responses.customer_interaction import (
+    CartClearResponse,
+    CartGetResponse,
+    CartSetResponse,
+    FavoritesAddResponse,
+    FavoritesGetResponse,
+    FavoritesRemoveResponse,
+)
 
 
 class CustomerInteractionApiResource(ApiResource):
@@ -53,7 +68,11 @@ class CustomerInteractionApiResource(ApiResource):
         return self._process_response(response, CartSetResponse)
 
     async def cart_get(
-        self, site: str, customer_id: str, by: IdTypesLiteral = "externalId", site_by: Literal["id", "code"] = "code"
+        self,
+        site: str,
+        customer_id: str,
+        by: IdTypesLiteral = "externalId",
+        site_by: Literal["id", "code"] = "code",
     ) -> CartGetResponse:
         """
         **Получение текущей корзины клиента**
@@ -73,7 +92,11 @@ class CustomerInteractionApiResource(ApiResource):
         return self._process_response(response, CartGetResponse)
 
     async def favorites_get(
-        self, site: str, customer_id: str, by: IdTypesLiteral = "externalId", site_by: Literal["id", "code"] = "code"
+        self,
+        site: str,
+        customer_id: str,
+        by: IdTypesLiteral = "externalId",
+        site_by: Literal["id", "code"] = "code",
     ) -> FavoritesGetResponse:
         """
         **Получение списка избранного для клиента**
@@ -93,7 +116,12 @@ class CustomerInteractionApiResource(ApiResource):
         return self._process_response(response, FavoritesGetResponse)
 
     async def favorites_add(
-        self, site: str, customer_id: str, favorite: SerializedFavorite, by: IdTypesLiteral = "externalId", site_by: Literal["id", "code"] = "code"
+        self,
+        site: str,
+        customer_id: str,
+        favorite: SerializedFavorite,
+        by: IdTypesLiteral = "externalId",
+        site_by: Literal["id", "code"] = "code",
     ) -> FavoritesAddResponse:
         """
         **Добавление товарного предложения в список избранного клиента**
@@ -116,7 +144,12 @@ class CustomerInteractionApiResource(ApiResource):
         return self._process_response(response, FavoritesAddResponse)
 
     async def favorites_remove(
-        self, site: str, customer_id: str, favorite: SerializedFavorite, by: IdTypesLiteral = "externalId", site_by: Literal["id", "code"] = "code"
+        self,
+        site: str,
+        customer_id: str,
+        favorite: SerializedFavorite,
+        by: IdTypesLiteral = "externalId",
+        site_by: Literal["id", "code"] = "code",
     ) -> FavoritesRemoveResponse:
         """
         **Удаление товарного предложения из списка избранного клиента**

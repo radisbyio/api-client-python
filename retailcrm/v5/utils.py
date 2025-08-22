@@ -3,7 +3,9 @@ from typing import Any, Type, TypeVar
 from pydantic import BaseModel, RootModel
 
 
-def pydantic_to_nested_dict(model: BaseModel | None, prefix: str = "") -> dict[str, str]:
+def pydantic_to_nested_dict(
+    model: BaseModel | None, prefix: str = ""
+) -> dict[str, str]:
     """
     Преобразует поля модели Pydantic в словарь с вложенными ключами вида "fieldA[fieldB]=valueB".
     Если на входе объект model имеет значение None, будет возвращён пустой словарь
@@ -38,6 +40,7 @@ def pydantic_to_nested_dict(model: BaseModel | None, prefix: str = "") -> dict[s
 
 
 T = TypeVar("T", bound=BaseModel)
+
 
 def pydantic_list_dumps_to_json(obj_list: list[T], obj_type: Type | None = None) -> str:
     """

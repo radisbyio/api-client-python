@@ -1,10 +1,21 @@
 from retailcrm.v5.resources.base import ApiResource
 from retailcrm.v5.schemas.base import SuccessResponse
-from retailcrm.v5.schemas.entities.payments import ApiCheckRequest, ApiCreateInvoiceRequest, ApiUpdateInvoiceRequest, \
-    ApiImportInvoiceRequest
-from retailcrm.v5.schemas.requests.payments import CreateInvoiceRequest, UpdateInvoiceRequest, InvoiceImportRequest
-from retailcrm.v5.schemas.responses.payments import CheckResponsePayment, CreateInvoiceResponsePayment, \
-    InvoiceImportResponse
+from retailcrm.v5.schemas.entities.payments import (
+    ApiCheckRequest,
+    ApiCreateInvoiceRequest,
+    ApiImportInvoiceRequest,
+    ApiUpdateInvoiceRequest,
+)
+from retailcrm.v5.schemas.requests.payments import (
+    CreateInvoiceRequest,
+    InvoiceImportRequest,
+    UpdateInvoiceRequest,
+)
+from retailcrm.v5.schemas.responses.payments import (
+    CheckResponsePayment,
+    CreateInvoiceResponsePayment,
+    InvoiceImportResponse,
+)
 
 
 class PaymentApiResource(ApiResource):
@@ -81,9 +92,7 @@ class PaymentApiResource(ApiResource):
 
         return self._process_response(response, InvoiceImportResponse)
 
-    async def invoice(
-        self, invoice_uuid: str
-    ) -> SuccessResponse:
+    async def invoice(self, invoice_uuid: str) -> SuccessResponse:
         """
         **Получение инвойса**
         Метод позволяет изменить данные инвойса в системе.

@@ -6,7 +6,9 @@ from retailcrm.v5.schemas.responses.settings import SettingsResponse
 
 
 class SegmentsApiResource(ApiResource):
-    async def filter(self, filter_obj: SegmentsFilter | None = None, limit: int = 20, page: int = 1) -> SegmentsFilterResponse:
+    async def filter(
+        self, filter_obj: SegmentsFilter | None = None, limit: int = 20, page: int = 1
+    ) -> SegmentsFilterResponse:
         """
         Получение списка пользовательских сегментов
 
@@ -16,9 +18,7 @@ class SegmentsApiResource(ApiResource):
         :param filter_obj: Фильтр
         :return: SegmentsFilterResponse
         """
-        request = SegmentFilterRequest(
-            limit=limit, page=page, filter_obj=filter_obj
-        )
+        request = SegmentFilterRequest(limit=limit, page=page, filter_obj=filter_obj)
         response = await self._client.get(
             endpoint="/segments",
             params=request.model_dump(exclude_none=True, by_alias=True),

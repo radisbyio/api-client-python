@@ -1,17 +1,38 @@
 from retailcrm.v5.resources.base import ApiResource
-from retailcrm.v5.schemas.entities.custom_fields import SerializedCustomFieldApiDocModel, SerializedCustomDictionary
-from retailcrm.v5.schemas.filters.custom_fields import CustomDictionaryFilter, CustomFieldFilter
-from retailcrm.v5.schemas.requests.custom_fields import CustomFieldEditRequest, CustomFieldCreateRequest, \
-    CustomDictionaryEditRequest, CustomDictionaryCreateRequest, CustomDictionariesFilterRequest, \
-    CustomFieldsFilterRequest
-from retailcrm.v5.schemas.responses.custom_fields import CustomFieldEditResponse, CustomFieldGetResponse, \
-    CustomFieldCreateResponse, CustomDictionaryEditResponse, CustomDictionaryGetResponse, \
-    CustomDictionaryCreateResponse, CustomDictionariesFilterResponse, CustomFieldsFilterResponse
+from retailcrm.v5.schemas.entities.custom_fields import (
+    SerializedCustomDictionary,
+    SerializedCustomFieldApiDocModel,
+)
+from retailcrm.v5.schemas.filters.custom_fields import (
+    CustomDictionaryFilter,
+    CustomFieldFilter,
+)
+from retailcrm.v5.schemas.requests.custom_fields import (
+    CustomDictionariesFilterRequest,
+    CustomDictionaryCreateRequest,
+    CustomDictionaryEditRequest,
+    CustomFieldCreateRequest,
+    CustomFieldEditRequest,
+    CustomFieldsFilterRequest,
+)
+from retailcrm.v5.schemas.responses.custom_fields import (
+    CustomDictionariesFilterResponse,
+    CustomDictionaryCreateResponse,
+    CustomDictionaryEditResponse,
+    CustomDictionaryGetResponse,
+    CustomFieldCreateResponse,
+    CustomFieldEditResponse,
+    CustomFieldGetResponse,
+    CustomFieldsFilterResponse,
+)
 
 
 class CustomFieldsApiResource(ApiResource):
     async def filter(
-        self, filter_obj: CustomFieldFilter | None = None, limit: int = 20, page: int = 1
+        self,
+        filter_obj: CustomFieldFilter | None = None,
+        limit: int = 20,
+        page: int = 1,
     ) -> CustomFieldsFilterResponse:
         """
         **Получение списка пользовательских полей, удовлетворяющих заданному фильтру**
@@ -23,7 +44,9 @@ class CustomFieldsApiResource(ApiResource):
         :param page: Номер страницы с результатами (по умолчанию равно 1).
         :return: CustomFieldsFilterResponse
         """
-        request = CustomFieldsFilterRequest(filter_obj=filter_obj, limit=limit, page=page)
+        request = CustomFieldsFilterRequest(
+            filter_obj=filter_obj, limit=limit, page=page
+        )
         response = await self._client.get(
             endpoint="/custom-fields",
             params=request.model_dump(exclude_none=True, by_alias=True),
@@ -31,7 +54,10 @@ class CustomFieldsApiResource(ApiResource):
         return self._process_response(response, CustomFieldsFilterResponse)
 
     async def dictionaries_filter(
-        self, filter_obj: CustomDictionaryFilter | None = None, limit: int = 20, page: int = 1
+        self,
+        filter_obj: CustomDictionaryFilter | None = None,
+        limit: int = 20,
+        page: int = 1,
     ) -> CustomDictionariesFilterResponse:
         """
         **Получение списка справочников, удовлетворяющих заданному фильтру**
@@ -43,14 +69,18 @@ class CustomFieldsApiResource(ApiResource):
         :param page: Номер страницы с результатами (по умолчанию равно 1).
         :return: CustomDictionariesFilterResponse
         """
-        request = CustomDictionariesFilterRequest(filter_obj=filter_obj, limit=limit, page=page)
+        request = CustomDictionariesFilterRequest(
+            filter_obj=filter_obj, limit=limit, page=page
+        )
         response = await self._client.get(
             endpoint="/custom-fields/dictionaries",
             params=request.model_dump(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, CustomDictionariesFilterResponse)
 
-    async def dictionaries_create(self, custom_dictionary: SerializedCustomDictionary) -> CustomDictionaryCreateResponse:
+    async def dictionaries_create(
+        self, custom_dictionary: SerializedCustomDictionary
+    ) -> CustomDictionaryCreateResponse:
         """
         **Создание справочника**
 
@@ -78,7 +108,9 @@ class CustomFieldsApiResource(ApiResource):
         )
         return self._process_response(response, CustomDictionaryGetResponse)
 
-    async def dictionaries_edit(self, code: str, custom_dictionary: SerializedCustomDictionary) -> CustomDictionaryEditResponse:
+    async def dictionaries_edit(
+        self, code: str, custom_dictionary: SerializedCustomDictionary
+    ) -> CustomDictionaryEditResponse:
         """
         **Редактирование справочника**
 
@@ -94,7 +126,9 @@ class CustomFieldsApiResource(ApiResource):
         )
         return self._process_response(response, CustomDictionaryEditResponse)
 
-    async def create(self, entity: str, custom_field: SerializedCustomFieldApiDocModel) -> CustomFieldCreateResponse:
+    async def create(
+        self, entity: str, custom_field: SerializedCustomFieldApiDocModel
+    ) -> CustomFieldCreateResponse:
         """
         **Создание пользовательского поля**
 
@@ -124,7 +158,9 @@ class CustomFieldsApiResource(ApiResource):
         )
         return self._process_response(response, CustomFieldGetResponse)
 
-    async def edit(self, entity: str, code: str, custom_field: SerializedCustomFieldApiDocModel) -> CustomFieldEditResponse:
+    async def edit(
+        self, entity: str, code: str, custom_field: SerializedCustomFieldApiDocModel
+    ) -> CustomFieldEditResponse:
         """
         **Редактирование пользовательского поля**
 

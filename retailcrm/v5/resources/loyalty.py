@@ -2,24 +2,53 @@ import decimal
 from datetime import datetime
 
 from retailcrm.v5.resources.base import ApiResource
-from retailcrm.v5.schemas.entities.loyalty import SerializedCreateLoyaltyAccount, SerializedEditLoyaltyAccount
+from retailcrm.v5.schemas.entities.loyalty import (
+    SerializedCreateLoyaltyAccount,
+    SerializedEditLoyaltyAccount,
+)
 from retailcrm.v5.schemas.entities.orders import SerializedOrder
-from retailcrm.v5.schemas.filters.loyalty import LoyaltyAccountFilterData, LoyaltyAccountBonusOperationsApiFilterType, \
-    LoyaltyAccountBonusApiFilterType, LoyaltyBonusOperationsApiFilterType, LoyaltyApiFilterData
-from retailcrm.v5.schemas.requests.loyalty import LoyaltyAccountsFilterRequest, LoyaltyAccountCreateRequest, \
-    LoyaltyAccountBonusChargeRequest, LoyaltyAccountEditRequest, LoyaltyAccountBonusCreditRequest, \
-    LoyaltyAccountBonusOperationsRequest, LoyaltyBonusDetailsRequest, LoyaltyBonusOperationsAllRequest, \
-    LoyaltyCalculateRequest, LoyaltiesFilterRequest
-from retailcrm.v5.schemas.responses.loyalty import LoyaltyAccountsResponse, LoyaltyAccountCreateResponse, \
-    LoyaltyAccountBonusChargeResponse, LoyaltyAccountActivateResponse, LoyaltyAccountEditResponse, \
-    LoyaltyAccountGetResponse, LoyaltyAccountBonusCreditResponse, LoyaltyAccountBonusOperationsResponse, \
-    LoyaltyBonusDetailsResponse, LoyaltyBonusOperationsResponse, LoyaltyCalculateResponse, LoyaltiesFilterResponse, \
-    LoyaltyRetrieveResponse
+from retailcrm.v5.schemas.filters.loyalty import (
+    LoyaltyAccountBonusApiFilterType,
+    LoyaltyAccountBonusOperationsApiFilterType,
+    LoyaltyAccountFilterData,
+    LoyaltyApiFilterData,
+    LoyaltyBonusOperationsApiFilterType,
+)
+from retailcrm.v5.schemas.requests.loyalty import (
+    LoyaltiesFilterRequest,
+    LoyaltyAccountBonusChargeRequest,
+    LoyaltyAccountBonusCreditRequest,
+    LoyaltyAccountBonusOperationsRequest,
+    LoyaltyAccountCreateRequest,
+    LoyaltyAccountEditRequest,
+    LoyaltyAccountsFilterRequest,
+    LoyaltyBonusDetailsRequest,
+    LoyaltyBonusOperationsAllRequest,
+    LoyaltyCalculateRequest,
+)
+from retailcrm.v5.schemas.responses.loyalty import (
+    LoyaltiesFilterResponse,
+    LoyaltyAccountActivateResponse,
+    LoyaltyAccountBonusChargeResponse,
+    LoyaltyAccountBonusCreditResponse,
+    LoyaltyAccountBonusOperationsResponse,
+    LoyaltyAccountCreateResponse,
+    LoyaltyAccountEditResponse,
+    LoyaltyAccountGetResponse,
+    LoyaltyAccountsResponse,
+    LoyaltyBonusDetailsResponse,
+    LoyaltyBonusOperationsResponse,
+    LoyaltyCalculateResponse,
+    LoyaltyRetrieveResponse,
+)
 
 
 class LoyaltyApiResource(ApiResource):
     async def accounts_filter(
-        self, filter_obj: LoyaltyAccountFilterData | None = None, limit: int = 20, page: int = 1
+        self,
+        filter_obj: LoyaltyAccountFilterData | None = None,
+        limit: int = 20,
+        page: int = 1,
     ) -> LoyaltyAccountsResponse:
         """Список участий в программе лояльности
 
@@ -29,7 +58,9 @@ class LoyaltyApiResource(ApiResource):
         :param page: Номер страницы
         :return: LoyaltyAccountsResponse
         """
-        request = LoyaltyAccountsFilterRequest(filter_obj=filter_obj, limit=limit, page=page)
+        request = LoyaltyAccountsFilterRequest(
+            filter_obj=filter_obj, limit=limit, page=page
+        )
         response = await self._client.get(
             "/loyalty/accounts",
             params=request.model_dump(exclude_none=True, by_alias=True),
@@ -223,7 +254,10 @@ class LoyaltyApiResource(ApiResource):
         return self._process_response(response, LoyaltyBonusOperationsResponse)
 
     async def calculate(
-        self, site: str, order: SerializedOrder, bonuses: decimal.Decimal = decimal.Decimal(0)
+        self,
+        site: str,
+        order: SerializedOrder,
+        bonuses: decimal.Decimal = decimal.Decimal(0),
     ) -> LoyaltyCalculateResponse:
         """
         **Расчёт максимальной скидки**
@@ -242,7 +276,10 @@ class LoyaltyApiResource(ApiResource):
         return self._process_response(response, LoyaltyCalculateResponse)
 
     async def loyalties_filter(
-        self, filter_data: LoyaltyApiFilterData | None = None, limit: int = 20, page: int = 1
+        self,
+        filter_data: LoyaltyApiFilterData | None = None,
+        limit: int = 20,
+        page: int = 1,
     ) -> LoyaltiesFilterResponse:
         """
         **Список программ лояльности**

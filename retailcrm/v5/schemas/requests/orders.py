@@ -1,14 +1,18 @@
 import decimal
 from typing import Optional
 
-from pydantic import Field, model_serializer, field_serializer
+from pydantic import Field, field_serializer, model_serializer
 
 from retailcrm.v5.enums.orders import CombineTechniqueTypes
 from retailcrm.v5.helpers import to_json_serializer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme, IdTypesLiteral
-from retailcrm.v5.schemas.entities.orders import SerializedOrderReference, SerializedOrder, SerializedOrderLink, \
-    SerializedPayment
-from retailcrm.v5.schemas.filters.orders import OrdersFilter, OrderHistoryFilterV4Type
+from retailcrm.v5.schemas.entities.orders import (
+    SerializedOrder,
+    SerializedOrderLink,
+    SerializedOrderReference,
+    SerializedPayment,
+)
+from retailcrm.v5.schemas.filters.orders import OrderHistoryFilterV4Type, OrdersFilter
 from retailcrm.v5.schemas.shared.fix_external_row import FixExternalRow
 from retailcrm.v5.schemas.shared.order import SerializedEntityOrder
 from retailcrm.v5.utils import pydantic_to_nested_dict
@@ -24,7 +28,7 @@ class OrdersFilterRequest(BaseRetailCrmScheme):
         return {
             "limit": self.limit,
             "page": self.page,
-            **pydantic_to_nested_dict(self.filter_obj, "filter")
+            **pydantic_to_nested_dict(self.filter_obj, "filter"),
         }
 
 
@@ -58,19 +62,24 @@ class FixExternalIdsRequest(BaseRetailCrmScheme):
 class OrdersHistoryRequest(BaseRetailCrmScheme):
     limit: Optional[int] = Field(None, description="Количество элементов в ответе")
     page: Optional[int] = Field(None, description="Номер страницы с результатами")
-    filter_obj: Optional[OrderHistoryFilterV4Type] = Field(None, description="Объект фильтра")
+    filter_obj: Optional[OrderHistoryFilterV4Type] = Field(
+        None, description="Объект фильтра"
+    )
 
     @model_serializer()
     def serialize_model(self) -> dict:
         return {
             "limit": self.limit,
             "page": self.page,
-            **pydantic_to_nested_dict(self.filter_obj, "filter")
+            **pydantic_to_nested_dict(self.filter_obj, "filter"),
         }
 
 
 class OrderLinkCreateRequest(BaseRetailCrmScheme):
-    site: Optional[str] = Field(None, description="Символьный код магазина. Указывается в случае указания заказов через externalId или number")
+    site: Optional[str] = Field(
+        None,
+        description="Символьный код магазина. Указывается в случае указания заказов через externalId или number",
+    )
     link: SerializedOrderLink
 
     link_serializer = field_serializer("link")(to_json_serializer())

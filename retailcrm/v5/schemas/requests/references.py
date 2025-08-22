@@ -2,10 +2,23 @@ from pydantic import field_serializer
 
 from retailcrm.v5.helpers import to_json_serializer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme
-from retailcrm.v5.schemas.entities.references import SerializedCostGroup, SerializedCostItem, SerializedCourier, \
-    SerializedCurrency, SerializedDeliveryService, SerializedDeliveryType, SerializedLegalEntity, SerializedOrderMethod, \
-    SerializedOrderType, SerializedPaymentStatus, SerializedPaymentType, SerializedSite, SerializedUnit, \
-    SerializedPriceType, SerializedOrderProductStatus
+from retailcrm.v5.schemas.entities.references import (
+    SerializedCostGroup,
+    SerializedCostItem,
+    SerializedCourier,
+    SerializedCurrency,
+    SerializedDeliveryService,
+    SerializedDeliveryType,
+    SerializedLegalEntity,
+    SerializedOrderMethod,
+    SerializedOrderProductStatus,
+    SerializedOrderType,
+    SerializedPaymentStatus,
+    SerializedPaymentType,
+    SerializedPriceType,
+    SerializedSite,
+    SerializedUnit,
+)
 from retailcrm.v5.schemas.entities.store import SerializedStore
 
 
@@ -33,7 +46,6 @@ class CouriersEditRequest(BaseRetailCrmScheme):
     courier_serializer = field_serializer("courier")(to_json_serializer())
 
 
-
 class CurrenciesCreateRequest(BaseRetailCrmScheme):
     currency: SerializedCurrency
 
@@ -49,7 +61,9 @@ class CurrenciesEditRequest(BaseRetailCrmScheme):
 class DeliveryServicesEditRequest(BaseRetailCrmScheme):
     deliveryService: SerializedDeliveryService
 
-    deliveryService_serializer = field_serializer("deliveryService")(to_json_serializer())
+    deliveryService_serializer = field_serializer("deliveryService")(
+        to_json_serializer()
+    )
 
 
 class DeliveryTypesEditRequest(BaseRetailCrmScheme):
@@ -92,6 +106,7 @@ class PriceTypesEditRequest(BaseRetailCrmScheme):
     priceType: SerializedPriceType
 
     priceType_serializer = field_serializer("priceType")(to_json_serializer())
+
 
 class ProductStatusesEditRequest(BaseRetailCrmScheme):
     productStatus: SerializedOrderProductStatus

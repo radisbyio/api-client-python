@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import model_serializer, Field
+from pydantic import Field, model_serializer
 
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme
 from retailcrm.v5.schemas.filters.segments import SegmentsFilter
@@ -17,5 +17,5 @@ class SegmentFilterRequest(BaseRetailCrmScheme):
         return {
             "limit": self.limit,
             "page": self.page,
-            **pydantic_to_nested_dict(self.filter_obj, "filter")
+            **pydantic_to_nested_dict(self.filter_obj, "filter"),
         }

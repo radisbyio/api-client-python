@@ -1,13 +1,11 @@
 from retailcrm.v5.resources.base import ApiResource
-from retailcrm.v5.schemas.entities.verification import (
-    SmsVerificationConfirm,
-)
+from retailcrm.v5.schemas.entities.verification import SmsVerificationConfirm
 from retailcrm.v5.schemas.responses.verification import VerificationConfirmResponse
 
 
 class VerificationController(ApiResource):
     async def sms_confirm(
-            self, verification: SmsVerificationConfirm
+        self, verification: SmsVerificationConfirm
     ) -> VerificationConfirmResponse:
         """
         Подтверждение верификации.

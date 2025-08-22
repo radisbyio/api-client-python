@@ -40,9 +40,13 @@ class Offer(BaseRetailCrmScheme):
     site: Optional[str] = Field(
         None, description="	deprecated Магазин. Используйте getCatalog()"
     )
-    purchasePrice: decimal.Decimal | None = Field(None, description="Закупочная цена SKU (в базовой валюте)")
+    purchasePrice: decimal.Decimal | None = Field(
+        None, description="Закупочная цена SKU (в базовой валюте)"
+    )
     quantity: decimal.Decimal | None = Field(None, description="Доступное количество")
-    stores: list[Inventory] = Field(default_factory=list, description="	Остатки по складам")
+    stores: list[Inventory] = Field(
+        default_factory=list, description="	Остатки по складам"
+    )
 
 
 class SerializedStore(BaseRetailCrmScheme):
@@ -50,7 +54,9 @@ class SerializedStore(BaseRetailCrmScheme):
     available: Optional[decimal.Decimal] = Field(
         None, description="Количество доступного товара или факт наличия"
     )
-    purchasePrice: Optional[decimal.Decimal] = Field(None, description="Закупочная цена")
+    purchasePrice: Optional[decimal.Decimal] = Field(
+        None, description="Закупочная цена"
+    )
 
 
 class SerializedOffer(BaseRetailCrmScheme):
@@ -113,7 +119,9 @@ class Product(BaseRetailCrmScheme):
 
 class ProductEditNotFoundResponse(BaseRetailCrmScheme):
     id: str | None = Field(None, description="ID необработанного товара")
-    externalId: str | None = Field(None, description="Внешний ID необработанного товара")
+    externalId: str | None = Field(
+        None, description="Внешний ID необработанного товара"
+    )
 
 
 class SerializedProductGroup(BaseRetailCrmScheme):
@@ -171,7 +179,8 @@ class PriceUploadNotFoundResponse(BaseRetailCrmScheme):
         None, description="ID не обработанного торгового предложения в магазине"
     )
     xmlId: Optional[str] = Field(
-        None, description="ID не обработанного торгового предложения в складской системе",
+        None,
+        description="ID не обработанного торгового предложения в складской системе",
     )
 
 
@@ -195,5 +204,3 @@ class ProductCreateInput(BaseRetailCrmScheme):
     manufacturer: Optional[str] = Field(None, description="Производитель")
     active: Optional[bool] = Field(None, description="Активность")
     markable: Optional[bool] = Field(None, description="Подлежит маркировке")
-
-

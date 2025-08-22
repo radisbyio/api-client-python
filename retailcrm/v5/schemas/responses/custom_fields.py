@@ -3,7 +3,10 @@ from typing import Optional
 from pydantic import Field
 
 from retailcrm.v5.schemas.base import PaginatedResponse, SuccessResponse
-from retailcrm.v5.schemas.entities.custom_fields import CustomDictionary, CustomFieldApiDocModel
+from retailcrm.v5.schemas.entities.custom_fields import (
+    CustomDictionary,
+    CustomFieldApiDocModel,
+)
 
 
 class CustomFieldsFilterResponse(PaginatedResponse):

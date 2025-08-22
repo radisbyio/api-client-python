@@ -4,18 +4,33 @@ from pydantic import Field, field_serializer
 
 from retailcrm.v5.helpers import to_json_serializer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme, IdTypesLiteral
-from retailcrm.v5.schemas.entities.corporate_customers import SerializedCustomerContact, SerializedCustomerCorporate, \
-    SerializedCompany, SerializedCustomerAddress
-from retailcrm.v5.schemas.entities.customers import SerializedCustomerNote, SerializedCustomerReference
-from retailcrm.v5.schemas.filters.customers_corporate import CustomerContactFilter, CompanyFilter, \
-    CustomerAddressFilter, CustomerNoteFilter, CustomerHistoryFilterV4Type, CustomerCorporateApiFilterData
+from retailcrm.v5.schemas.entities.corporate_customers import (
+    SerializedCompany,
+    SerializedCustomerAddress,
+    SerializedCustomerContact,
+    SerializedCustomerCorporate,
+)
+from retailcrm.v5.schemas.entities.customers import (
+    SerializedCustomerNote,
+    SerializedCustomerReference,
+)
+from retailcrm.v5.schemas.filters.customers_corporate import (
+    CompanyFilter,
+    CustomerAddressFilter,
+    CustomerContactFilter,
+    CustomerCorporateApiFilterData,
+    CustomerHistoryFilterV4Type,
+    CustomerNoteFilter,
+)
 from retailcrm.v5.schemas.shared.fix_external_row import FixExternalRow
 
 
 class CustomerCorporateFilterRequest(BaseRetailCrmScheme):
     limit: Optional[int]
     page: Optional[int]
-    filter_obj: Optional[CustomerCorporateApiFilterData] = Field(None, alias="filter_obj")
+    filter_obj: Optional[CustomerCorporateApiFilterData] = Field(
+        None, alias="filter_obj"
+    )
 
 
 class CustomerCorporateCombineRequest(BaseRetailCrmScheme):
@@ -27,15 +42,21 @@ class CustomerCorporateCombineRequest(BaseRetailCrmScheme):
 
 
 class CustomerCorporateCreateRequest(BaseRetailCrmScheme):
-    customerCorporate: SerializedCustomerCorporate = Field( alias="customerCorporate")
+    customerCorporate: SerializedCustomerCorporate = Field(alias="customerCorporate")
 
-    customerCorporate_serializer = field_serializer("customerCorporate")(to_json_serializer())
+    customerCorporate_serializer = field_serializer("customerCorporate")(
+        to_json_serializer()
+    )
 
 
 class CustomerCorporateFixExternalIdsRequest(BaseRetailCrmScheme):
-    customersCorporate: list[FixExternalRow] = Field(default_factory=list, alias="customersCorporate")
+    customersCorporate: list[FixExternalRow] = Field(
+        default_factory=list, alias="customersCorporate"
+    )
 
-    customersCorporate_serializer = field_serializer("customersCorporate")(to_json_serializer())
+    customersCorporate_serializer = field_serializer("customersCorporate")(
+        to_json_serializer()
+    )
 
 
 class CustomerCorporateHistoryRequest(BaseRetailCrmScheme):
@@ -58,10 +79,16 @@ class CustomerCorporateNoteCreateRequest(BaseRetailCrmScheme):
 
 
 class CustomerCorporateUploadRequest(BaseRetailCrmScheme):
-    site: str = Field(description="Символьный код магазина, к которому относятся загружаемые клиенты")
-    customersCorporate: list[SerializedCustomerCorporate] = Field(default_factory=list, alias="customersCorporate")
+    site: str = Field(
+        description="Символьный код магазина, к которому относятся загружаемые клиенты"
+    )
+    customersCorporate: list[SerializedCustomerCorporate] = Field(
+        default_factory=list, alias="customersCorporate"
+    )
 
-    customersCorporate_serializer = field_serializer("customersCorporate")(to_json_serializer())
+    customersCorporate_serializer = field_serializer("customersCorporate")(
+        to_json_serializer()
+    )
 
 
 class CustomerCorporateGetRequest(BaseRetailCrmScheme):
@@ -80,7 +107,7 @@ class CustomerCorporateAddressesRequest(BaseRetailCrmScheme):
 class CustomerCorporateAddressCreateRequest(BaseRetailCrmScheme):
     by: IdTypesLiteral
     site: Optional[str] = Field(None)
-    address: SerializedCustomerAddress = Field( alias="address")
+    address: SerializedCustomerAddress = Field(alias="address")
 
     address_serializer = field_serializer("address")(to_json_serializer())
 
@@ -149,4 +176,6 @@ class CustomerCorporateEditRequest(BaseRetailCrmScheme):
     site: Optional[str] = Field(None)
     customerCorporate: SerializedCustomerCorporate
 
-    customerCorporate_serializer = field_serializer("customerCorporate")(to_json_serializer())
+    customerCorporate_serializer = field_serializer("customerCorporate")(
+        to_json_serializer()
+    )

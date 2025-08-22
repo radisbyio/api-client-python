@@ -1,6 +1,6 @@
 import decimal
 from datetime import datetime
-from typing import Optional, Literal, Any
+from typing import Any, Literal, Optional
 
 from pydantic import Field, field_serializer, field_validator
 
@@ -15,10 +15,13 @@ from retailcrm.v5.schemas.shared.source import SerializedSource
 class MGChannel(BaseRetailCrmScheme):
     id: Optional[int] = Field(None, description="ID канала")
     externalId: Optional[int] = Field(None, description="Внешний ID канала")
-    allowedSendByPhone: Optional[bool] = Field(None, description="Можно ли писать первыми в этот канал по номеру телефона")
+    allowedSendByPhone: Optional[bool] = Field(
+        None, description="Можно ли писать первыми в этот канал по номеру телефона"
+    )
     type: Optional[str] = Field(None, description="Тип канала")
     active: Optional[bool] = Field(False, description="Активность канала")
     name: Optional[str] = Field(None, description="Название канала")
+
 
 class MGCustomer(BaseRetailCrmScheme):
     id: Optional[int] = Field(None, description="ID клиента")
@@ -74,7 +77,8 @@ class Customer(BaseRetailCrmScheme):
     id: Optional[int] = Field(None, description="ID клиента")
     externalId: Optional[str] = Field(None, description="Внешний ID клиента")
     isContact: Optional[bool] = Field(
-        None, description="Клиент является контактным лицом (создан как контактное лицо и на него нет оформленных заказов)",
+        None,
+        description="Клиент является контактным лицом (создан как контактное лицо и на него нет оформленных заказов)",
     )
     createdAt: Optional[datetime] = Field(None, description="Создан")
     managerId: Optional[int] = Field(None, description="Менеджер клиента")
@@ -95,13 +99,22 @@ class Customer(BaseRetailCrmScheme):
         None, description="Номер дисконтной карты"
     )
     avgMarginSumm: float | None = Field(
-        None, description="Средняя валовая прибыль по заказам клиента (в базовой валюте)"
+        None,
+        description="Средняя валовая прибыль по заказам клиента (в базовой валюте)",
     )
-    marginSumm: Optional[decimal.Decimal] = Field(None, description="LTV (в базовой валюте)")
-    totalSumm: Optional[decimal.Decimal] = Field(None, description="Общая сумма заказов (в базовой валюте)")
-    averageSumm: Optional[decimal.Decimal] = Field(None, description="Средняя сумма заказа (в базовой валюте)")
+    marginSumm: Optional[decimal.Decimal] = Field(
+        None, description="LTV (в базовой валюте)"
+    )
+    totalSumm: Optional[decimal.Decimal] = Field(
+        None, description="Общая сумма заказов (в базовой валюте)"
+    )
+    averageSumm: Optional[decimal.Decimal] = Field(
+        None, description="Средняя сумма заказа (в базовой валюте)"
+    )
     ordersCount: int = Field(None, description="Количество заказов")
-    costSumm: Optional[decimal.Decimal] = Field(None, description="Сумма расходов (в базовой валюте)")
+    costSumm: Optional[decimal.Decimal] = Field(
+        None, description="Сумма расходов (в базовой валюте)"
+    )
     address: Optional[CustomerAddress] = Field(None, description="Адрес клиента")
     maturationTime: Optional[int] = Field(
         None, description="Время «созревания», в секундах"
@@ -135,7 +148,9 @@ class Customer(BaseRetailCrmScheme):
 
     # TODO: Временно до создания CorporateCustomer
     nickName: str | None = Field(None, description="Наименование")
-    mainCompany: EntityWithExternalIdNameOutput | None = Field(None, description="Основная компания")
+    mainCompany: EntityWithExternalIdNameOutput | None = Field(
+        None, description="Основная компания"
+    )
     phone: str | None = Field(None, description="Номер телефона")
 
     createdAt_serializer = field_serializer("createdAt")(
@@ -145,7 +160,7 @@ class Customer(BaseRetailCrmScheme):
     customFields_validator = field_validator("customFields", mode="before")(
         dict_validator()
     )
-    
+
 
 class CustomerContragent(BaseRetailCrmScheme):
     contragentType: Optional[str] = Field(None, description="Тип контрагента")
@@ -170,8 +185,12 @@ class Segment(BaseRetailCrmScheme):
     code: Optional[str] = Field(None, description="Символьный код")
     name: Optional[str] = Field(None, description="Название сегмента")
     createdAt: Optional[datetime] = Field(None, description="Дата создания сегмента")
-    isDynamic: Optional[bool] = Field(None, description="Является ли сегмент автоматически пересчитываемым")
-    customersCount: Optional[int] = Field(None, description="Количество клиентов в сегменте")
+    isDynamic: Optional[bool] = Field(
+        None, description="Является ли сегмент автоматически пересчитываемым"
+    )
+    customersCount: Optional[int] = Field(
+        None, description="Количество клиентов в сегменте"
+    )
     active: Optional[bool] = Field(None, description="Активность сегмента")
 
 
@@ -181,15 +200,18 @@ class Subscription(BaseRetailCrmScheme):
     name: Optional[str] = Field(None, description="Название")
     code: Optional[str] = Field(None, description="Символьный код")
     active: Optional[bool] = Field(None, description="Статус активности")
-    autoSubscribe: Optional[bool] = Field(None, description="Автоматически подписывать новых клиентов")
+    autoSubscribe: Optional[bool] = Field(
+        None, description="Автоматически подписывать новых клиентов"
+    )
     ordering: Optional[int] = Field(None)
 
 
 class CustomerSubscription(BaseRetailCrmScheme):
     subscription: Optional[Subscription] = Field(None, description="Категория подписки")
     subscribed: Optional[bool] = Field(None, description="Активность подписки")
-    changedAt: Optional[datetime] = Field(None, description="Дата изменения флага активности")
-
+    changedAt: Optional[datetime] = Field(
+        None, description="Дата изменения флага активности"
+    )
 
 
 class SerializedCustomerReference(BaseRetailCrmScheme):
@@ -208,7 +230,9 @@ class CustomerAddressWithIsMain(CustomerAddress):
 
 
 class CustomerHistory(BaseRetailCrmScheme):
-    id: Optional[int] = Field(None, description="Внутренний идентификатор записи в истории")
+    id: Optional[int] = Field(
+        None, description="Внутренний идентификатор записи в истории"
+    )
     createdAt: Optional[datetime] = Field(None, description="Дата внесения изменения")
     created: Optional[bool] = Field(None, description="Признак создания сущности")
     deleted: Optional[bool] = Field(None, description="Признак удаления сущности")
@@ -217,10 +241,19 @@ class CustomerHistory(BaseRetailCrmScheme):
     field: Optional[str] = Field(None, description="Имя изменившегося поля")
     oldValue: Optional[Any] = Field(None, description="Старое значение свойства")
     newValue: Optional[Any] = Field(None, description="Новое значение свойства")
-    apiKey: Optional[HistoryApiKey] = Field(None, alias="apiKey", description="Информация о ключе api, использовавшемся для этого изменения")
+    apiKey: Optional[HistoryApiKey] = Field(
+        None,
+        alias="apiKey",
+        description="Информация о ключе api, использовавшемся для этого изменения",
+    )
     customer: Optional[Customer] = Field(None, description="Клиент")
-    address: Optional[CustomerAddressWithIsMain] = Field(None, description="Адрес клиента")
-    combinedTo: Optional[Customer] = Field(None, description="Информация о клиенте, который получился после объединения с текущим клиентом")
+    address: Optional[CustomerAddressWithIsMain] = Field(
+        None, description="Адрес клиента"
+    )
+    combinedTo: Optional[Customer] = Field(
+        None,
+        description="Информация о клиенте, который получился после объединения с текущим клиентом",
+    )
     subscription: Optional[Subscription] = Field(None, description="Категория подписки")
 
 
@@ -238,31 +271,49 @@ class EntityWithExternalId(BaseRetailCrmScheme):
 
 class SerializedCustomer(BaseRetailCrmScheme):
     externalId: Optional[str] = Field(None, description="Внешний ID клиента")
-    isContact: Optional[bool] = Field(None, description="Клиент является контактным лицом (создан как контактное лицо и на него нет оформленных заказов)")
+    isContact: Optional[bool] = Field(
+        None,
+        description="Клиент является контактным лицом (создан как контактное лицо и на него нет оформленных заказов)",
+    )
     createdAt: Optional[datetime] = Field(None, description="Создан")
     vip: Optional[bool] = Field(None, description="Важный клиент")
     bad: Optional[bool] = Field(None, description="Плохой клиент")
-    contragent: Optional[CustomerContragent] = Field(None, description="deprecated Реквизиты (Поля объекта следует использовать только при неактивированной функциональности 'Корпоративные клиенты')")
-    customFields: Optional[dict[str, Any]] = Field(None, description="Ассоциативный массив пользовательских полей")
+    contragent: Optional[CustomerContragent] = Field(
+        None,
+        description="deprecated Реквизиты (Поля объекта следует использовать только при неактивированной функциональности 'Корпоративные клиенты')",
+    )
+    customFields: Optional[dict[str, Any]] = Field(
+        None, description="Ассоциативный массив пользовательских полей"
+    )
     personalDiscount: Optional[float] = Field(None, description="Персональная скидка")
-    discountCardNumber: Optional[str] = Field(None, description="Номер дисконтной карты")
+    discountCardNumber: Optional[str] = Field(
+        None, description="Номер дисконтной карты"
+    )
     address: Optional[CustomerAddress] = Field(None, description="Адрес клиента")
     firstName: Optional[str] = Field(None, description="Имя")
     lastName: Optional[str] = Field(None, description="Фамилия")
     patronymic: Optional[str] = Field(None, description="Отчество")
     email: Optional[str] = Field(None, description="E-mail")
-    emailMarketingUnsubscribedAt: Optional[datetime] = Field(None, description="deprecated Дата отписки от email рассылок")
+    emailMarketingUnsubscribedAt: Optional[datetime] = Field(
+        None, description="deprecated Дата отписки от email рассылок"
+    )
     phones: Optional[list[CustomerPhone]] = Field(None, description="Телефоны")
     birthday: Optional[datetime] = Field(None, description="День рождения")
     photoUrl: Optional[str] = Field(None, description="URL фотографии")
     managerId: Optional[int] = Field(None, description="Менеджер клиента")
     sex: Optional[str] = Field(None, description="Пол")
     source: Optional[SerializedSource] = Field(None, description="Источник клиента")
-    mgCustomerId: Optional[MGCustomer] = Field(None, alias="mgCustomerId", description="Идентификатор клиента MessageGateway")
-    subscribed: Optional[bool] = Field(None, description="Статус подписки на маркетинговые рассылки писем")
+    mgCustomerId: Optional[MGCustomer] = Field(
+        None, alias="mgCustomerId", description="Идентификатор клиента MessageGateway"
+    )
+    subscribed: Optional[bool] = Field(
+        None, description="Статус подписки на маркетинговые рассылки писем"
+    )
     tags: Optional[list[str]] = Field(None, description="Теги")
     attachedTag: Optional[str] = Field(None, description="Прикреплённый тег")
-    browserId: Optional[str] = Field(None, description="Идентификатор устройства в Collector")
+    browserId: Optional[str] = Field(
+        None, description="Идентификатор устройства в Collector"
+    )
     addTags: Optional[list[str]] = Field(None, description="Добавление тегов")
     removeTags: Optional[list[str]] = Field(None, description="Удаление тегов")
 
@@ -277,4 +328,6 @@ class SerializedSubscription(BaseRetailCrmScheme):
     channel: Literal["email", "sms", "waba"] = Field(None, description="Канал подписки")
     subscription: Optional[str] = Field(None, description="Код категории подписки")
     active: bool = Field(None, description="Флаг подписки (подписан/отписан)")
-    messageId: Optional[int] = Field(None, description="Идентификатор сообщения, с которым взаимодействовал клиент")
+    messageId: Optional[int] = Field(
+        None, description="Идентификатор сообщения, с которым взаимодействовал клиент"
+    )

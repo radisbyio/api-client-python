@@ -1,18 +1,28 @@
 from retailcrm.v5.resources.base import ApiResource
 from retailcrm.v5.schemas.base import IdResponse, SuccessResponse
 from retailcrm.v5.schemas.entities.orders_packs import SerializedOrderProductPack
-from retailcrm.v5.schemas.filters.orders_packs import OrderProductPackFilter, OrderProductPackHistoryFilterType
-from retailcrm.v5.schemas.requests.orders_packs import OrdersProductsPacksFilterRequest, OrdersPacksCreateRequest, \
-    OrdersPacksEditRequest, OrdersProductsPacksHistoryFilterRequest
-from retailcrm.v5.schemas.responses.orders_packs import OrderProductPackFilterResponse, OrderProductPackResponse, \
-    OrderProductPackHistoryListResponse
+from retailcrm.v5.schemas.filters.orders_packs import (
+    OrderProductPackFilter,
+    OrderProductPackHistoryFilterType,
+)
+from retailcrm.v5.schemas.requests.orders_packs import (
+    OrdersPacksCreateRequest,
+    OrdersPacksEditRequest,
+    OrdersProductsPacksFilterRequest,
+    OrdersProductsPacksHistoryFilterRequest,
+)
+from retailcrm.v5.schemas.responses.orders_packs import (
+    OrderProductPackFilterResponse,
+    OrderProductPackHistoryListResponse,
+    OrderProductPackResponse,
+)
 
 __all__ = ["OrdersPacksApiResource"]
 
 
 class OrdersPacksApiResource(ApiResource):
     async def filter(
-            self, filter_obj: OrderProductPackFilter | None, limit: int = 20, page: int = 1
+        self, filter_obj: OrderProductPackFilter | None, limit: int = 20, page: int = 1
     ) -> OrderProductPackFilterResponse:
         """
         **Получение списка паков, удовлетворяющих заданному фильтру**
@@ -51,7 +61,10 @@ class OrdersPacksApiResource(ApiResource):
         return self._process_response(response, IdResponse)
 
     async def history(
-            self, filter_obj: OrderProductPackHistoryFilterType | None, limit: int = 20, page: int = 1
+        self,
+        filter_obj: OrderProductPackHistoryFilterType | None,
+        limit: int = 20,
+        page: int = 1,
     ) -> OrderProductPackHistoryListResponse:
         """
         **Получение истории комплектации заказа**
@@ -99,7 +112,9 @@ class OrdersPacksApiResource(ApiResource):
 
         return self._process_response(response, SuccessResponse)
 
-    async def edit(self, pack_id: int, pack: SerializedOrderProductPack) -> OrderProductPackResponse:
+    async def edit(
+        self, pack_id: int, pack: SerializedOrderProductPack
+    ) -> OrderProductPackResponse:
         """
         **Редактирование пака**
         :param pack_id:

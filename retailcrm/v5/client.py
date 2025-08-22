@@ -2,16 +2,30 @@ from typing import TypeVar
 
 from retailcrm.http_cilent import BaseHttpClient, HttpClient
 from retailcrm.v5.resources import (
+    ApiInfoApiResource,
+    CostsApiResource,
+    CustomerInteractionApiResource,
+    CustomersApiResource,
+    CustomersCorporateApiResource,
+    CustomFieldsApiResource,
+    DeliveryApiResource,
+    FilesApiResource,
+    IntegrationsApiResource,
+    LoyaltyApiResource,
+    NotificationsApiResource,
+    OrdersApiResource,
+    OrdersPacksApiResource,
     PaymentApiResource,
     ReferencesController,
+    SegmentsApiResource,
+    SettingsApiResource,
+    StatisticApiResource,
     StoreApiResource,
     TasksApiResource,
-    SettingsApiResource,
-    UsersApiResource, WebAnalyticsApiResource, StatisticApiResource, VerificationController, TelephonyApiResource,
-    SegmentsApiResource, OrdersPacksApiResource,
-    NotificationsApiResource, OrdersApiResource, FilesApiResource, LoyaltyApiResource, IntegrationsApiResource,
-    ApiInfoApiResource, CostsApiResource, CustomFieldsApiResource, CustomersApiResource, CustomersCorporateApiResource,
-    CustomerInteractionApiResource, DeliveryApiResource
+    TelephonyApiResource,
+    UsersApiResource,
+    VerificationController,
+    WebAnalyticsApiResource,
 )
 from retailcrm.v5.resources.base import ApiResource
 from retailcrm.v5.utils import validate_crm_url
@@ -79,7 +93,9 @@ class RetailCrmApiClientV5:
 
     @property
     def customer_interaction(self) -> CustomerInteractionApiResource:
-        return self._get_resource("customer_interaction", CustomerInteractionApiResource)
+        return self._get_resource(
+            "customer_interaction", CustomerInteractionApiResource
+        )
 
     @property
     def delivery(self) -> DeliveryApiResource:

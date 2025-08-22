@@ -2,14 +2,22 @@ import decimal
 from datetime import datetime
 from typing import Optional
 
-from pydantic import field_serializer, Field, model_serializer
+from pydantic import Field, field_serializer, model_serializer
 
 from retailcrm.v5.helpers import datetime_serializer, to_json_serializer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme
-from retailcrm.v5.schemas.entities.loyalty import SerializedCreateLoyaltyAccount, SerializedEditLoyaltyAccount
+from retailcrm.v5.schemas.entities.loyalty import (
+    SerializedCreateLoyaltyAccount,
+    SerializedEditLoyaltyAccount,
+)
 from retailcrm.v5.schemas.entities.orders import SerializedOrder
-from retailcrm.v5.schemas.filters.loyalty import LoyaltyAccountFilterData, LoyaltyAccountBonusOperationsApiFilterType, \
-    LoyaltyAccountBonusApiFilterType, LoyaltyApiFilterData, LoyaltyBonusOperationsApiFilterType
+from retailcrm.v5.schemas.filters.loyalty import (
+    LoyaltyAccountBonusApiFilterType,
+    LoyaltyAccountBonusOperationsApiFilterType,
+    LoyaltyAccountFilterData,
+    LoyaltyApiFilterData,
+    LoyaltyBonusOperationsApiFilterType,
+)
 from retailcrm.v5.utils import pydantic_to_nested_dict
 
 
@@ -23,7 +31,7 @@ class LoyaltyAccountsFilterRequest(BaseRetailCrmScheme):
         return {
             "limit": self.limit,
             "page": self.page,
-            **pydantic_to_nested_dict(self.filter_obj, "filter")
+            **pydantic_to_nested_dict(self.filter_obj, "filter"),
         }
 
 
@@ -47,12 +55,20 @@ class LoyaltyAccountBonusChargeRequest(BaseRetailCrmScheme):
 
 class LoyaltyAccountBonusCreditRequest(BaseRetailCrmScheme):
     amount: decimal.Decimal = Field(None, description="Количество бонусов к начислению")
-    activationDate: Optional[datetime] = Field(None, alias="activationDate", description="Дата активации бонусов")
-    expireDate: Optional[datetime] = Field(None, alias="expireDate", description="Дата сгорания бонусов")
+    activationDate: Optional[datetime] = Field(
+        None, alias="activationDate", description="Дата активации бонусов"
+    )
+    expireDate: Optional[datetime] = Field(
+        None, alias="expireDate", description="Дата сгорания бонусов"
+    )
     comment: Optional[str] = Field(None, description="Комментарий")
 
-    activationDate_serializer = field_serializer("activationDate")(datetime_serializer("%Y-%m-%d"))
-    expireDate_serializer = field_serializer("expireDate")(datetime_serializer("%Y-%m-%d"))
+    activationDate_serializer = field_serializer("activationDate")(
+        datetime_serializer("%Y-%m-%d")
+    )
+    expireDate_serializer = field_serializer("expireDate")(
+        datetime_serializer("%Y-%m-%d")
+    )
 
 
 class LoyaltyAccountBonusOperationsRequest(BaseRetailCrmScheme):
@@ -65,7 +81,7 @@ class LoyaltyAccountBonusOperationsRequest(BaseRetailCrmScheme):
         return {
             "limit": self.limit,
             "page": self.page,
-            **pydantic_to_nested_dict(self.filter_obj, "filter")
+            **pydantic_to_nested_dict(self.filter_obj, "filter"),
         }
 
 
@@ -79,13 +95,15 @@ class LoyaltyBonusDetailsRequest(BaseRetailCrmScheme):
         return {
             "limit": self.limit,
             "page": self.page,
-            **pydantic_to_nested_dict(self.filter_obj, "filter")
+            **pydantic_to_nested_dict(self.filter_obj, "filter"),
         }
 
 
 class LoyaltyBonusOperationsAllRequest(BaseRetailCrmScheme):
     limit: Optional[int] = Field(20, description="Количество элементов в ответе")
-    cursor: Optional[str] = Field(None, description="Курсор элемента с которого начинается поиск")
+    cursor: Optional[str] = Field(
+        None, description="Курсор элемента с которого начинается поиск"
+    )
     filter_obj: Optional[LoyaltyBonusOperationsApiFilterType] = Field(None)
 
     @model_serializer()
@@ -93,7 +111,7 @@ class LoyaltyBonusOperationsAllRequest(BaseRetailCrmScheme):
         return {
             "limit": self.limit,
             "cursor": self.cursor,
-            **pydantic_to_nested_dict(self.filter_obj, "filter")
+            **pydantic_to_nested_dict(self.filter_obj, "filter"),
         }
 
 
@@ -115,5 +133,5 @@ class LoyaltiesFilterRequest(BaseRetailCrmScheme):
         return {
             "limit": self.limit,
             "page": self.page,
-            **pydantic_to_nested_dict(self.filter_obj, "filter")
+            **pydantic_to_nested_dict(self.filter_obj, "filter"),
         }

@@ -15,4 +15,3 @@ class BonusOperationType(str, Enum):
 class BonusOperationEventType(str, Enum):
     BIRTHDAY = "birthday"
     WELCOME = "welcome"
-

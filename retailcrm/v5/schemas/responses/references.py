@@ -4,9 +4,26 @@ from pydantic import Field
 
 from retailcrm.v5.schemas.base import SuccessResponse
 from retailcrm.v5.schemas.entities.customers import MGChannel
-from retailcrm.v5.schemas.entities.references import CostGroup, Courier, Currency, DeliveryService, DeliveryType, \
-    OrderMethod, OrderType, PaymentStatus, PaymentType, Site, Store, StatusGroup, Status, SerializedUnit, LegalEntity, \
-    PriceType, OrderProductStatus, CostItem
+from retailcrm.v5.schemas.entities.references import (
+    CostGroup,
+    CostItem,
+    Courier,
+    Currency,
+    DeliveryService,
+    DeliveryType,
+    LegalEntity,
+    OrderMethod,
+    OrderProductStatus,
+    OrderType,
+    PaymentStatus,
+    PaymentType,
+    PriceType,
+    SerializedUnit,
+    Site,
+    Status,
+    StatusGroup,
+    Store,
+)
 
 
 class CostGroupsResponse(SuccessResponse):
@@ -39,41 +56,63 @@ class CurrenciesResponse(SuccessResponse):
 class CurrenciesCreateResponse(SuccessResponse):
     id: int | None = Field(None, description="Внутренний ID созданного объекта")
 
+
 class DeliveryServicesResponse(SuccessResponse):
-    deliveryServices: list[DeliveryService] = Field(default_factory=list, description="Служба доставки")
+    deliveryServices: list[DeliveryService] = Field(
+        default_factory=list, description="Служба доставки"
+    )
+
 
 class DeliveryTypesResponse(SuccessResponse):
-    deliveryServices: list[DeliveryType] = Field(default_factory=list, description="Тип доставки")
+    deliveryServices: list[DeliveryType] = Field(
+        default_factory=list, description="Тип доставки"
+    )
+
 
 class LegalEntitiesResponse(SuccessResponse):
-    legalEntities: list[LegalEntity] = Field(default_factory=list, description="Список юридических лиц")
+    legalEntities: list[LegalEntity] = Field(
+        default_factory=list, description="Список юридических лиц"
+    )
 
 
 class MGChannelsResponse(SuccessResponse):
-    mgChannels: list[MGChannel] = Field(default_factory=list, description="Список юридических лиц")
+    mgChannels: list[MGChannel] = Field(
+        default_factory=list, description="Список юридических лиц"
+    )
 
 
 class OrderMethodResponse(SuccessResponse):
-    orderMethods: dict[str, OrderMethod] = Field(default_factory=dict, description="Способ оформления заказа")
+    orderMethods: dict[str, OrderMethod] = Field(
+        default_factory=dict, description="Способ оформления заказа"
+    )
+
 
 class OrderTypesResponse(SuccessResponse):
-    orderTypes: dict[str, OrderType] = Field(default_factory=dict, description="Тип заказа")
-
+    orderTypes: dict[str, OrderType] = Field(
+        default_factory=dict, description="Тип заказа"
+    )
 
 
 class PaymentStatusesResponse(SuccessResponse):
-    paymentStatuses: dict[str, PaymentStatus] = Field(default_factory=dict, description="	Статус оплаты")
+    paymentStatuses: dict[str, PaymentStatus] = Field(
+        default_factory=dict, description="	Статус оплаты"
+    )
 
 
 class PaymentTypesResponse(SuccessResponse):
-    paymentTypes: list[PaymentType] = Field(default_factory=list, description="Тип оплаты")
+    paymentTypes: list[PaymentType] = Field(
+        default_factory=list, description="Тип оплаты"
+    )
 
 
 class PriceTypesResponse(SuccessResponse):
     priceTypes: list[PriceType] = Field(default_factory=list, description="Тип цены")
 
+
 class ProductStatusesResponse(SuccessResponse):
-    productStatuses: Optional[list[OrderProductStatus]] = Field(None, description="Статус товара в заказе")
+    productStatuses: Optional[list[OrderProductStatus]] = Field(
+        None, description="Статус товара в заказе"
+    )
 
 
 class SitesResponse(SuccessResponse):
@@ -85,12 +124,15 @@ class StatusGroupsResponse(SuccessResponse):
         default_factory=list, description="Группа статусов"
     )
 
+
 class StatusesResponse(SuccessResponse):
-    statuses: dict[str, Status] = Field(default_factory=dict, description="Статус заказа")
+    statuses: dict[str, Status] = Field(
+        default_factory=dict, description="Статус заказа"
+    )
 
 
 class StoresResponse(SuccessResponse):
-    stores: list[Store] =  Field(default_factory=list, description="Склад")
+    stores: list[Store] = Field(default_factory=list, description="Склад")
 
 
 class UnitsResponse(SuccessResponse):

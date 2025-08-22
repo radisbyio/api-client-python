@@ -6,12 +6,23 @@ from pydantic import Field, field_serializer
 from retailcrm.v5.enums.task import TasksStatuses
 from retailcrm.v5.helpers import datetime_serializer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme
-from retailcrm.v5.schemas.shared.customer import SerializedEntityCustomer, AbstractCustomer
+from retailcrm.v5.schemas.shared.customer import (
+    AbstractCustomer,
+    SerializedEntityCustomer,
+)
 from retailcrm.v5.schemas.shared.history_api_key import HistoryApiKey
 from retailcrm.v5.schemas.shared.history_user import HistoryUser
 from retailcrm.v5.schemas.shared.order import AbstractOrder, SerializedEntityOrder
 
-__all__ = ["TagsFilter", "TaskFilter", "Task", "TaskComment", "TaskHistory", "SerializedTask", "TaskHistoryFilter"]
+__all__ = [
+    "TagsFilter",
+    "TaskFilter",
+    "Task",
+    "TaskComment",
+    "TaskHistory",
+    "SerializedTask",
+    "TaskHistoryFilter",
+]
 
 
 class TagsFilter(BaseRetailCrmScheme):
@@ -46,8 +57,8 @@ class TaskFilter(BaseRetailCrmScheme):
 
 class Task(BaseRetailCrmScheme):
     id: int | None = Field(None, description="ID задачи")
-    text: str | None= Field(None, description="Текст задачи")
-    commentary: str | None= Field(None, description="Комментарий к задаче")
+    text: str | None = Field(None, description="Текст задачи")
+    commentary: str | None = Field(None, description="Комментарий к задаче")
     datetime_: Optional[datetime] = Field(
         None, description="Время выполнения задачи", validation_alias="datetime"
     )
@@ -70,7 +81,7 @@ class Task(BaseRetailCrmScheme):
 
 
 class TaskComment(BaseRetailCrmScheme):
-    id: int | None= Field(None, description="ID комментария к задаче")
+    id: int | None = Field(None, description="ID комментария к задаче")
     creator: Optional[int] = Field(None, description="Автор комментария")
     text: str | None = Field(None, description="Текст комментария к задаче")
     createdAt: Optional[datetime] = Field(description="Дата создания")

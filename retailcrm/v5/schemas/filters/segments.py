@@ -3,8 +3,8 @@ from typing import Optional
 
 from pydantic import Field, field_serializer
 
-from retailcrm.v5.schemas.base import BaseRetailCrmScheme
 from retailcrm.v5.helpers import datetime_serializer
+from retailcrm.v5.schemas.base import BaseRetailCrmScheme
 
 
 class SegmentsFilter(BaseRetailCrmScheme):
@@ -16,7 +16,9 @@ class SegmentsFilter(BaseRetailCrmScheme):
     dateTo: Optional[datetime] = Field(None, description="Дата создания (до)")
     minCustomersCount: Optional[int] = Field(None, description="Число клиентов (от)")
     maxCustomersCount: Optional[int] = Field(None, description="Число клиентов (до)")
-    type: Optional[str] = Field(None, description="Тип сегмента", pattern="^(dynamic|static)$")
+    type: Optional[str] = Field(
+        None, description="Тип сегмента", pattern="^(dynamic|static)$"
+    )
 
     dateFrom_serializer = field_serializer("dateFrom")(datetime_serializer("%Y-%m-%d"))
     dateTo_serializer = field_serializer("dateTo")(datetime_serializer("%Y-%m-%d"))

@@ -1,16 +1,42 @@
 from retailcrm.v5.resources.base import ApiResource
-from retailcrm.v5.schemas.base import SuccessResponse, IdTypesLiteral
-from retailcrm.v5.schemas.entities.customers import SerializedCustomerReference, SerializedCustomer, \
-    SerializedCustomerNote, SerializedSubscription
-from retailcrm.v5.schemas.filters.customers import CustomerFilter, CustomerHistoryFilterV4Type, CustomerNoteFilter
-from retailcrm.v5.schemas.requests.customers import CustomersFilterRequest, CustomersCombineRequest, \
-    CustomersCreateRequest, CustomersFixExternalIdsRequest, CustomersHistoryRequest, CustomersNotesFilterRequest, \
-    CustomerNoteCreateRequest, CustomersUploadRequest, CustomerGetRequest, CustomerEditRequest, \
-    CustomerSubscriptionsRequest
-from retailcrm.v5.schemas.responses.customers import CustomersResponse, CustomersCombineResponse, \
-    CustomerCreateResponse, CustomersFixExternalIdsResponse, CustomersHistoryResponse, CustomersNotesResponse, \
-    CustomerNoteCreateResponse, CustomersUploadResponse, CustomerGetResponse, CustomerEditResponse, \
-    CustomerSubscriptionsResponse
+from retailcrm.v5.schemas.base import IdTypesLiteral, SuccessResponse
+from retailcrm.v5.schemas.entities.customers import (
+    SerializedCustomer,
+    SerializedCustomerNote,
+    SerializedCustomerReference,
+    SerializedSubscription,
+)
+from retailcrm.v5.schemas.filters.customers import (
+    CustomerFilter,
+    CustomerHistoryFilterV4Type,
+    CustomerNoteFilter,
+)
+from retailcrm.v5.schemas.requests.customers import (
+    CustomerEditRequest,
+    CustomerGetRequest,
+    CustomerNoteCreateRequest,
+    CustomersCombineRequest,
+    CustomersCreateRequest,
+    CustomersFilterRequest,
+    CustomersFixExternalIdsRequest,
+    CustomersHistoryRequest,
+    CustomersNotesFilterRequest,
+    CustomerSubscriptionsRequest,
+    CustomersUploadRequest,
+)
+from retailcrm.v5.schemas.responses.customers import (
+    CustomerCreateResponse,
+    CustomerEditResponse,
+    CustomerGetResponse,
+    CustomerNoteCreateResponse,
+    CustomersCombineResponse,
+    CustomersFixExternalIdsResponse,
+    CustomersHistoryResponse,
+    CustomersNotesResponse,
+    CustomersResponse,
+    CustomerSubscriptionsResponse,
+    CustomersUploadResponse,
+)
 from retailcrm.v5.schemas.shared.fix_external_row import FixExternalRow
 
 
@@ -36,7 +62,9 @@ class CustomersApiResource(ApiResource):
         return self._process_response(response, CustomersResponse)
 
     async def combine(
-        self, result_customer: SerializedCustomerReference, customers: list[SerializedCustomerReference]
+        self,
+        result_customer: SerializedCustomerReference,
+        customers: list[SerializedCustomerReference],
     ) -> CustomersCombineResponse:
         """
         **Объединение клиентов**
@@ -46,14 +74,18 @@ class CustomersApiResource(ApiResource):
         :param customers: Список клиентов, которые будут объединены.
         :return: CustomersCombineResponse
         """
-        request = CustomersCombineRequest(resultCustomer=result_customer, customers=customers)
+        request = CustomersCombineRequest(
+            resultCustomer=result_customer, customers=customers
+        )
         response = await self._client.post(
             endpoint="/customers/combine",
             content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, CustomersCombineResponse)
 
-    async def create(self, customer: SerializedCustomer, site: str | None = None) -> CustomerCreateResponse:
+    async def create(
+        self, customer: SerializedCustomer, site: str | None = None
+    ) -> CustomerCreateResponse:
         """
         **Создание клиента**
 
@@ -69,7 +101,9 @@ class CustomersApiResource(ApiResource):
         )
         return self._process_response(response, CustomerCreateResponse)
 
-    async def fix_external_ids(self, customers: list[FixExternalRow]) -> CustomersFixExternalIdsResponse:
+    async def fix_external_ids(
+        self, customers: list[FixExternalRow]
+    ) -> CustomersFixExternalIdsResponse:
         """
         **Массовая запись внешних ID клиентов**
 
@@ -85,7 +119,10 @@ class CustomersApiResource(ApiResource):
         return self._process_response(response, CustomersFixExternalIdsResponse)
 
     async def history(
-        self, filter_obj: CustomerHistoryFilterV4Type | None = None, limit: int = 20, page: int = 1
+        self,
+        filter_obj: CustomerHistoryFilterV4Type | None = None,
+        limit: int = 20,
+        page: int = 1,
     ) -> CustomersHistoryResponse:
         """
         **Получение истории изменения клиентов**
@@ -104,7 +141,10 @@ class CustomersApiResource(ApiResource):
         return self._process_response(response, CustomersHistoryResponse)
 
     async def notes(
-        self, filter_obj: CustomerNoteFilter | None = None, limit: int = 20, page: int = 1
+        self,
+        filter_obj: CustomerNoteFilter | None = None,
+        limit: int = 20,
+        page: int = 1,
     ) -> CustomersNotesResponse:
         """
         **Получение заметок**
@@ -115,14 +155,18 @@ class CustomersApiResource(ApiResource):
         :param page: Номер страницы с результатами (по умолчанию равно 1).
         :return: CustomersNotesResponse
         """
-        request = CustomersNotesFilterRequest(filter_obj=filter_obj, limit=limit, page=page)
+        request = CustomersNotesFilterRequest(
+            filter_obj=filter_obj, limit=limit, page=page
+        )
         response = await self._client.get(
             endpoint="/customers/notes",
             params=request.model_dump(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, CustomersNotesResponse)
 
-    async def notes_create(self, note: SerializedCustomerNote, site: str | None = None) -> CustomerNoteCreateResponse:
+    async def notes_create(
+        self, note: SerializedCustomerNote, site: str | None = None
+    ) -> CustomerNoteCreateResponse:
         """
         **Создание заметки**
 
@@ -151,7 +195,9 @@ class CustomersApiResource(ApiResource):
         )
         return self._process_response(response, SuccessResponse)
 
-    async def upload(self, customers: list[SerializedCustomer], site: str) -> CustomersUploadResponse:
+    async def upload(
+        self, customers: list[SerializedCustomer], site: str
+    ) -> CustomersUploadResponse:
         """
         **Пакетная загрузка клиентов**
 
@@ -170,7 +216,10 @@ class CustomersApiResource(ApiResource):
         return self._process_response(response, CustomersUploadResponse)
 
     async def get(
-        self, customer_id: str, by: IdTypesLiteral = "externalId", site: str | None = None
+        self,
+        customer_id: str,
+        by: IdTypesLiteral = "externalId",
+        site: str | None = None,
     ) -> CustomerGetResponse:
         """
         **Получение информации о клиенте**
@@ -189,7 +238,11 @@ class CustomersApiResource(ApiResource):
         return self._process_response(response, CustomerGetResponse)
 
     async def edit(
-        self, customer_id: str, customer: SerializedCustomer, by: IdTypesLiteral = "externalId", site: str | None = None
+        self,
+        customer_id: str,
+        customer: SerializedCustomer,
+        by: IdTypesLiteral = "externalId",
+        site: str | None = None,
     ) -> CustomerEditResponse:
         """
         **Редактирование клиента**
@@ -209,7 +262,11 @@ class CustomersApiResource(ApiResource):
         return self._process_response(response, CustomerEditResponse)
 
     async def subscriptions(
-        self, customer_id: str, subscriptions: list[SerializedSubscription], by: IdTypesLiteral = "externalId", site: str | None = None
+        self,
+        customer_id: str,
+        subscriptions: list[SerializedSubscription],
+        by: IdTypesLiteral = "externalId",
+        site: str | None = None,
     ) -> CustomerSubscriptionsResponse:
         """
         **Подписка/отписка клиента на рассылки**
@@ -221,7 +278,9 @@ class CustomersApiResource(ApiResource):
         :param site: Символьный код магазина.
         :return: CustomerSubscriptionsResponse
         """
-        request = CustomerSubscriptionsRequest(subscriptions=subscriptions, by=by, site=site)
+        request = CustomerSubscriptionsRequest(
+            subscriptions=subscriptions, by=by, site=site
+        )
         response = await self._client.post(
             endpoint=f"/customers/{customer_id}/subscriptions",
             content=request.model_dump_json(exclude_none=True, by_alias=True),

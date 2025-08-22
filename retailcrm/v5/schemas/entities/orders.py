@@ -1,19 +1,30 @@
 import decimal
-from datetime import datetime, date, time
-from typing import Optional, Any
+from datetime import date, datetime, time
+from typing import Any, Optional
 
-from pydantic import field_serializer, field_validator, Field
+from pydantic import Field, field_serializer, field_validator
 
-from retailcrm.v5.enums import PrivilegeType, DiscountTypes
+from retailcrm.v5.enums import DiscountTypes, PrivilegeType
 from retailcrm.v5.enums.country_code_iso3166 import CountryCodeIso3166
 from retailcrm.v5.enums.currency import Currency
-from retailcrm.v5.helpers import datetime_serializer, dict_validator, payments_validator, time_serializer
+from retailcrm.v5.helpers import (
+    datetime_serializer,
+    dict_validator,
+    payments_validator,
+    time_serializer,
+)
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme
 from retailcrm.v5.schemas.entities.corporate_customers import Company
 from retailcrm.v5.schemas.entities.customers import Customer
-from retailcrm.v5.schemas.entities.loyalty import LoyaltyEventDiscount, LoyaltyLevel, LoyaltyAccount
+from retailcrm.v5.schemas.entities.loyalty import (
+    LoyaltyAccount,
+    LoyaltyEventDiscount,
+    LoyaltyLevel,
+)
 from retailcrm.v5.schemas.shared.code_value_model import CodeValueModel
-from retailcrm.v5.schemas.shared.entity_with_external_id import EntityWithExternalIdInput
+from retailcrm.v5.schemas.shared.entity_with_external_id import (
+    EntityWithExternalIdInput,
+)
 from retailcrm.v5.schemas.shared.history_api_key import HistoryApiKey
 from retailcrm.v5.schemas.shared.history_user import HistoryUser
 from retailcrm.v5.schemas.shared.order import SerializedEntityOrder
@@ -36,7 +47,8 @@ class AbstractDiscount(BaseRetailCrmScheme):
 
 class OrderProductProperties(BaseRetailCrmScheme):
     code: Optional[str] = Field(
-        None, description="Код свойства (не обязательное поле, код может передаваться в ключе свойства)",
+        None,
+        description="Код свойства (не обязательное поле, код может передаваться в ключе свойства)",
     )
     name: Optional[str] = Field(None, description="Имя свойства")
     value: Optional[str] = Field(None, description="Значение свойства")
@@ -48,9 +60,12 @@ class PriceType(BaseRetailCrmScheme):
 
 class OrderProductPriceItem(BaseRetailCrmScheme):
     price: Optional[decimal.Decimal] = Field(
-        None, description="Итоговая цена c учетом всех скидок на товар и заказ (в валюте объекта)",
+        None,
+        description="Итоговая цена c учетом всех скидок на товар и заказ (в валюте объекта)",
     )
-    quantity: Optional[decimal.Decimal] = Field(None, description="Количество товара по заданной цене")
+    quantity: Optional[decimal.Decimal] = Field(
+        None, description="Количество товара по заданной цене"
+    )
 
 
 class Unit(BaseRetailCrmScheme):
@@ -85,10 +100,14 @@ class OrderProduct(BaseRetailCrmScheme):
     externalIds: list[CodeValueModel] = Field(
         default_factory=list, description="Внешние идентификаторы позиции в заказе"
     )
-    discounts: list[AbstractDiscount] = Field(default_factory=list, description="Массив скидок")
+    discounts: list[AbstractDiscount] = Field(
+        default_factory=list, description="Массив скидок"
+    )
     offer: Optional[Offer] = Field(None, description="Торговое предложение")
     ordering: Optional[int] = Field(None, description="Порядок")
-    properties: dict = Field(default_factory=dict, description="Дополнительные свойства позиции в заказе")
+    properties: dict = Field(
+        default_factory=dict, description="Дополнительные свойства позиции в заказе"
+    )
 
     bonusesChargeTotal: Optional[decimal.Decimal] = Field(
         None, description="Количество списанных бонусов"
@@ -106,7 +125,8 @@ class OrderProduct(BaseRetailCrmScheme):
         description="Итоговая денежная скидка на единицу товара c учетом всех скидок на товар и заказ (в валюте объекта)",
     )
     prices: list[OrderProductPriceItem] = Field(
-        default_factory=list, description="Набор итоговых цен реализации с указанием количества"
+        default_factory=list,
+        description="Набор итоговых цен реализации с указанием количества",
     )
     vatRate: Optional[str] = Field(None, description="Ставка НДС")
     createdAt: Optional[datetime] = Field(
@@ -118,7 +138,9 @@ class OrderProduct(BaseRetailCrmScheme):
     isCanceled: bool = Field(
         False, description="Данная позиция в заказе является отменной"
     )
-    purchasePrice: Optional[decimal.Decimal] | None = Field(None, description="Закупочная цена (в базовой валюте)")
+    purchasePrice: Optional[decimal.Decimal] | None = Field(
+        None, description="Закупочная цена (в базовой валюте)"
+    )
 
     properties_validator = field_validator("properties", mode="before")(
         dict_validator()
@@ -140,7 +162,9 @@ class SerializedOrderProductOffer(BaseRetailCrmScheme):
 
 class SerializedOrderProduct(BaseRetailCrmScheme):
     id: Optional[int] = Field(None, description="ID позиции в заказе")
-    externalId: Optional[str] = Field(None, description="(deprecated) Внешний ID позиции в заказе")
+    externalId: Optional[str] = Field(
+        None, description="(deprecated) Внешний ID позиции в заказе"
+    )
     markingCodes: Optional[list[str]] = Field(None, description="Коды маркировки")
     initialPrice: Optional[decimal.Decimal] = Field(
         None, description="Цена товара/SKU (в валюте объекта)"
@@ -160,7 +184,9 @@ class SerializedOrderProduct(BaseRetailCrmScheme):
     properties: Optional[list[OrderProductProperties]] = Field(
         None, description="Дополнительные свойства позиции в заказе"
     )
-    purchasePrice: decimal.Decimal = Field(None, description="Закупочная цена (в базовой валюте)")
+    purchasePrice: decimal.Decimal = Field(
+        None, description="Закупочная цена (в базовой валюте)"
+    )
     ordering: Optional[int] = Field(None, description="Порядок")
     offer: Optional[SerializedOrderProductOffer] = Field(
         None, description="Торговое предложение"
@@ -194,6 +220,7 @@ class OrderLink(BaseRetailCrmScheme):
         datetime_serializer("%Y-%m-%d %H:%M:%S")
     )
 
+
 class Payment(BaseRetailCrmScheme):
     id: Optional[int] = Field(None, description="Внутренний ID")
     type: Optional[str] = Field(None, description="Тип оплаты")
@@ -201,7 +228,9 @@ class Payment(BaseRetailCrmScheme):
         None, description="Внешний ID платежа", validation_alias="externalId"
     )
     status: Optional[str] = Field(None, description="Статус оплаты")
-    amount: Optional[decimal.Decimal] = Field(None, description="Сумма платежа (в валюте объекта)")
+    amount: Optional[decimal.Decimal] = Field(
+        None, description="Сумма платежа (в валюте объекта)"
+    )
     paidAt: Optional[datetime] = Field(None, description="Дата оплаты")
     comment: Optional[str] = Field(None, description="Комментарий")
 
@@ -214,7 +243,9 @@ class Payment(BaseRetailCrmScheme):
 
 class SerializedPayment(BaseRetailCrmScheme):
     externalId: Optional[str] = Field(None, description="Внешний ID платежа")
-    amount: Optional[decimal.Decimal] = Field(None, description="Сумма платежа (в валюте объекта)")
+    amount: Optional[decimal.Decimal] = Field(
+        None, description="Сумма платежа (в валюте объекта)"
+    )
     paidAt: Optional[datetime] = Field(None, description="Дата оплаты")
     comment: Optional[str] = Field(None, description="Комментарий")
     type: Optional[str] = Field(None, description="Тип оплаты")
@@ -315,8 +346,10 @@ class PackageItem(BaseRetailCrmScheme):
     )
     vatRate: Optional[str] = Field(
         None, description='Ставка НДС ("none" - НДС не облагается)'
-    ) # TODO: Уточнить значение
-    quantity: Optional[decimal.Decimal] = Field(None, description="Количество товара в упаковке")
+    )  # TODO: Уточнить значение
+    quantity: Optional[decimal.Decimal] = Field(
+        None, description="Количество товара в упаковке"
+    )
     unit: Optional[Unit] = Field(None, description="Единица измерения товара")
     cost: Optional[decimal.Decimal] = Field(
         None, description="Стоимость товара (с учетом скидок)"
@@ -338,12 +371,18 @@ class Package(BaseRetailCrmScheme):
     width: Optional[int] = Field(None, description="Ширина мм.")
     length: Optional[int] = Field(None, description="Длина мм.")
     height: Optional[int] = Field(None, description="Высота мм.")
-    items: list[PackageItem] = Field(default_factory=list, description="Содержимое упаковки")
+    items: list[PackageItem] = Field(
+        default_factory=list, description="Содержимое упаковки"
+    )
 
 
 class DeclaredValueItem(BaseRetailCrmScheme):
-    orderProduct: PackageItemOrderProduct | None = Field(None, description="Позиция в заказе")
-    value: decimal.Decimal | None = Field(None, description="Объявленная стоимость товара")
+    orderProduct: PackageItemOrderProduct | None = Field(
+        None, description="Позиция в заказе"
+    )
+    value: decimal.Decimal | None = Field(
+        None, description="Объявленная стоимость товара"
+    )
 
 
 class GenericData(BaseRetailCrmScheme):
@@ -367,9 +406,7 @@ class GenericData(BaseRetailCrmScheme):
         description="Дополнительные данные доставки (deliveryDataField.code => значение)",
     )
     itemDeclaredValues: Optional[list[DeclaredValueItem]] = Field(default_factory=list)
-    packages: list[Package] = Field(
-        default_factory=list, description="Упаковки"
-    )
+    packages: list[Package] = Field(default_factory=list, description="Упаковки")
 
 
 class SerializedOrderDelivery(BaseRetailCrmScheme):
@@ -379,7 +416,9 @@ class SerializedOrderDelivery(BaseRetailCrmScheme):
     )
     # service: Optional[SerializedDeliveryService] = Field(None)  # todo realize
     cost: Optional[decimal.Decimal] = Field(None, description="Стоимость доставки")
-    netCost: Optional[decimal.Decimal] = Field(None, description="Себестоимость доставки")
+    netCost: Optional[decimal.Decimal] = Field(
+        None, description="Себестоимость доставки"
+    )
     date_: Optional[date] = Field(
         None, description="Дата доставки", serialization_alias="date"
     )
@@ -390,25 +429,32 @@ class SerializedOrderDelivery(BaseRetailCrmScheme):
     vatRate: Optional[str] = Field(None, description="Ставка НДС")
 
 
-
 class Order(BaseRetailCrmScheme):
     id: int | None = Field(None, description="ID заказа")
     externalId: str | None = Field(None, description="Внешний ID заказа")
     number: str | None = Field(None, description="Номер заказа")
     site: str | None = Field(None, description="Магазин")
     status: str | None = Field(None, description="Статус заказа")
-    statusComment: str | None = Field(None, description="Комментарий к статусу доставки")
-    managerId: int | None = Field(
-        None, description="Менеджер, прикрепленный к заказу"
+    statusComment: str | None = Field(
+        None, description="Комментарий к статусу доставки"
     )
-    bonusesCreditTotal: Optional[decimal.Decimal] = Field(None, description="Количество начисленных бонусов")
-    bonusesChargeTotal: Optional[decimal.Decimal] = Field(None, description="Количество списанных бонусов")
-    summ: Optional[decimal.Decimal] = Field(None, description="Сумма по товарам (в валюте объекта)")
+    managerId: int | None = Field(None, description="Менеджер, прикрепленный к заказу")
+    bonusesCreditTotal: Optional[decimal.Decimal] = Field(
+        None, description="Количество начисленных бонусов"
+    )
+    bonusesChargeTotal: Optional[decimal.Decimal] = Field(
+        None, description="Количество списанных бонусов"
+    )
+    summ: Optional[decimal.Decimal] = Field(
+        None, description="Сумма по товарам (в валюте объекта)"
+    )
     currency: Currency | None = Field(None, description="Валюта")
     orderType: str = Field(None, description="Тип заказа")
     orderMethod: str = Field(None, description="Способ оформления")
     privilegeType: Optional[PrivilegeType] = Field(None, description="Тип привилегии")
-    countryIso: CountryCodeIso3166 | None = Field(None, description="ISO код страны (ISO 3166-1 alpha-2)")
+    countryIso: CountryCodeIso3166 | None = Field(
+        None, description="ISO код страны (ISO 3166-1 alpha-2)"
+    )
     createdAt: Optional[datetime] = Field(None, description="Дата оформления заказа")
     statusUpdatedAt: Optional[datetime] = Field(
         None, description="Дата последнего изменения статуса"
@@ -416,7 +462,9 @@ class Order(BaseRetailCrmScheme):
     totalSumm: Optional[decimal.Decimal] = Field(
         None, description="Общая сумма с учетом скидки (в валюте объекта)"
     )
-    prepaySum: Optional[decimal.Decimal] = Field(None, description="Оплаченная сумма (в валюте объекта)")
+    prepaySum: Optional[decimal.Decimal] = Field(
+        None, description="Оплаченная сумма (в валюте объекта)"
+    )
     purchaseSumm: Optional[decimal.Decimal] = Field(
         None, description="Общая стоимость закупки (в базовой валюте)"
     )
@@ -451,7 +499,9 @@ class Order(BaseRetailCrmScheme):
         None, description="Данные о доставке"
     )
     source: Optional[SerializedSource] = Field(None, description="Источник заказа")
-    items: list[OrderProduct] = Field(default_factory=list, description="Позиция в заказе")
+    items: list[OrderProduct] = Field(
+        default_factory=list, description="Позиция в заказе"
+    )
     fullPaidAt: Optional[datetime] = Field(None, description="Дата полной оплаты")
     payments: dict[str, Payment] = Field(default_factory=dict, description="Платежи")
     fromApi: bool = Field(False, description="Заказ поступил через API")
@@ -535,7 +585,7 @@ class SerializedOrder(BaseRetailCrmScheme):
     shipped: Optional[bool] = Field(None, description="Заказ отгружен")
     dialogId: Optional[Any] = Field(
         None, description="Идентификатор диалога Чатов"
-    ) # TODO: Уточнить
+    )  # TODO: Уточнить
     customFields: Optional[dict] = Field(
         None, description="Ассоциативный массив пользовательских полей"
     )
@@ -579,6 +629,7 @@ class SerializedOrder(BaseRetailCrmScheme):
         datetime_serializer("%Y-%m-%d %H:%M:%S")
     )
 
+
 class OrderHistory(BaseRetailCrmScheme):
     id: Optional[int] = Field(
         None, alias="id", description="Внутренний идентификатор записи в истории"
@@ -613,8 +664,12 @@ class OrderHistory(BaseRetailCrmScheme):
 
 
 class SerializedLoyaltyOrder(BaseRetailCrmScheme):
-    bonusesCreditTotal: decimal.Decimal | None = Field(None, description="Количество начисленных бонусов")
-    bonusesChargeTotal: decimal.Decimal | None = Field(None, description="Количество списанных бонусов")
+    bonusesCreditTotal: decimal.Decimal | None = Field(
+        None, description="Количество начисленных бонусов"
+    )
+    bonusesChargeTotal: decimal.Decimal | None = Field(
+        None, description="Количество списанных бонусов"
+    )
     currency: str | None = Field(None, description="Валюта")
     privilegeType: PrivilegeType | None = Field(
         None,
@@ -629,10 +684,10 @@ class SerializedLoyaltyOrder(BaseRetailCrmScheme):
     loyaltyAccount: LoyaltyAccount = Field(
         None, description="Участие в программе лояльности"
     )
-    loyaltyLevel: LoyaltyLevel| None = Field(
+    loyaltyLevel: LoyaltyLevel | None = Field(
         None, description="Уровень участия в программе лояльности"
     )
-    loyaltyEventDiscount: LoyaltyEventDiscount| None = Field(
+    loyaltyEventDiscount: LoyaltyEventDiscount | None = Field(
         None, description="Скидка по событию программы лояльности"
     )
     customer: Customer | None = Field(None, description="Клиент")
@@ -640,4 +695,6 @@ class SerializedLoyaltyOrder(BaseRetailCrmScheme):
         None, description="Данные о доставке"
     )
     site: str | None = Field(None, description="Магазин")
-    items: list[OrderProduct] = Field(default_factory=list, description="Позиция в заказе")
+    items: list[OrderProduct] = Field(
+        default_factory=list, description="Позиция в заказе"
+    )

@@ -1,7 +1,15 @@
 from retailcrm.v5.resources.base import ApiResource
 from retailcrm.v5.schemas.entities.telephony import CallEvent, CallUpload
-from retailcrm.v5.schemas.requests.telephony import CallEventRequest, CallsUploadRequest, ManagerRequest
-from retailcrm.v5.schemas.responses.telephony import CallEventResponse, CallsUploadResponse, ManagerResponse
+from retailcrm.v5.schemas.requests.telephony import (
+    CallEventRequest,
+    CallsUploadRequest,
+    ManagerRequest,
+)
+from retailcrm.v5.schemas.responses.telephony import (
+    CallEventResponse,
+    CallsUploadResponse,
+    ManagerResponse,
+)
 
 
 class TelephonyApiResource(ApiResource):
@@ -52,7 +60,9 @@ class TelephonyApiResource(ApiResource):
         :return: ManagerResponse
         """
 
-        request = ManagerRequest(phone=phone, details=details, ignoreStatus=ignore_status)
+        request = ManagerRequest(
+            phone=phone, details=details, ignoreStatus=ignore_status
+        )
         response = await self._client.post(
             endpoint="/telephony/manager",
             params=request.model_dump(exclude_none=True, by_alias=True),

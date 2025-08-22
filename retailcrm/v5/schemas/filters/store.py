@@ -27,7 +27,8 @@ class OfferFilter(BaseRetailCrmScheme):
         None, description="Свойства торговых предложений"
     )
     sinceId: Optional[int] = Field(
-        None, description="Начиная с ID торгового предложения",
+        None,
+        description="Начиная с ID торгового предложения",
     )
     minPrice: Optional[int] = Field(None, description="Цена торгового предложения (от)")
     maxPrice: Optional[int] = Field(None, description="Цена торгового предложения (до)")
@@ -112,20 +113,24 @@ class ProductFilter(BaseRetailCrmScheme):
         None, description="Массив ID торговых предложений"
     )
     offerExternalId: Optional[str] = Field(
-        None, description="Внешний ID торгового предложения",
+        None,
+        description="Внешний ID торгового предложения",
     )
     offerXmlId: Optional[str] = Field(
-        None, description="XmlId торгового предложения",
+        None,
+        description="XmlId торгового предложения",
     )
     groupExternalId: Optional[str] = Field(
-        None, description="Внешний ID товарной группы",
+        None,
+        description="Внешний ID товарной группы",
     )
     sinceUpdatedAt: Optional[datetime] = Field(
         None,
         description="Нижнее ограничение по дате изменения товара (исключая границу)",
     )
     sinceId: Optional[int] = Field(
-        None, description="Начиная с ID товара",
+        None,
+        description="Начиная с ID товара",
     )
     minPrice: Optional[int] = Field(None, description="Цена товара (от)")
     maxPrice: Optional[int] = Field(None, description="Цена товара (до)")
@@ -154,6 +159,7 @@ class ProductPropertiesFilter(BaseRetailCrmScheme):
     groups: Optional[list[int]] = Field(
         None, description="Массив ID групп товаров или услуг"
     )
+
 
 class ProductPropertyValuesFilter(BaseRetailCrmScheme):
     propertyName: Optional[str] = Field(None, description="Название свойства")

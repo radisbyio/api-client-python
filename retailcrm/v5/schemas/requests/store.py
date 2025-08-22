@@ -1,19 +1,30 @@
 from typing import Optional
 
-from pydantic import Field, model_serializer, field_serializer
+from pydantic import Field, field_serializer, model_serializer
 
 from retailcrm.v5.helpers import to_json_serializer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme
-from retailcrm.v5.schemas.entities.store import SerializedOffer, PriceUploadInput, SerializedProductGroup, \
-    ProductCreateInput
-from retailcrm.v5.schemas.filters.store import OfferFilter, ProductGroupFilter, ProductFilter, \
-    ProductPropertiesFilter, ProductPropertyValuesFilter
+from retailcrm.v5.schemas.entities.store import (
+    PriceUploadInput,
+    ProductCreateInput,
+    SerializedOffer,
+    SerializedProductGroup,
+)
+from retailcrm.v5.schemas.filters.store import (
+    OfferFilter,
+    ProductFilter,
+    ProductGroupFilter,
+    ProductPropertiesFilter,
+    ProductPropertyValuesFilter,
+)
 from retailcrm.v5.utils import pydantic_to_nested_dict
 
 
 class InventoriesUploadRequest(BaseRetailCrmScheme):
     offers: list[SerializedOffer]
-    site: str | None = Field(description="Символьный код магазина. Указывается в случае идентификации торговых предложений по externalId")
+    site: str | None = Field(
+        description="Символьный код магазина. Указывается в случае идентификации торговых предложений по externalId"
+    )
 
 
 class OffersFilterRequest(BaseRetailCrmScheme):
@@ -26,7 +37,7 @@ class OffersFilterRequest(BaseRetailCrmScheme):
         return {
             "limit": self.limit,
             "page": self.page,
-            **pydantic_to_nested_dict(self.filter_obj, "filter")
+            **pydantic_to_nested_dict(self.filter_obj, "filter"),
         }
 
 
@@ -44,7 +55,7 @@ class ProductGroupsFilterRequest(BaseRetailCrmScheme):
         return {
             "limit": self.limit,
             "page": self.page,
-            **pydantic_to_nested_dict(self.filter_obj, "filter")
+            **pydantic_to_nested_dict(self.filter_obj, "filter"),
         }
 
 
@@ -68,7 +79,7 @@ class ProductsFilterRequest(BaseRetailCrmScheme):
         return {
             "limit": self.limit,
             "page": self.page,
-            **pydantic_to_nested_dict(self.filter_obj, "filter")
+            **pydantic_to_nested_dict(self.filter_obj, "filter"),
         }
 
 
@@ -87,28 +98,30 @@ class ProductsBatchEditRequest(BaseRetailCrmScheme):
 class ProductPropertiesFilterRequest(BaseRetailCrmScheme):
     limit: Optional[int] = Field(None, description="Количество элементов в ответе")
     page: Optional[int] = Field(None, description="Номер страницы с результатами")
-    filter_obj: Optional[ProductPropertiesFilter] = Field(None, description="Объект фильтра")
+    filter_obj: Optional[ProductPropertiesFilter] = Field(
+        None, description="Объект фильтра"
+    )
 
     @model_serializer()
     def serialize_model(self) -> dict:
         return {
             "limit": self.limit,
             "page": self.page,
-            **pydantic_to_nested_dict(self.filter_obj, "filter")
+            **pydantic_to_nested_dict(self.filter_obj, "filter"),
         }
-
 
 
 class ProductsPropertyValuesFilterRequest(BaseRetailCrmScheme):
     limit: Optional[int] = Field(None, description="Количество элементов в ответе")
     page: Optional[int] = Field(None, description="Номер страницы с результатами")
-    filter_obj: Optional[ProductPropertyValuesFilter] = Field(None, description="Объект фильтра")
-
+    filter_obj: Optional[ProductPropertyValuesFilter] = Field(
+        None, description="Объект фильтра"
+    )
 
     @model_serializer()
     def serialize_model(self) -> dict:
         return {
             "limit": self.limit,
             "page": self.page,
-            **pydantic_to_nested_dict(self.filter_obj, "filter")
+            **pydantic_to_nested_dict(self.filter_obj, "filter"),
         }

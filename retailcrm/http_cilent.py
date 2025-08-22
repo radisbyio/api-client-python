@@ -11,16 +11,18 @@ logger = logging.getLogger("retailcrm.http_client")
 
 
 class BaseHttpClient:
-    async def get(self, endpoint: str, params: Optional[dict] = None, use_version: bool = True) -> Response:
+    async def get(
+        self, endpoint: str, params: Optional[dict] = None, use_version: bool = True
+    ) -> Response:
         raise NotImplementedError
 
     async def post(
         self,
-            endpoint: str,
-            params: Optional[dict] = None,
-            content: Optional[str | bytes] = None,
-            headers: Optional[dict] = None,
-            use_version: bool = True
+        endpoint: str,
+        params: Optional[dict] = None,
+        content: Optional[str | bytes] = None,
+        headers: Optional[dict] = None,
+        use_version: bool = True,
     ) -> Response:
         raise NotImplementedError
 
@@ -43,7 +45,9 @@ class HttpClient(BaseHttpClient):
             headers=headers, base_url=crm_url + "/api/", transport=transport
         )
 
-    async def get(self, endpoint: str, params: Optional[dict] = None, use_version: bool = True) -> Response:
+    async def get(
+        self, endpoint: str, params: Optional[dict] = None, use_version: bool = True
+    ) -> Response:
         if use_version:
             endpoint = self._version + endpoint
 
@@ -58,11 +62,11 @@ class HttpClient(BaseHttpClient):
 
     async def post(
         self,
-            endpoint: str,
-            params: Optional[dict] = None,
-            content: Optional[str | bytes] = None,
+        endpoint: str,
+        params: Optional[dict] = None,
+        content: Optional[str | bytes] = None,
         headers: Optional[dict] = None,
-            use_version: bool = True,
+        use_version: bool = True,
     ) -> Response:
         if headers is None:
             headers = {"Content-Type": "application/json"}

@@ -4,11 +4,13 @@ from pydantic import BaseModel, Field, field_serializer
 
 from retailcrm.v5.helpers import datetime_serializer
 
-
 __all__ = ["ChatVisitedPage", "ChatLastVisit", "ChatUtm", "ChatDevice"]
 
+
 class ChatVisitedPage(BaseModel):
-    dateTime: datetime | None = Field(None, description="Дата и время посещения страницы")
+    dateTime: datetime | None = Field(
+        None, description="Дата и время посещения страницы"
+    )
     url: str | None = Field(None, description="URL страницы")
     title: str | None | None = Field(None, description="Заголовок страницы")
 
@@ -21,8 +23,12 @@ class ChatLastVisit(BaseModel):
     source: str | None = Field(None, description="Источник визита")
     createdAt: datetime | None = Field(None, description="Дата начала визита")
     endedAt: datetime | None = Field(None, description="Дата окончания визита")
-    duration: int | None = Field(None, description="Продолжительность визита в секундах")
-    pages: list[ChatVisitedPage] = Field(default_factory=list, description="Посещенные страницы")
+    duration: int | None = Field(
+        None, description="Продолжительность визита в секундах"
+    )
+    pages: list[ChatVisitedPage] = Field(
+        default_factory=list, description="Посещенные страницы"
+    )
 
     createdAt_serializer = field_serializer("createdAt")(
         datetime_serializer("%Y-%m-%d %H:%M:%S")
@@ -39,6 +45,10 @@ class ChatUtm(BaseModel):
 
 
 class ChatDevice(BaseModel):
-    lang: str | None = Field(None, description="Язык на устройстве пользователя (в формате en_US)")
-    browser: str | None = Field(None, description="Информация об устройстве пользователя")
+    lang: str | None = Field(
+        None, description="Язык на устройстве пользователя (в формате en_US)"
+    )
+    browser: str | None = Field(
+        None, description="Информация об устройстве пользователя"
+    )
     os: str | None = Field(None, description="Тип ОС пользователя")

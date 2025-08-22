@@ -1,12 +1,25 @@
 from retailcrm.v5.resources.base import ApiResource
 from retailcrm.v5.schemas.base import SuccessResponse
-from retailcrm.v5.schemas.entities.delivery import DeliveryShipment, RequestStatusUpdateItem
+from retailcrm.v5.schemas.entities.delivery import (
+    DeliveryShipment,
+    RequestStatusUpdateItem,
+)
 from retailcrm.v5.schemas.entities.orders import SerializedOrder
 from retailcrm.v5.schemas.filters.delivery import DeliveryShipmentFilter
-from retailcrm.v5.schemas.requests.delivery import DeliveryShipmentEditRequest, DeliveryShipmentCreateRequest, \
-    DeliveryShipmentsFilterRequest, DeliveryGenericTrackingRequest, DeliveryCalculateRequest
-from retailcrm.v5.schemas.responses.delivery import DeliveryShipmentGetResponse, DeliveryShipmentEditResponse, \
-    DeliveryShipmentCreateResponse, DeliveryShipmentsResponse,DeliveryCalculateResponse
+from retailcrm.v5.schemas.requests.delivery import (
+    DeliveryCalculateRequest,
+    DeliveryGenericTrackingRequest,
+    DeliveryShipmentCreateRequest,
+    DeliveryShipmentEditRequest,
+    DeliveryShipmentsFilterRequest,
+)
+from retailcrm.v5.schemas.responses.delivery import (
+    DeliveryCalculateResponse,
+    DeliveryShipmentCreateResponse,
+    DeliveryShipmentEditResponse,
+    DeliveryShipmentGetResponse,
+    DeliveryShipmentsResponse,
+)
 
 
 class DeliveryApiResource(ApiResource):
@@ -21,14 +34,18 @@ class DeliveryApiResource(ApiResource):
         :param order: Объект заказа.
         :return: DeliveryCalculateResponse
         """
-        request = DeliveryCalculateRequest(deliveryTypeCodes=delivery_type_codes, order=order)
+        request = DeliveryCalculateRequest(
+            deliveryTypeCodes=delivery_type_codes, order=order
+        )
         response = await self._client.post(
             endpoint="/delivery/calculate",
             content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
         return self._process_response(response, DeliveryCalculateResponse)
 
-    async def generic_tracking(self, subcode: str, status_update: list[RequestStatusUpdateItem]) -> SuccessResponse:
+    async def generic_tracking(
+        self, subcode: str, status_update: list[RequestStatusUpdateItem]
+    ) -> SuccessResponse:
         """
         **Обновление статусов доставки**
 
@@ -38,7 +55,9 @@ class DeliveryApiResource(ApiResource):
         :return: DeliveryGenericTrackingResponse
         """
         if len(status_update) > 100:
-            raise ValueError("Too many status updates, only 100 are allowed per request.")
+            raise ValueError(
+                "Too many status updates, only 100 are allowed per request."
+            )
         request = DeliveryGenericTrackingRequest(statusUpdate=status_update)
         response = await self._client.post(
             endpoint=f"/delivery/generic/{subcode}/tracking",
@@ -47,7 +66,10 @@ class DeliveryApiResource(ApiResource):
         return self._process_response(response, SuccessResponse)
 
     async def shipments_filter(
-        self, filter_obj: DeliveryShipmentFilter | None = None, limit: int = 20, page: int = 1
+        self,
+        filter_obj: DeliveryShipmentFilter | None = None,
+        limit: int = 20,
+        page: int = 1,
     ) -> DeliveryShipmentsResponse:
         """
         **Получение списка отгрузок в службы доставки**
@@ -58,7 +80,9 @@ class DeliveryApiResource(ApiResource):
         :param page: Номер страницы с результатами (по умолчанию равно 1).
         :return: DeliveryShipmentsResponse
         """
-        request = DeliveryShipmentsFilterRequest(filter=filter_obj, limit=limit, page=page)
+        request = DeliveryShipmentsFilterRequest(
+            filter=filter_obj, limit=limit, page=page
+        )
         response = await self._client.get(
             endpoint="/delivery/shipments",
             params=request.model_dump(exclude_none=True, by_alias=True),
@@ -66,7 +90,10 @@ class DeliveryApiResource(ApiResource):
         return self._process_response(response, DeliveryShipmentsResponse)
 
     async def shipments_create(
-        self, delivery_type: str, delivery_shipment: DeliveryShipment, site: str | None = None
+        self,
+        delivery_type: str,
+        delivery_shipment: DeliveryShipment,
+        site: str | None = None,
     ) -> DeliveryShipmentCreateResponse:
         """
         **Создание отгрузки**
@@ -77,7 +104,9 @@ class DeliveryApiResource(ApiResource):
         :param site: Символьный код магазина.
         :return: DeliveryShipmentCreateResponse
         """
-        request = DeliveryShipmentCreateRequest(deliveryType=delivery_type, deliveryShipment=delivery_shipment, site=site)
+        request = DeliveryShipmentCreateRequest(
+            deliveryType=delivery_type, deliveryShipment=delivery_shipment, site=site
+        )
         response = await self._client.post(
             endpoint="/delivery/shipments/create",
             content=request.model_dump_json(exclude_none=True, by_alias=True),
@@ -98,7 +127,10 @@ class DeliveryApiResource(ApiResource):
         return self._process_response(response, DeliveryShipmentGetResponse)
 
     async def shipments_edit(
-        self, shipment_id: str, delivery_shipment: DeliveryShipment, site: str | None = None
+        self,
+        shipment_id: str,
+        delivery_shipment: DeliveryShipment,
+        site: str | None = None,
     ) -> DeliveryShipmentEditResponse:
         """
         **Редактирование отгрузки**
@@ -109,7 +141,9 @@ class DeliveryApiResource(ApiResource):
         :param site: Символьный код магазина.
         :return: DeliveryShipmentEditResponse
         """
-        request = DeliveryShipmentEditRequest(deliveryShipment=delivery_shipment, site=site)
+        request = DeliveryShipmentEditRequest(
+            deliveryShipment=delivery_shipment, site=site
+        )
         response = await self._client.post(
             endpoint=f"/delivery/shipments/{shipment_id}/edit",
             content=request.model_dump_json(exclude_none=True, by_alias=True),

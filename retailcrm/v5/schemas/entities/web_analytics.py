@@ -42,9 +42,7 @@ class Source(BaseRetailCrmScheme):
 class Page(BaseRetailCrmScheme):
     url: str = Field(None, description="URL страницы")
     title: str | None = Field(None, description="Заголовок страницы")
-    countViews: int | None = Field(
-        None, description="Количество просмотров страницы"
-    )
+    countViews: int | None = Field(None, description="Количество просмотров страницы")
     timeOnPage: int | None = Field(
         None, description="Время, проведенное на странице в миллисекундах"
     )
@@ -62,13 +60,18 @@ class Visit(BaseRetailCrmScheme):
     )
     pageDepth: int | None = Field(None, description="Глубина просмотра")
     customer: SerializedEntityCustomer | None = Field(None, description="Клиент")
-    source: SerializedSource | None = Field(None, description="Данные по источнику клиента")
-    pages: list[Page] = Field(default_factory=list, description="Массив страниц для загрузки")
+    source: SerializedSource | None = Field(
+        None, description="Данные по источнику клиента"
+    )
+    pages: list[Page] = Field(
+        default_factory=list, description="Массив страниц для загрузки"
+    )
     clientId: str | None = Field(
         None, description="clientId веб-аналитики, к которому будет привязан визит"
     )
     site: str | None = Field(
-        None, description="Символьный код магазина, в котором ищутся страницы или клиент"
+        None,
+        description="Символьный код магазина, в котором ищутся страницы или клиент",
     )
     createdAt_serializer = field_serializer("createdAt")(
         datetime_serializer("%Y-%m-%d %H:%M:%S")
