@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import Field, field_serializer
+from pydantic import Field, field_serializer, model_serializer
 
 from retailcrm.v5.helpers import to_json_serializer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme, IdTypesLiteral
@@ -23,6 +23,7 @@ from retailcrm.v5.schemas.filters.customers_corporate import (
     CustomerNoteFilter,
 )
 from retailcrm.v5.schemas.shared.fix_external_row import FixExternalRow
+from retailcrm.v5.utils import pydantic_to_nested_dict
 
 
 class CustomerCorporateFilterRequest(BaseRetailCrmScheme):
@@ -62,13 +63,29 @@ class CustomerCorporateFixExternalIdsRequest(BaseRetailCrmScheme):
 class CustomerCorporateHistoryRequest(BaseRetailCrmScheme):
     limit: Optional[int]
     page: Optional[int]
-    filter_obj: Optional[CustomerHistoryFilterV4Type] = Field(None, alias="filter_obj")
+    filter_obj: Optional[CustomerHistoryFilterV4Type] = Field(None)
+
+    @model_serializer()
+    def serialize_model(self) -> dict:
+        return {
+            "limit": self.limit,
+            "page": self.page,
+            **pydantic_to_nested_dict(self.filter_obj, "filter"),
+        }
 
 
 class CustomerCorporateNotesFilterRequest(BaseRetailCrmScheme):
     limit: Optional[int]
     page: Optional[int]
-    filter_obj: Optional[CustomerNoteFilter] = Field(None, alias="filter_obj")
+    filter_obj: Optional[CustomerNoteFilter] = Field(None)
+
+    @model_serializer()
+    def serialize_model(self) -> dict:
+        return {
+            "limit": self.limit,
+            "page": self.page,
+            **pydantic_to_nested_dict(self.filter_obj, "filter"),
+        }
 
 
 class CustomerCorporateNoteCreateRequest(BaseRetailCrmScheme):
@@ -99,9 +116,17 @@ class CustomerCorporateGetRequest(BaseRetailCrmScheme):
 class CustomerCorporateAddressesRequest(BaseRetailCrmScheme):
     by: IdTypesLiteral
     site: Optional[str] = Field(None)
-    limit: Optional[int] = Field(20)
-    page: Optional[int] = Field(1)
-    filter_obj: Optional[CustomerAddressFilter]
+    limit: Optional[int]
+    page: Optional[int]
+    filter_obj: Optional[CustomerAddressFilter] = None
+
+    @model_serializer()
+    def serialize_model(self) -> dict:
+        return {
+            "limit": self.limit,
+            "page": self.page,
+            **pydantic_to_nested_dict(self.filter_obj, "filter"),
+        }
 
 
 class CustomerCorporateAddressCreateRequest(BaseRetailCrmScheme):
@@ -126,7 +151,16 @@ class CustomerCorporateCompaniesRequest(BaseRetailCrmScheme):
     site: Optional[str] = Field(None)
     limit: Optional[int]
     page: Optional[int]
-    filter_obj: Optional[CompanyFilter]
+    filter_obj: Optional[CompanyFilter] = None
+
+    @model_serializer()
+    def serialize_model(self) -> dict:
+        return {
+            "limit": self.limit,
+            "page": self.page,
+            **pydantic_to_nested_dict(self.filter_obj, "filter"),
+        }
+
 
 
 class CustomerCorporateCompanyCreateRequest(BaseRetailCrmScheme):
@@ -152,6 +186,14 @@ class CustomerCorporateContactsRequest(BaseRetailCrmScheme):
     limit: Optional[int]
     page: Optional[int]
     filter_obj: Optional[CustomerContactFilter] = Field(None)
+
+    @model_serializer()
+    def serialize_model(self) -> dict:
+        return {
+            "limit": self.limit,
+            "page": self.page,
+            **pydantic_to_nested_dict(self.filter_obj, "filter"),
+        }
 
 
 class CustomerCorporateContactCreateRequest(BaseRetailCrmScheme):

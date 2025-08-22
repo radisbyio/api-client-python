@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import Field, field_serializer
+from pydantic import Field, field_serializer, model_serializer
 
 from retailcrm.v5.helpers import to_json_serializer
 from retailcrm.v5.schemas.base import BaseRetailCrmScheme
@@ -10,6 +10,7 @@ from retailcrm.v5.schemas.entities.delivery import (
 )
 from retailcrm.v5.schemas.entities.orders import SerializedOrder
 from retailcrm.v5.schemas.filters.delivery import DeliveryShipmentFilter
+from retailcrm.v5.utils import pydantic_to_nested_dict
 
 
 class DeliveryCalculateRequest(BaseRetailCrmScheme):
@@ -28,7 +29,15 @@ class DeliveryGenericTrackingRequest(BaseRetailCrmScheme):
 class DeliveryShipmentsFilterRequest(BaseRetailCrmScheme):
     limit: Optional[int] = Field(20, description="Количество элементов в ответе")
     page: Optional[int] = Field(1, description="Номер страницы с результатами")
-    filter: Optional[DeliveryShipmentFilter] = Field(None)
+    filter_obj: Optional[DeliveryShipmentFilter] = Field(None)
+
+    @model_serializer()
+    def serialize_model(self) -> dict:
+        return {
+            "limit": self.limit,
+            "page": self.page,
+            **pydantic_to_nested_dict(self.filter_obj, "filter"),
+        }
 
 
 class DeliveryShipmentCreateRequest(BaseRetailCrmScheme):

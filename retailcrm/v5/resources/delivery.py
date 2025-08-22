@@ -81,7 +81,7 @@ class DeliveryApiResource(ApiResource):
         :return: DeliveryShipmentsResponse
         """
         request = DeliveryShipmentsFilterRequest(
-            filter=filter_obj, limit=limit, page=page
+            filter_obj=filter_obj, limit=limit, page=page
         )
         response = await self._client.get(
             endpoint="/delivery/shipments",
