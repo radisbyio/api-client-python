@@ -12,7 +12,7 @@ from retailcrm.v5.resources.api import ApiInfoApiResource
 from retailcrm.v5.resources.costs import CostsApiResource
 from retailcrm.v5.resources.users import UsersApiResource
 from retailcrm.v5.resources.integrations import IntegrationsApiResource
-# from retailcrm.v5.resources.delivery import DeliveryController
+from retailcrm.v5.resources.delivery import DeliveryApiResource
 from retailcrm.v5.resources.web_analytics import WebAnalyticsApiResource
 from retailcrm.v5.resources.verification import VerificationController
 from retailcrm.v5.resources.statistic import StatisticApiResource

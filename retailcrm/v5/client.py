@@ -11,7 +11,7 @@ from retailcrm.v5.resources import (
     SegmentsApiResource, OrdersPacksApiResource,
     NotificationsApiResource, OrdersApiResource, FilesApiResource, LoyaltyApiResource, IntegrationsApiResource,
     ApiInfoApiResource, CostsApiResource, CustomFieldsApiResource, CustomersApiResource, CustomersCorporateApiResource,
-    CustomerInteractionApiResource
+    CustomerInteractionApiResource, DeliveryApiResource
 )
 from retailcrm.v5.resources.base import ApiResource
 from retailcrm.v5.utils import validate_crm_url
@@ -82,9 +82,8 @@ class RetailCrmApiClientV5:
         return self._get_resource("customer_interaction", CustomerInteractionApiResource)
 
     @property
-    def delivery(self) -> CustomersCorporateApiResource:
-        return self._get_resource("delivery", CustomersCorporateApiResource)
-
+    def delivery(self) -> DeliveryApiResource:
+        return self._get_resource("delivery", DeliveryApiResource)
 
     @property
     def files(self) -> FilesApiResource:

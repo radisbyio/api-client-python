@@ -1,17 +1,12 @@
 from enum import StrEnum
 
 
-__all__ = ["ContragentType", "Sex", "PaymentObject", "PaymentMethod", "Vat"]
+__all__ = ["ContragentType", "PaymentObject", "PaymentMethod", "Vat"]
 
 class ContragentType(StrEnum):
     INDIVIDUAL = "individual"
     LEGAL_ENTITY = "legal-entity"
     ENTERPRENEUR = "enterpreneur"
-
-
-class Sex(StrEnum):
-    MALE = "male"
-    FEMALE = "female"
 
 
 class PaymentObject(StrEnum):

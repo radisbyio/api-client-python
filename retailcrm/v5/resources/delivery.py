@@ -1,172 +1,117 @@
-from retailcrm.exceptions import RetailCrmApiError
-from retailcrm.http_cilent import BaseHttpClient
-from retailcrm.v5.schemas.delivery import (
-    DeliveryTrackingResponse,
-    DeliveryShipmentFilterData,
-    FilterDeliveryShipmentsResponse,
-    CreateDeliveryShipmentsResponse,
-    GetDeliveryShipmentResponse,
-    EditDeliveryShipmentsResponse,
-    DeliveryShipment,
-    RequestStatusUpdateItem,
-    CalculationResponse,
-)
-from retailcrm.v5.utils import pydantic_to_nested_dict
+from retailcrm.v5.resources.base import ApiResource
+from retailcrm.v5.schemas.entities.delivery import DeliveryShipment, RequestStatusUpdateItem
+from retailcrm.v5.schemas.entities.orders import SerializedOrder
+from retailcrm.v5.schemas.filters.delivery import DeliveryShipmentFilter
+from retailcrm.v5.schemas.requests.delivery import DeliveryShipmentEditRequest, DeliveryShipmentCreateRequest, \
+    DeliveryShipmentsFilterRequest, DeliveryGenericTrackingRequest, DeliveryCalculateRequest
+from retailcrm.v5.schemas.responses.delivery import DeliveryShipmentGetResponse, DeliveryShipmentEditResponse, \
+    DeliveryShipmentCreateResponse, DeliveryShipmentsResponse, DeliveryGenericTrackingResponse, \
+    DeliveryCalculateResponse
 
 
-class DeliveryController:
-    def __init__(self, client: BaseHttpClient):
-        self._client = client
-
-    async def calculate(self, order: SerializedOrder, delivery_type_codes: list[str]) -> CalculationResponse:
+class DeliveryApiResource(ApiResource):
+    async def calculate(
+        self, delivery_type_codes: list[str], order: SerializedOrder
+    ) -> DeliveryCalculateResponse:
         """
-        Расчёт стоимости доставки
+        **Расчёт стоимости доставки**
 
-        Метод рассчитывает стоимость доставки для выбранных типов доставок (deliveryTypeCodes).
-        :param order:
-        :param delivery_type_codes:
-        :return:
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-delivery-calculate
+        :param delivery_type_codes: Коды типов доставок.
+        :param order: Объект заказа.
+        :return: DeliveryCalculateResponse
         """
+        request = DeliveryCalculateRequest(deliveryTypeCodes=delivery_type_codes, order=order)
         response = await self._client.post(
-            endpoint=f"/delivery/calculate",
-            data={
-                "deliveryTypeCodes": delivery_type_codes,
-                "order": order.model_dump_json(exclude_unset=True, by_alias=True),
-            },
+            endpoint="/delivery/calculate",
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
-        response_obj = CalculationResponse.model_validate_json(response.content)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        return self._process_response(response, DeliveryCalculateResponse)
 
-    async def tracking(
-            self, status_update: RequestStatusUpdateItem, sub_code: str
-    ) -> DeliveryTrackingResponse:
+    async def generic_tracking(self, subcode: str, status_update: list[RequestStatusUpdateItem]) -> DeliveryGenericTrackingResponse:
         """
-        Обновление статусов доставки
-        Метод позволяет передавать статусы отдельно для каждого заказа в момент смены
-        статуса или передавать историю изменений по группе заказов через определенные
-        промежутки на усмотрение службы доставки.
+        **Обновление статусов доставки**
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-delivery-generic-subcode-tracking
-        :param sub_code: Идентификатор модуля интеграции
-        :param status_update:
-        :return: Response
+        :param subcode: Код интеграции.
+        :param status_update: JSON с данными по статусам заказов.
+        :return: DeliveryGenericTrackingResponse
         """
+        if len(status_update) > 100:
+            raise ValueError("Too many status updates, only 100 are allowed per request.")
+        request = DeliveryGenericTrackingRequest(statusUpdate=status_update)
         response = await self._client.post(
-            endpoint=f"/delivery/generic/{sub_code}/tracking",
-            data={
-                "statusUpdate": [
-                    status_update.model_dump_json(exclude_unset=True, by_alias=True)
-                ],
-            },
+            endpoint=f"/delivery/generic/{subcode}/tracking",
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
-        response_obj = DeliveryTrackingResponse.model_validate_json(response.content)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        return self._process_response(response, DeliveryGenericTrackingResponse)
 
     async def shipments_filter(
-            self, filter_data: DeliveryShipmentFilterData | None = None, limit: int = 20, page: int = 1
-    ) -> FilterDeliveryShipmentsResponse:
+        self, filter_obj: DeliveryShipmentFilter | None = None, limit: int = 20, page: int = 1
+    ) -> DeliveryShipmentsResponse:
         """
-        Получение списка отгрузок в службы доставки
+        **Получение списка отгрузок в службы доставки**
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-delivery-shipments
-        :param limit: Количество элементов в ответе (по умолчанию равно 20)
-        :param page: Номер страницы с результатами (по умолчанию равно 1)
-        :param filter_data: Фильтр
-        :return: Response
+        :param filter_obj: Объект фильтра.
+        :param limit: Количество элементов в ответе (по умолчанию равно 20).
+        :param page: Номер страницы с результатами (по умолчанию равно 1).
+        :return: DeliveryShipmentsResponse
         """
+        request = DeliveryShipmentsFilterRequest(filter=filter_obj, limit=limit, page=page)
         response = await self._client.get(
-            endpoint=f"/delivery/shipments",
-            params={
-                "limit": limit,
-                "page": page,
-                **pydantic_to_nested_dict(filter_data, "filter"),
-            },
+            endpoint="/delivery/shipments",
+            params=request.model_dump(exclude_none=True, by_alias=True),
         )
-        response_obj = FilterDeliveryShipmentsResponse.model_validate_json(response.content)
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        return self._process_response(response, DeliveryShipmentsResponse)
 
     async def shipments_create(
-            self, delivery_shipment: DeliveryShipment, delivery_type: str, site: str
-    ) -> CreateDeliveryShipmentsResponse:
+        self, delivery_type: str, delivery_shipment: DeliveryShipment, site: str | None = None
+    ) -> DeliveryShipmentCreateResponse:
         """
-        Создание отгрузки
+        **Создание отгрузки**
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-delivery-shipments-create
-        :param delivery_type: Тип доставки
-        :param site: Символьный код магазина
-        :param delivery_shipment: Заявка на отгрузку в службу доставки
-        :return: Response
+        :param delivery_type: Тип доставки.
+        :param delivery_shipment: Заявка на отгрузку в службу доставки.
+        :param site: Символьный код магазина.
+        :return: DeliveryShipmentCreateResponse
         """
+        request = DeliveryShipmentCreateRequest(deliveryType=delivery_type, deliveryShipment=delivery_shipment, site=site)
         response = await self._client.post(
             endpoint="/delivery/shipments/create",
-            data={
-                "deliveryType": delivery_type,
-                "site": site,
-                "deliveryShipment": delivery_shipment.model_dump_json(
-                    exclude_unset=True, by_alias=True
-                ),
-            },
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
+        return self._process_response(response, DeliveryShipmentCreateResponse)
 
-        response_obj = CreateDeliveryShipmentsResponse.model_validate_json(
-            response.content
-        )
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
-
-    async def shipments_get(self, shipment_id: int) -> GetDeliveryShipmentResponse:
+    async def shipments_get(self, shipment_id: str) -> DeliveryShipmentGetResponse:
         """
-        Получение информации об отгрузке
+        **Получение информации об отгрузке**
 
         https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#get--api-v5-delivery-shipments-id
-        :param shipment_id: Идентификатор отгрузки
-        :return: Response
+        :param shipment_id: Идентификатор отгрузки.
+        :return: DeliveryShipmentGetResponse
         """
         response = await self._client.get(
-            endpoint=f"/delivery/shipments/{shipment_id}"
+            endpoint=f"/delivery/shipments/{shipment_id}",
         )
-
-        response_obj = GetDeliveryShipmentResponse.model_validate_json(
-            response.content
-        )
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        return self._process_response(response, DeliveryShipmentGetResponse)
 
     async def shipments_edit(
-            self, shipment_id: int, delivery_shipment: DeliveryShipment, site: str = None
-    ) -> EditDeliveryShipmentsResponse:
+        self, shipment_id: str, delivery_shipment: DeliveryShipment, site: str | None = None
+    ) -> DeliveryShipmentEditResponse:
         """
-        Редактирование платежа
-        Метод позволяет вносить изменения в платёж.
+        **Редактирование отгрузки**
 
-        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-orders-payments-id-edit
-        :param shipment_id: Идентификатор отгрузки
-        :param delivery_shipment: Заявка на отгрузку в службу доставки
-        :param site: string
-        :return: Response
+        https://docs.retailcrm.ru/Developers/API/APIVersions/APIv5#post--api-v5-delivery-shipments-id-edit
+        :param shipment_id: Идентификатор отгрузки.
+        :param delivery_shipment: Заявка на отгрузку в службу доставки.
+        :param site: Символьный код магазина.
+        :return: DeliveryShipmentEditResponse
         """
-        data = {
-            "deliveryShipment": delivery_shipment.model_dump_json(
-                exclude_unset=True, by_alias=True
-            ),
-        }
-        if site:
-            data["site"] = site
-
+        request = DeliveryShipmentEditRequest(deliveryShipment=delivery_shipment, site=site)
         response = await self._client.post(
-            endpoint=f"/delivery/shipments/{shipment_id}/edit", data=data
+            endpoint=f"/delivery/shipments/{shipment_id}/edit",
+            content=request.model_dump_json(exclude_none=True, by_alias=True),
         )
-        response_obj = EditDeliveryShipmentsResponse.model_validate_json(
-            response.content
-        )
-        if response.status_code >= 400:
-            raise RetailCrmApiError(response.status_code, response_obj.errorMsg)
-        return response_obj
+        return self._process_response(response, DeliveryShipmentEditResponse)
